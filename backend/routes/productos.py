@@ -102,7 +102,7 @@ def agregar_producto():
             "stock": datos["stock"],
             "tipo": datos["tipo"],
             "local": local_nombre
-        })
+        }), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
