@@ -137,3 +137,34 @@ def eliminar_producto(id_producto):
             cursor.close()
         if conn:
             conn.close()
+
+@productos_bp.route("/<int:id_producto>", methods=["GET"])
+def listar_producto(id_producto):
+    conn = None
+    cursor = None
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary = True)
+        query = "SELECT * FROM productos WHERE id_producto = %s"
+        cursor.execute(query, (id_producto,))
+        producto = cursor.fetchone()
+        if not producto:
+            return jsonify({"error": "producto no encontrado"}), 404
+        query_local = "SELECT nombre FROM locales WHERE id_local = %s"
+        cursor.execute(query_local, (producto["local_producto"],))
+        local_nombre = cursor.fetchone()["nombre"]
+        return jsonify({
+            "id": producto["id_producto"],
+            "nombre": producto["nombre"],
+            "precio": producto["precio"],
+            "stock": producto["stock"],
+            "tipo": producto["tipo"],
+            "local": local_nombre
+        }), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
