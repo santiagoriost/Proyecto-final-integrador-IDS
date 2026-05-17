@@ -1,4 +1,10 @@
 Flask
+flask-bcrypt
+flask-jwt-extended
+flask-cors
+qrcode
+pillow
+requests
 mysql-connector-python
 
 #venv --> python3 m- venv .venv --> source .venv/bin/activate
