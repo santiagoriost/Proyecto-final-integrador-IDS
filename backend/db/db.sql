@@ -1,17 +1,15 @@
 CREATE DATABASE IF NOT EXISTS cafeteria;
 use cafeteria;
-CREATE TABLE roles(
-    id_rol INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    nombre_rol VARCHAR(255) NOT NULL UNIQUE
-);
+
 CREATE TABLE cuentas(
     id_cuenta INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(150) NOT NULL,
     apellido VARCHAR(150) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
     clave VARCHAR(255) NOT NULL,
-    rol INT NOT NULL,
-    FOREIGN KEY(rol) REFERENCES roles(id_rol)
+    rol ENUM('admin', 'user') DEFAULT 'user',
+    reset_token VARCHAR(255) DEFAULT NULL,
+    reset_token_expiration DATETIME DEFAULT NULL
 );
 CREATE TABLE locales(
     id_local INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
