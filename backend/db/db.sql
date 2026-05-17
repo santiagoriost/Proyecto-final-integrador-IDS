@@ -22,7 +22,7 @@ CREATE TABLE locales(
     direccion VARCHAR(255) NOT NULL
 );
 CREATE TABLE productos(
-    id_producto INT NOT NULL PRIMARY KEY AUTO_INCREMENT.
+    id_producto INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(255) NOT NULL,
     precio DECIMAL(6,2) NOT NULL,
     stock INT NOT NULL DEFAULT 0,
