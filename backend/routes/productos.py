@@ -110,3 +110,30 @@ def agregar_producto():
             cursor.close()
         if conn: 
             conn.close()
+
+@productos_bp.route("/<int:id_producto>", methods=["DELETE"])
+def eliminar_producto(id_producto):
+    conn = None
+    cursor = None
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary = True)
+        query_verificacion = "SELECT * FROM productos WHERE id_producto = %s"
+        cursor.execute(query_verificacion, (id_producto,))
+        producto = cursor.fetchone()
+        if not producto:
+            return jsonify({"error": "producto no encontrado"}), 404
+        query_eliminar = "DELETE FROM productos WHERE id_producto = %s"
+        cursor.execute(query_eliminar, (id_producto,))
+        conn.commit()
+        return jsonify({
+            "mensaje": "producto eliminado correctamente",
+            "producto_eliminado": producto
+        }), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
