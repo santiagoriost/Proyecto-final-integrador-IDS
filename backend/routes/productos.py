@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, request
 from db.db_conn import get_connection
-
+from .utils import validar_atributos_producto
+from db.queries.productos_queries import verificar_producto
+from db.queries.local_queries import obtener_nombre_local
 productos_bp = Blueprint("productos", __name__)
 
 @productos_bp.route("/", methods=["GET"])
@@ -68,26 +70,14 @@ def agregar_producto():
         conn = get_connection()
         cursor = conn.cursor(dictionary = True)
         datos = request.get_json()
-        if not datos:
-            return jsonify({"error": "no se recibieron atributos"}), 400
-        atributos_necesarios = ("nombre", "precio", "stock", "tipo", "local_producto")
-        for atributo in atributos_necesarios:
-            if atributo not in datos:
-                return jsonify({"error": "atributo %s no encontrado" %atributo}), 400
-            if str(datos[atributo]).strip() == "":
-                return jsonify({"error": "el atributo %s tiene un valor vacio" %atributo}), 400
-            elif atributo == "precio" and not isinstance(datos["precio"], (int, float)):
-                return jsonify({"error": "atributo %s no es un dato de tipo INT / FLOAT" %atributo}), 400
-            elif atributo in ("stock", "local_producto") and not str(datos[atributo]).isdigit():
-                return jsonify({"error": "atributo %s tiene que ser de tipo INT" %atributo}), 400
-            elif atributo in ("nombre", "tipo") and not isinstance(datos[atributo], str):
-                return jsonify({"error": "el atributo %s tiene que ser tipo str" %atributo}), 400
+
+        error_validacion = validar_atributos_producto(datos)
+        if error_validacion:
+            return error_validacion
         
-        query_local = "SELECT nombre FROM locales WHERE id_local=%s"
-        cursor.execute(query_local, (datos["local_producto"],))
-        local_nombre = cursor.fetchone()["nombre"]
+        local_nombre = obtener_nombre_local(datos["local_producto"], cursor)
         if not local_nombre:
-            return jsonify({"error": "local no encontrado (id = %s)" %datos["local_producto"]}), 404
+            return jsonify({"error": "el local indicado no existe"}), 404
         
         valores = (datos["nombre"], datos["precio"], datos["stock"], datos["tipo"], datos["local_producto"])
         query = """
@@ -145,14 +135,13 @@ def listar_producto(id_producto):
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary = True)
-        query = "SELECT * FROM productos WHERE id_producto = %s"
-        cursor.execute(query, (id_producto,))
-        producto = cursor.fetchone()
+
+        producto = verificar_producto(id_producto, cursor)
         if not producto:
             return jsonify({"error": "producto no encontrado"}), 404
-        query_local = "SELECT nombre FROM locales WHERE id_local = %s"
-        cursor.execute(query_local, (producto["local_producto"],))
-        local_nombre = cursor.fetchone()["nombre"]
+        
+        local_nombre = obtener_nombre_local(producto["local_producto"], cursor)
+
         return jsonify({
             "id": producto["id_producto"],
             "nombre": producto["nombre"],
@@ -161,6 +150,55 @@ def listar_producto(id_producto):
             "tipo": producto["tipo"],
             "local": local_nombre
         }), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+@productos_bp.route("/<int:id_producto>", methods=["PUT"])
+def actualizar_producto(id_producto):
+    conn = None
+    cursor = None
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary = True)
+        datos = request.get_json()
+
+        error_validacion = validar_atributos_producto(datos)
+        if error_validacion:
+            return error_validacion
+        
+        producto = verificar_producto(id_producto, cursor)
+        if not producto:
+            return jsonify({"error": "producto no encontrado"}), 404
+
+        local_nombre = obtener_nombre_local(datos["local_producto"], cursor)
+        if not local_nombre:
+            return jsonify({"error": "el local indicado no existe"}), 404
+            
+        valores = (datos["nombre"], datos["precio"], datos["stock"], datos["tipo"], datos["local_producto"], id_producto)
+        query = """
+            UPDATE productos
+            SET nombre = %s, precio = %s, stock = %s, tipo = %s, local_producto = %s
+            WHERE id_producto = %s
+        """
+        cursor.execute(query, valores)
+        conn.commit()
+        producto_actualizado = {
+            "id": id_producto,
+            "nombre": datos["nombre"],
+            "precio": datos["precio"],
+            "stock": datos["stock"],
+            "tipo": datos["tipo"],
+            "local": local_nombre
+        }
+        return jsonify({
+            "mensaje": "producto actualizado correctamente",
+            "producto_actualizado": producto_actualizado
+        })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
