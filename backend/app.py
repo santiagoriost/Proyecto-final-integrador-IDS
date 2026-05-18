@@ -4,15 +4,18 @@ from routes.productos import productos_bp
 from routes.usuarios import usuarios_bp
 from routes.admin import administradores_bp
 from routes.reservas import reservas_bp
+from routes.reseñas import reseñas_bp   
 
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = "despues_vemos_que_pongo"
 jwt = JWTManager(app)
 
+
 app.register_blueprint(productos_bp, url_prefix="/productos")
 app.register_blueprint(usuarios_bp, url_prefix="/usuarios")
 app.register_blueprint(administradores_bp, url_prefix="/administradores")
+app.register_blueprint(reseñas_bp, url_prefix="/reseñas")
 app.register_blueprint(reservas_bp, url_prefix="/reservas")
 
 if __name__ == "__main__":

@@ -163,7 +163,7 @@ def eliminar_administrador(admin_id):
         if conn:
             conn.close()
 
-@administradores_bp.route("/reseñas/<int:reseña_id>", methods=["DELETE"])
+@administradores_bp.route("/reseñas/<int:resena_id>", methods=["DELETE"])
 @jwt_required()
 def eliminar_reseña(reseña_id):
     conn = None
