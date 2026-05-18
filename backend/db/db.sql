@@ -27,6 +27,16 @@ CREATE TABLE productos(
     local_producto INT NOT NULL,
     FOREIGN KEY(local_producto) REFERENCES locales(id_local)
 );
+CREATE TABLE  reseñas(
+    id_resena INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    id_usuario INT NOT NULL,
+    id_producto INT NOT NULL,
+    puntuacion INT NOT NULL CHECK (puntuacion >= 1 AND puntuacion <= 5),
+    comentario TEXT,
+    fecha_resena TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(id_usuario) REFERENCES cuentas(id_cuenta),
+    FOREIGN KEY(id_producto) REFERENCES productos(id_producto)
+);
 CREATE TABLE reservas(
     id_reserva INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     usuario_reserva INT NOT NULL,
