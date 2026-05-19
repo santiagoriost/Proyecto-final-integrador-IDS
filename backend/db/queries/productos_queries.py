@@ -1,7 +1,28 @@
 from flask import jsonify
 
-def verificar_producto(id_producto, cursor):
+def obtener_producto(id_producto, cursor):
     query_verificacion = "SELECT * FROM productos WHERE id_producto = %s"
     cursor.execute(query_verificacion, (id_producto,))
     producto = cursor.fetchone()
     return producto
+
+def validar_tipo_dato(datos, atributo):
+    if str(datos[atributo]).strip() == "":
+        return jsonify({"error": "el atributo %s tiene un valor vacio" %atributo}), 400
+    elif atributo == "precio" and not isinstance(datos["precio"], (int, float)):
+        return jsonify({"error": "atributo %s no es un dato de tipo INT / FLOAT" %atributo}), 400
+    elif atributo in ("stock", "local_producto") and not str(datos[atributo]).isdigit():
+        return jsonify({"error": "atributo %s tiene que ser de tipo INT" %atributo}), 400
+    elif atributo in ("nombre", "tipo") and not isinstance(datos[atributo], str):
+        return jsonify({"error": "el atributo %s tiene que ser tipo str" %atributo}), 400
+
+def validar_atributos_necesarios(datos):
+    if not datos:
+        return jsonify({"error": "no se especificaron los atributos"}), 400
+    atributos_necesarios = ("nombre", "precio", "stock", "tipo", "local_producto")
+    for atributo in atributos_necesarios:
+        if atributo not in datos:
+            return jsonify({"error": "atributo %s no especificado" %atributo}), 400
+        error_tipo_dato = validar_tipo_dato(datos, atributo)
+        if error_tipo_dato:
+            return error_tipo_dato

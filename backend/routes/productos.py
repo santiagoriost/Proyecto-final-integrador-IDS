@@ -1,8 +1,7 @@
 from flask import Blueprint, jsonify, request
 from db.db_conn import get_connection
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from .utils import validar_atributos_producto
-from db.queries.productos_queries import verificar_producto
+from db.queries.productos_queries import obtener_producto, validar_atributos_necesarios, validar_tipo_dato
 from db.queries.local_queries import obtener_nombre_local
 productos_bp = Blueprint("productos", __name__)
 
@@ -64,19 +63,19 @@ def listar_productos():
             conn.close()
 
 @productos_bp.route("/", methods=["POST"])
-@jwt_required()
+#@jwt_required()
 def agregar_producto():
     conn = None
     cursor = None
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary = True)
-        usuario_logueado = get_jwt_identity()
-        if usuario_logueado["rol"] != "admin":
-            return jsonify({"error": "acceso denegado"}), 403
+        #usuario_logueado = get_jwt_identity()
+        #if usuario_logueado["rol"] != "admin":
+        #    return jsonify({"error": "acceso denegado"}), 403
+        
         datos = request.get_json()
-
-        error_validacion = validar_atributos_producto(datos)
+        error_validacion = validar_atributos_necesarios(datos)
         if error_validacion:
             return error_validacion
         
@@ -107,22 +106,21 @@ def agregar_producto():
             conn.close()
 
 @productos_bp.route("/<int:id_producto>", methods=["DELETE"])
-@jwt_required()
+#@jwt_required()
 def eliminar_producto(id_producto):
     conn = None
     cursor = None
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary = True)
-        usuario_logueado = get_jwt_identity()
-        if usuario_logueado["rol"] != "admin":
-            return jsonify({"error": "acceso denegado"}), 403
+        #usuario_logueado = get_jwt_identity()
+        #if usuario_logueado["rol"] != "admin":
+        #    return jsonify({"error": "acceso denegado"}), 403
 
-        query_verificacion = "SELECT * FROM productos WHERE id_producto = %s"
-        cursor.execute(query_verificacion, (id_producto,))
-        producto = cursor.fetchone()
+        producto = obtener_producto(id_producto, cursor)
         if not producto:
             return jsonify({"error": "producto no encontrado"}), 404
+
         query_eliminar = "DELETE FROM productos WHERE id_producto = %s"
         cursor.execute(query_eliminar, (id_producto,))
         conn.commit()
@@ -146,7 +144,7 @@ def listar_producto(id_producto):
         conn = get_connection()
         cursor = conn.cursor(dictionary = True)
 
-        producto = verificar_producto(id_producto, cursor)
+        producto = obtener_producto(id_producto, cursor)
         if not producto:
             return jsonify({"error": "producto no encontrado"}), 404
         
@@ -169,23 +167,23 @@ def listar_producto(id_producto):
             conn.close()
 
 @productos_bp.route("/<int:id_producto>", methods=["PUT"])
-@jwt_required()
+#@jwt_required()
 def actualizar_producto(id_producto):
     conn = None
     cursor = None
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary = True)
-        usuario_logueado = get_jwt_identity()
-        if usuario_logueado["rol"] != "admin":
-            return jsonify({"error": "acceso denegado"}), 403
+        #usuario_logueado = get_jwt_identity()
+        #if usuario_logueado["rol"] != "admin":
+        #    return jsonify({"error": "acceso denegado"}), 403
 
         datos = request.get_json()
-        error_validacion = validar_atributos_producto(datos)
+        error_validacion = validar_atributos_necesarios(datos)
         if error_validacion:
             return error_validacion
         
-        producto = verificar_producto(id_producto, cursor)
+        producto = obtener_producto(id_producto, cursor)
         if not producto:
             return jsonify({"error": "producto no encontrado"}), 404
 
@@ -222,45 +220,46 @@ def actualizar_producto(id_producto):
             conn.close()
 
 @productos_bp.route("/<int:id_producto>", methods=["PATCH"])
-@jwt_required()
+#@jwt_required()
 def modificar_producto(id_producto):
     conn = None
     cursor = None
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary = True)
-        usuario_logueado = get_jwt_identity()
-        if usuario_logueado["rol"] != "admin":
-            return jsonify({"error": "acceso denegado"}), 403
+
+        #usuario_logueado = get_jwt_identity()
+        #if usuario_logueado["rol"] != "admin":
+        #    return jsonify({"error": "acceso denegado"}), 403
+        
         datos = request.get_json()
         if not datos:
             return jsonify({"error": "atributos no especificados"}), 400
-        producto = verificar_producto(id_producto, cursor)
-        if not producto:
+        if not obtener_producto(id_producto, cursor):
             return jsonify({"error": "producto no encontrado"}), 404
+        
         atributos_validos = ["nombre", "precio", "stock", "tipo", "local"]
         query = "UPDATE productos SET "
         sentencias = []
+        valores = []
         for atributo in datos:
             if atributo not in atributos_validos:
                 return jsonify({"error": "atributo no valido"}), 400
-            if str(atributo).strip() == "":
-                return jsonify({"error": "el atributo %s tiene un valor vacio" %atributo}), 400
-            elif atributo == "precio" and not isinstance(atributo, (int, float)):
-                return jsonify({"error": "atributo %s tiene que ser INT o FLOAT" %atributo}), 400
-            elif atributo in ("stock", "local_producto") and not str(datos[atributo]).isdigit():
-                return jsonify({"error": "atributo %s tiene que ser de tipo INT" %atributo}), 400
-            elif atributo in ("nombre", "tipo") and not isinstance(datos[atributo], str):
-                return jsonify({"error": "el atributo %s tiene que ser tipo str" %atributo}), 400
-            sentencias.append(f"{atributo} = {datos[atributo]}")
-        query += valores.join(", ")
-        query += f"WHERE id_producto = {id_producto}"
-        cursor.execute(query)
+            error_tipo_dato = validar_tipo_dato(datos, atributo)
+            if error_tipo_dato:
+                return error_tipo_dato
+            sentencias.append(f"{atributo} = %s")
+            valores.append(datos[atributo])
+        query += ", ".join(sentencias)
+        query += f" WHERE id_producto = %s"
+        valores.append(id_producto)
+        cursor.execute(query, valores)
         conn.commit()
 
+        producto_modificado = obtener_producto(id_producto, cursor)
         return jsonify({
             "mensaje": "producto modificado correctamente",
-            "producto_modificacdo": producto
+            "producto_modificacdo": producto_modificado
         }), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
