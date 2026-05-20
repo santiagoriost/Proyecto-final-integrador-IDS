@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, request
 from db.db_conn import get_connection
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from db.queries.productos_queries import obtener_producto, validar_atributos_necesarios, validar_tipo_dato
-from db.queries.local_queries import obtener_nombre_local
+from backend.lib.productos_lib import obtener_producto, validar_atributos_necesarios, validar_tipo_dato
+from backend.lib.local_lib import obtener_nombre_local
 productos_bp = Blueprint("productos", __name__)
 
 @productos_bp.route("/", methods=["GET"])
