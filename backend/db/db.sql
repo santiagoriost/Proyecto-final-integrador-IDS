@@ -1,8 +1,8 @@
 CREATE DATABASE IF NOT EXISTS cafeteria;
 use cafeteria;
 
-CREATE TABLE cuentas(
-    id_cuenta INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE usuarios(
+    id_usuario INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(150) NOT NULL,
     apellido VARCHAR(150) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
@@ -16,7 +16,9 @@ CREATE TABLE locales(
     nombre VARCHAR(255) NOT NULL DEFAULT "Cafeteria 11",
     pais VARCHAR(150) NOT NULL DEFAULT "Argentina",
     provincia VARCHAR(150) NOT NULL DEFAULT "Buenos Aires",
-    direccion VARCHAR(255) NOT NULL DEFAULT "Av. Paseo Colon 860"
+    direccion VARCHAR(255) NOT NULL DEFAULT "Av. Paseo Colon 860",
+    horario_apertura TIME NOT NULL DEFAULT '08:00:00',
+    horario_cierre TIME NOT NULL DEFAULT '23:00:00'
 );
 CREATE TABLE productos(
     id_producto INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -34,7 +36,7 @@ CREATE TABLE  reseñas(
     puntuacion INT NOT NULL CHECK (puntuacion >= 1 AND puntuacion <= 5),
     comentario TEXT,
     fecha_resena TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(id_usuario) REFERENCES cuentas(id_cuenta),
+    FOREIGN KEY(id_usuario) REFERENCES usuarios(id_usuario),
     FOREIGN KEY(id_producto) REFERENCES productos(id_producto)
 );
 CREATE TABLE reservas(
@@ -44,6 +46,6 @@ CREATE TABLE reservas(
     fecha_reserva TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     fecha_entrega TIMESTAMP,
     estado VARCHAR(50) NOT NULL DEFAULT "En proceso",
-    FOREIGN KEY(usuario_reserva) REFERENCES cuentas(id_cuenta),
+    FOREIGN KEY(usuario_reserva) REFERENCES usuarios(id_usuario),
     FOREIGN KEY(producto_reserva) REFERENCES productos(id_producto)
 );

@@ -137,12 +137,47 @@ def mostrar_usuarios():
         if usuario_logueado["rol"] != "admin":
             return jsonify({"error": "Acceso denegado"}), 403
         
-        query_mostrar_users = "SELECT * FROM usuarios"
+        limit = int(request.args.get("limit", 10))
+        offset = int(request.args.get("offset", 0))
 
-        cursor.execute(query_mostrar_users)
-        usuarios = cursor.fetchall()
+        cursor.execute("SELECT COUNT(*) as total FROM usuarios")
+        total_usuarios = cursor.fetchone()["total"]
         
-        return jsonify({"usuarios": usuarios}), 200
+        query_mostrar_users = "SELECT * FROM usuarios LIMIT %s OFFSET %s"
+        cursor.execute(query_mostrar_users, (limit, offset))
+        usuarios = cursor.fetchall()
+
+        usuarios_a_mostrar = []
+        for usuario in usuarios:
+            usuarios_a_mostrar.append({
+                "id": usuario["id_usuario"],
+                "nombre": usuario["nombre"],
+                "apellido": usuario["apellido"],
+                "email": usuario["email"],
+                "rol": usuario["rol"]
+            })
+
+        base_url = request.base_url
+        def build_url(new_offset):
+            return f"{base_url}?limit={limit}&offset={new_offset}"
+
+        links = {
+            "first": {"href": build_url(0)},
+            "last": {"href": build_url(max(total_usuarios - (total_usuarios % limit), total_usuarios - limit))}
+        }
+
+        if offset > 0:
+            links["prev"] = {"href": build_url(max(offset - limit, 0))}
+
+        if offset + limit < total_usuarios:
+            links["next"] = {"href": build_url(offset + limit)}
+            
+        
+        return jsonify({
+            "usuarios": usuarios_a_mostrar,
+            "total": total_usuarios,
+            "_links": links
+        }), 200
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500

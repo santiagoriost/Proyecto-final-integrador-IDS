@@ -4,7 +4,8 @@ from routes.productos import productos_bp
 from routes.usuarios import usuarios_bp
 from routes.admin import administradores_bp
 from routes.reservas import reservas_bp
-from routes.reseñas import reseñas_bp   
+from routes.reseñas import reseñas_bp 
+from routes.locales import locales_bp  
 
 app = Flask(__name__)
 
@@ -17,6 +18,7 @@ app.register_blueprint(usuarios_bp, url_prefix="/usuarios")
 app.register_blueprint(administradores_bp, url_prefix="/administradores")
 app.register_blueprint(reseñas_bp, url_prefix="/reseñas")
 app.register_blueprint(reservas_bp, url_prefix="/reservas")
+app.register_blueprint(locales_bp, url_prefix="/locales")
 
 if __name__ == "__main__":
     app.run(port=5001, debug=True)
