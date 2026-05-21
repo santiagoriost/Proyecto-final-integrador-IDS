@@ -2,15 +2,11 @@ from flask import jsonify
 def obtener_registros(cursor, limit, offset):
     query = "SELECT * FROM productos LIMIT %s OFFSET %s"
     cursor.execute(query, (limit, offset))
-    lista_productos = cursor.fetchall()
-    if lista_productos:
-        return lista_productos
+    return cursor.fetchall()
 
 def cantidad_productos(cursor):
     cursor.execute("SELECT COUNT(*) as total FROM productos")
-    cant_productos = cursor.fetchone()["total"]
-    if cant_productos:
-        return cant_productos
+    return cursor.fetchone()["total"]
     
 def obtener_producto(id_producto, cursor):
     query_verificacion = "SELECT * FROM productos WHERE id_producto = %s"
