@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, request
 from db.db_conn import get_connection
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from backend.lib.productos_lib import obtener_producto, validar_atributos_necesarios, validar_tipo_dato
-from backend.lib.local_lib import obtener_nombre_local
+from lib.productos_lib import obtener_producto, validar_atributos_necesarios, validar_tipo_dato, obtener_registros, cantidad_productos, generar_links
+from lib.local_lib import obtener_nombre_local
 productos_bp = Blueprint("productos", __name__)
 
 @productos_bp.route("/", methods=["GET"])
@@ -15,41 +15,24 @@ def listar_productos():
         limit = int(request.args.get("_limit", 10))
         offset = int(request.args.get("_offset", 0))
 
-        query = "SELECT * FROM productos LIMIT %s OFFSET %s"
-        cursor.execute(query, (limit, offset))
-        lista_productos = cursor.fetchall()
+        lista_productos = obtener_registros(cursor, limit, offset)
         if not lista_productos:
             return jsonify({"error": "productos no encontrados"}), 404
+        cant_productos = cantidad_productos(cursor)
         
-        query_cant_productos = "SELECT COUNT(*) as total FROM productos"
-        cursor.execute(query_cant_productos)
-        cant_productos = cursor.fetchone()["total"]
-
         productos = []
         for producto in lista_productos:
+            nombre_local = obtener_nombre_local(producto["local_producto"], cursor)
             productos.append({
                 "id": producto["id_producto"],
                 "nombre": producto["nombre"],
                 "precio": producto["precio"],
                 "stock": producto["stock"],
                 "tipo": producto["tipo"],
-                "local": producto["local_producto"]
+                "local": nombre_local
             })
-        
         base_url = request.base_url
-        def build_url(new_offset):
-            params = f"_limit={limit}&_offset={new_offset}"
-            #despues podemos aplicar la opcion de buscar por atributo pero bueno ahora no tengo ganas
-            return f"{base_url}?{params}"
-        links = {
-            "_first": {"href": build_url(0)},
-            "_last": {"href": build_url(max(cant_productos - (cant_productos % 10), cant_productos - limit))}
-        }
-        if offset > 0:
-            links["_prev"] = {"href": build_url(max(offset - limit, 0))}
-        if offset + limit < cant_productos:
-            links["_next"] = {"href": build_url(offset + limit)}
-
+        links = generar_links(base_url, limit, cant_productos, offset)
         return jsonify({
             "productos": productos,
             "_links": links
