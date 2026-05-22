@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from flask_bcrypt import Bcrypt
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
 from db.db_conn import get_connection
 import secrets 
 from datetime import timedelta, datetime
@@ -22,10 +22,11 @@ def register():
         apellido = datos.get("apellido")
         email = datos.get("email")
         clave = datos.get("clave")
-
+        rol = datos.get("rol")
         if not nombre or not apellido or not email or not clave:
             return jsonify({"error": "Todos los campos son obligatorios"}), 400
-        
+        if not rol:
+            rol = "user"
         query_validacion_email = "SELECT id_usuario FROM usuarios WHERE email = %s"
         cursor.execute(query_validacion_email, (email,))
         if cursor.fetchone():
@@ -34,16 +35,17 @@ def register():
         clave_hashed = bcrypt.generate_password_hash(clave).decode("utf-8")
         
         query_insert = """
-        INSERT INTO usuarios(nombre, apellido, email, clave)
-        VALUES (%s, %s, %s, %s)"""
-        cursor.execute(query_insert, (nombre, apellido, email, clave_hashed))
+        INSERT INTO usuarios(nombre, apellido, email, clave, rol)
+        VALUES (%s, %s, %s, %s, %s)"""
+        cursor.execute(query_insert, (nombre, apellido, email, clave_hashed, rol))
         conn.commit()
         
         return jsonify({
             "id": cursor.lastrowid,
             "nombre": nombre,
             "apellido": apellido,
-            "email": email
+            "email": email,
+            "rol": rol
         }), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -79,7 +81,13 @@ def login():
         if not password_valida:
             return jsonify({"error": "Contraseña incorrecta"}), 401
         
-        token = create_access_token(identity= { "id": usuario["id_usuario"], "email": usuario["email"], "rol": usuario["rol"] })
+        claims = {
+            "nombre": usuario["nombre"],
+            "apellido": usuario["apellido"],
+            "email": usuario["email"],
+            "rol": usuario["rol"]
+        }
+        token = create_access_token(identity=str(usuario["id_usuario"]), additional_claims=claims)
         
         return jsonify({"message": "Login exitoso", "token": token, "usuario": {
             "id": usuario["id_usuario"],
@@ -111,9 +119,9 @@ def mostrar_perfil():
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
-        usuario_actual = get_jwt_identity()
-
-        return jsonify({"usuario": { "id": usuario_actual["id"], "nombre": usuario_actual["email"], "rol": usuario_actual["rol"]}}), 200
+        id_usuario = get_jwt_identity()
+        datos_usuario = get_jwt()
+        return jsonify({"usuario": { "id": id_usuario, "nombre": datos_usuario.get("nombre"), "rol": datos_usuario.get("rol")}}), 200
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -123,7 +131,7 @@ def mostrar_perfil():
         if conn:
             conn.close()
 
-@usuarios_bp.route("/usuarios", methods=["GET"])
+@usuarios_bp.route("/", methods=["GET"])
 @jwt_required()
 def mostrar_usuarios():
     conn = None
@@ -132,9 +140,9 @@ def mostrar_usuarios():
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
-        usuario_logueado = get_jwt_identity()
-        
-        if usuario_logueado["rol"] != "admin":
+        #id_usuario = get_jwt_identity()
+        datos_usuario = get_jwt()
+        if datos_usuario.get("rol") != "admin":
             return jsonify({"error": "Acceso denegado"}), 403
         
         limit = int(request.args.get("limit", 10))
@@ -187,7 +195,7 @@ def mostrar_usuarios():
         if conn:
             conn.close()
 
-@usuarios_bp.route("/usuarios/<int:id>", methods=["GET"])
+@usuarios_bp.route("/<int:id>", methods=["GET"])
 @jwt_required()
 def mostrar_usuario(id):
     conn = None
@@ -196,9 +204,10 @@ def mostrar_usuario(id):
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
-        usuario_logueado = get_jwt_identity()
+        id_usuario = get_jwt_identity()
+        datos_usuario = get_jwt()
         
-        if usuario_logueado["rol"] != "admin" and usuario_logueado["id"] != id:
+        if datos_usuario.get("rol") != "admin" and id_usuario != str(id):
             return jsonify({"error": "Acceso denegado"}), 403
         
         query_mostrar_user = "SELECT * FROM usuarios WHERE id_usuario = %s"
@@ -219,7 +228,7 @@ def mostrar_usuario(id):
         if conn:
             conn.close()
   
-@usuarios_bp.route("/usuarios/<int:id>", methods=["PUT"])
+@usuarios_bp.route("/<int:id>", methods=["PUT"])
 @jwt_required()
 def modificar_usuario(id):
     conn = None
@@ -228,9 +237,10 @@ def modificar_usuario(id):
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
-        usuario_logueado = get_jwt_identity()
+        id_usuario = get_jwt_identity()
+        datos_usuario = get_jwt()
 
-        if usuario_logueado["rol"] != "admin" and usuario_logueado["id"] != id:
+        if datos_usuario.get("rol") != "admin" and id_usuario != str(id):
             return jsonify({"error": "Acceso denegado"}), 403
 
         datos = request.get_json()
@@ -259,7 +269,7 @@ def modificar_usuario(id):
         if conn:
             conn.close()
 
-@usuarios_bp.route("/usuarios/<int:id>", methods=["DELETE"])
+@usuarios_bp.route("/<int:id>", methods=["DELETE"])
 @jwt_required()
 def eliminar_usuario(id):
     conn = None
@@ -268,9 +278,9 @@ def eliminar_usuario(id):
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
-        usuario_logueado = get_jwt_identity()
-
-        if usuario_logueado["rol"] != "admin" and usuario_logueado["id"] != id:
+        id_usuario = get_jwt_identity()
+        datos_usuario = get_jwt()
+        if datos_usuario.get("rol") != "admin" and id_usuario != str(id):
             return jsonify({"error": "Acceso denegado"}), 403
         
         validation_query = "SELECT id_usuario FROM usuarios WHERE id_usuario = %s"

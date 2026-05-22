@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from db.db_conn import get_connection
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt
 from lib.productos_lib import obtener_producto, validar_atributos_necesarios, validar_tipo_dato, obtener_registros, cantidad_productos, generar_links
 from lib.local_lib import obtener_nombre_local
 productos_bp = Blueprint("productos", __name__)
@@ -46,16 +46,16 @@ def listar_productos():
             conn.close()
 
 @productos_bp.route("/", methods=["POST"])
-#@jwt_required()
+@jwt_required()
 def agregar_producto():
     conn = None
     cursor = None
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary = True)
-        #usuario_logueado = get_jwt_identity()
-        #if usuario_logueado["rol"] != "admin":
-        #    return jsonify({"error": "acceso denegado"}), 403
+        datos_usuario = get_jwt()
+        if datos_usuario.get("rol") != "admin":
+            return jsonify({"error": "acceso denegado"}), 403
         
         datos = request.get_json()
         error_validacion = validar_atributos_necesarios(datos)
@@ -89,16 +89,16 @@ def agregar_producto():
             conn.close()
 
 @productos_bp.route("/<int:id_producto>", methods=["DELETE"])
-#@jwt_required()
+@jwt_required()
 def eliminar_producto(id_producto):
     conn = None
     cursor = None
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary = True)
-        #usuario_logueado = get_jwt_identity()
-        #if usuario_logueado["rol"] != "admin":
-        #    return jsonify({"error": "acceso denegado"}), 403
+        datos_usuario = get_jwt()
+        if datos_usuario.get("rol") != "admin":
+            return jsonify({"error": "acceso denegado"}), 403
 
         producto = obtener_producto(id_producto, cursor)
         if not producto:
@@ -150,16 +150,16 @@ def listar_producto(id_producto):
             conn.close()
 
 @productos_bp.route("/<int:id_producto>", methods=["PUT"])
-#@jwt_required()
+@jwt_required()
 def actualizar_producto(id_producto):
     conn = None
     cursor = None
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary = True)
-        #usuario_logueado = get_jwt_identity()
-        #if usuario_logueado["rol"] != "admin":
-        #    return jsonify({"error": "acceso denegado"}), 403
+        datos_usuario = get_jwt()
+        if datos_usuario.get("rol") != "admin":
+            return jsonify({"error": "acceso denegado"}), 403
 
         datos = request.get_json()
         error_validacion = validar_atributos_necesarios(datos)
@@ -203,7 +203,7 @@ def actualizar_producto(id_producto):
             conn.close()
 
 @productos_bp.route("/<int:id_producto>", methods=["PATCH"])
-#@jwt_required()
+@jwt_required()
 def modificar_producto(id_producto):
     conn = None
     cursor = None
@@ -211,9 +211,9 @@ def modificar_producto(id_producto):
         conn = get_connection()
         cursor = conn.cursor(dictionary = True)
 
-        #usuario_logueado = get_jwt_identity()
-        #if usuario_logueado["rol"] != "admin":
-        #    return jsonify({"error": "acceso denegado"}), 403
+        datos_usuario = get_jwt()
+        if datos_usuario.get("rol") != "admin":
+            return jsonify({"error": "acceso denegado"}), 403
         
         datos = request.get_json()
         if not datos:
