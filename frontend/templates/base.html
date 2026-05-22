@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title%}Cafeteria 11{% endblock %}</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='styles/base.css')}}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header>
+    <nav class="navbar">
+        <div class="titulo">Cafeteria 11</div>
+        <ul class="nav-links">
+            <li><a href="#">Inicio</a></li>
+            <li><a href="#">Productos</a></li>
+            <li><a href="#">Reservas</a></li>
+            <li><a href="#">Ubicacion</a></li>
+            <li><a href="#">Iniciar sesion</a></li>
+            <li><a href="#">Registrarse</a></li>
+        </ul>
+    </nav>
+    </header>
+    <main>
+    {% block contenido%}{% endblock %}
+    </main>
+    <footer>
+        <ul class="footer-links">
+            <li>&copy; 2026 Cafeteria 11. Todos los derechos reservados.</p></li>
+            <li><a href="https://instagram.com"><img class="logo" src="{{url_for('static', filename='imagenes/instagram_logo.png')}}" alt="Instagram"></a></li>
+            <li>cafeteria11@gmail.com</li>
+            <li>Contacto: 1121832</li>
+            <li>Av. Paseo Colon 860</li>
+        </ul>
+    </footer>
+</body>
+</html>
