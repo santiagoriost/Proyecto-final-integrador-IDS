@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Iniciar sesion{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{url_for('static', filename='styles/login.css')}}">
+{% endblock %}
+{% block contenido %}
+<div class="contenedor_form">
+<form action="{{url_for('login.manejo_login')}}" method="post">
+    <div class="form_group">
+    <label for="email_usuario">Email:</label>
+    <input type="email" id="email_usuario" name="form_email" placeholder="Ingrese su email...">
+    <label for="clave_usuario">Contraseña:</label>
+    <input type="password" id="clave_usuario" name="form_clave" placeholder="Ingrese su contraseña...">
+    </div>
+
+    <div class="form_actions">
+        <button type="submit">Iniciar sesion</button>
+    </div>
+</form>
+<a href="#"><button id="nueva_clave_bttn">¿Olvidaste tu contraseña?</button></a>
+<a href="#"><button id="nueva_cuenta_bttn">Crear cuenta nueva</button></a>
+</div>
+
+{% endblock %}
