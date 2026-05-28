@@ -1,8 +1,27 @@
 {% extends "base.html" %}
 {% block title %}Inicio{% endblock %}
-{% block extra_css %}{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{url_for('static', filename='styles/inicio.css')}}">
+{% endblock %}
 {% block contenido %}
 <!-- contenido de la pagina inicio -->
-
-<p>test 1</p>
+ <h1 id="titulo_inicio">BIENVENIDO A CAFETERIA 11</h1>
+<img src="{{url_for('static', filename='imagenes/cafeteria_ejemplo.jpg')}}" id='img_portada' alt="cafeteria">
+<div class="contenedor_inicio">
+    <h2>Nuestros mejores productos</h2>
+    <div id="contenedor_top3">
+        <div class="unidad_top">
+            <h3>ESPRESSO</h3>
+            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Unde veniam aliquam laborum iusto, eos expedita minima, impedit voluptates ducimus aspernatur deleniti eligendi enim in debitis inventore consectetur voluptate! Quia, recusandae?</p>
+        </div>
+        <div class="unidad_top">
+            <h3>CAPUCCINO</h3>
+            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Unde veniam aliquam laborum iusto, eos expedita minima, impedit voluptates ducimus aspernatur deleniti eligendi enim in debitis inventore consectetur voluptate! Quia, recusandae?</p>
+        </div>
+        <div class="unidad_top">
+            <h3>LATTE</h3>
+            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Unde veniam aliquam laborum iusto, eos expedita minima, impedit voluptates ducimus aspernatur deleniti eligendi enim in debitis inventore consectetur voluptate! Quia, recusandae?</p>
+        </div>
+    </div>
+</div>
 {% endblock %}
