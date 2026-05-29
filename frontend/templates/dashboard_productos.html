@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Dashboard Productos{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apex-grid/dist/themes/bootstrap.css">
+<link rel="stylesheet" href="{{url_for('static', filename='styles/dashboard.css')}}">
+{% endblock %}
+{% block contenido %}
+<div class="contenedor_dashboard">
+    <div class="tabla_responsiva">
+        <table class="tabla_productos">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Tipo</th>
+                    <th>Local</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                    {% for producto in productos %}
+                    <tr>
+                        <td>{{producto.id}}</td>
+                        <td>{{producto.nombre}}</td>
+                        <td>{{producto.precio}}</td>
+                        <td>{{producto.stock}}</td>
+                        <td>{{producto.tipo}}</td>
+                        <td>{{producto.local}}</td>
+                        <td>
+                            <button>Editar</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% if links %}
+<div class="contenedor_paginacion">
+    {% if links._first %}
+        <a href="{{url_for('dashboard.dashboard_productos')}}?_limit=10&_offset=0" class="btn_pag">Inicio</a>
+    {% endif %}
+
+    {% if links._prev %}
+        <a href="{{url_for('dashboard.dashboard_productos')}}?{{links._prev.href.split('?')[1]}}" class="btn_pag">Anterior</a>
+    {% endif %}
+
+    {% if links._next %}
+        <a href="{{url_for('dashboard.dashboard_productos')}}?{{links._next.href.split('?')[1]}}" class="btn_pag">Siguiente</a>
+    {% endif %}
+
+    {% if links._last %}
+        <a href="{{url_for('dashboard.dashboard_productos')}}?{{links._last.href.split('?')[1]}}" class="btn_pag">Ultimo</a>
+    {% endif %}
+</div>
+{% endif %}
+<!-- <script src="{{url_for('static', filename='js/dashboard.js')}}"></script> -->
+{% endblock %}

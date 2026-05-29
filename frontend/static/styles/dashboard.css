@@ -1,0 +1,28 @@
+.tabla_responsiva{
+    margin: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    border-style: solid;
+}
+/* Estilos de la tabla */
+.tabla_productos {
+    width: 100%;
+    border-collapse: collapse; /* Elimina el espacio doble entre bordes */
+    background-color: #ffffff;
+    text-align: center;
+}
+
+.tabla_productos thead tr{
+    background-color: #eae4e4; /* Un tono oscuro elegante */
+    font-weight: bold;
+}
+.tabla_productos thead tr th{
+    font-size: 20px;
+}
+
+.contenedor_paginacion{
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
