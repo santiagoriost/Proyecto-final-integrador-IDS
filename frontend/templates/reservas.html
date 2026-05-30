@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Reservas{% endblock %}
+
+{% block contenido %}
+
+<section class="reservas-container">
+    <h1>Titulo-reserva>Reserva tu experiencia</h1>
+    <form class="form-reserva">
+        <div class="grupo-form">
+            <label> Nombre Completo </label>
+            <input type="text" placeholder="Ingrese su nombre completo">
+        </div>
+        <div class="grupo-form">
+            <label>Correo Electronico</label>
+            <input type="email" placeholder="Ingrese su correo electronico">
+        </div>
+         <div class="grupo-form">
+            <label>Fecha</label>
+            <input type="date">
+        </div>
+        <div class="grupo-form">
+            <label>Hora</label>
+            <input type="time">
+        </div>
+
+        <div class="grupo-form">
+            <label>Número de personas</label>
+            <input type="number" min="1" max="20">
+        </div>
+        <div class="grupo-form">
+            <label>Tipo de reserva</label>
+            <select>
+                <option>Mesa</option>
+                <option>Producto</option>
+            </select>
+        </div>
+        <div class="grupo-form">
+            <label>Producto</label>
+            <select>
+                <option>Espresso</option>
+                <option>Capuccino</option>
+                <option>Latte</option>
+            </select>
+        </div>
+        <div class="grupo-form">
+            <label>Comentarios</label>
+            <textarea rows="5" placeholder="Escribe algo..."></textarea>
+        </div>
+        <button type="submit" class="btn-reserva">
+            Reservar ahora
+        </button>
+    </form>
+</section>
+
+
+
+{% endblock %}
