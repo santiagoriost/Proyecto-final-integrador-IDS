@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Producto{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{url_for('static', filename='styles/dashboard_producto.css')}}">
+{% endblock %}
+{% block contenido %}
+<div class="contenedor_producto">
+    <h2>Detalle del producto {{producto.id}}</h2>
+    <div>
+        <form action="{{url_for('dashboard.gestionar_producto', id_producto = producto.id)}}" method="post">
+            <div class="form_producto">
+                <label for="nombre_producto">Nombre:</label>
+                <input type="text" id="nombre_producto" name="fproducto_nombre" value="{{producto.nombre}}">
+                <label for="precio_producto">Precio:</label>
+                <input type="number" id="precio_producto" name="fproducto_precio" value="{{producto.precio}}">
+                <label for="stock_producto">Stock:</label>
+                <input type="number" id="stock_producto" name="fproducto_stock" value="{{producto.stock}}">
+                <label for="tipo_producto">Categoria:</label>
+                <input type="text" id="tipo_producto" name="fproducto_tipo" value="{{producto.tipo}}">
+                <label for="local_producto">Local:</label>
+                <input type="text" id="local_producto" name="fproducto_local" value="{{producto.local}}">
+            </div>
+            <div class="form_bttn_modificar">
+                <button type="submit">Guardar</button>
+            </div>
+        </form>
+        <form action="{{url_for('dashboard.eliminar_producto', id_producto = producto.id)}}" method="post">
+            <button type="submit" class="bttn_eliminar">Eliminar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
