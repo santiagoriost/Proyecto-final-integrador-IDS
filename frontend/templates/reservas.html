@@ -1,11 +1,14 @@
 {% extends "base.html" %}
 
 {% block title %}Reservas{% endblock %}
-
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/reservas.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock %}
 {% block contenido %}
 
 <section class="reservas-container">
-    <h1>Titulo-reserva>Reserva tu experiencia</h1>
+    <h1 class=" titulo-reserva">Reserva tu experiencia</h1>
     <form class="form-reserva">
         <div class="grupo-form">
             <label> Nombre Completo </label>
@@ -52,7 +55,6 @@
         </button>
     </form>
 </section>
-
-
-
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="{{ url_for('static', filename='js/reservas.js') }}"></script>
 {% endblock %}
