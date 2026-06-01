@@ -29,7 +29,7 @@ CREATE TABLE productos(
     local_producto INT NOT NULL,
     FOREIGN KEY(local_producto) REFERENCES locales(id_local)
 );
-CREATE TABLE  reseñas(
+CREATE TABLE  resenas(
     id_resena INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT NOT NULL,
     id_producto INT NOT NULL,
@@ -39,15 +39,21 @@ CREATE TABLE  reseñas(
     FOREIGN KEY(id_usuario) REFERENCES usuarios(id_usuario),
     FOREIGN KEY(id_producto) REFERENCES productos(id_producto)
 );
-CREATE TABLE reservas(
+CREATE TABLE reservas (
     id_reserva INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    usuario_reserva INT NOT NULL,
-    producto_reserva INT NOT NULL,
-    fecha_reserva TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    fecha_entrega TIMESTAMP,
-    estado VARCHAR(50) NOT NULL DEFAULT "En proceso",
-    FOREIGN KEY(usuario_reserva) REFERENCES usuarios(id_usuario),
-    FOREIGN KEY(producto_reserva) REFERENCES productos(id_producto)
+    usuario_reserva INT NULL,
+    producto_reserva INT NULL,
+    nombre_cliente VARCHAR(100) NOT NULL,
+    correo_cliente VARCHAR(120) NOT NULL,
+    tipo_reserva ENUM('mesa', 'producto') NOT NULL,
+    fecha_reserva DATE NOT NULL,
+    hora_reserva TIME NOT NULL,
+    numero_personas INT NULL,
+    comentarios TEXT,
+    estado VARCHAR(50) NOT NULL DEFAULT 'En proceso',
+    fecha_creacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_reserva) REFERENCES usuarios(id_usuario),
+    FOREIGN KEY (producto_reserva) REFERENCES productos(id_producto)
 );
 
 INSERT INTO productos (nombre, descripcion, precio, categoria, imagen_url, disponible, destacado) VALUES
