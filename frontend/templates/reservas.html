@@ -1,56 +1,87 @@
 {% extends "base.html" %}
 
 {% block title %}Reservas{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/reservas.css') }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock %}
+
 {% block contenido %}
-
 <section class="reservas-container">
-    <h1 class=" titulo-reserva">Reserva tu experiencia</h1>
-    <form class="form-reserva">
-        <div class="grupo-form">
-            <label> Nombre Completo </label>
-            <input type="text" placeholder="Ingrese su nombre completo">
+    <h1 class="titulo-reserva">
+        Reserva tu experiencia
+    </h1>
+    <form class="formulario-reserva" method="POST" action="{{ url_for('inicio.crear_reserva') }}">
+        <div class="grupo-campo">
+            <label>Nombre Completo</label>
+            <input
+                type="text"
+                name="nombre_cliente"
+                placeholder="Ingrese su nombre completo"
+                required
+            >
         </div>
-        <div class="grupo-form">
-            <label>Correo Electronico</label>
-            <input type="email" placeholder="Ingrese su correo electronico">
+        <div class="grupo-campo">
+            <label>Correo Electrónico</label>
+            <input
+                type="email"
+                name="correo_cliente"
+                placeholder="Ingrese su correo electrónico"
+                required
+            >
         </div>
-         <div class="grupo-form">
+        <div class="grupo-campo">
             <label>Fecha</label>
-            <input type="date">
+            <input
+                type="date"
+                name="fecha_reserva"
+                required
+            >
         </div>
-        <div class="grupo-form">
+        <div class="grupo-campo grupo-hora">
             <label>Hora</label>
-            <input type="time">
+            <div class="caja-hora" id="hora-box">
+                <input
+                    type="text"
+                    id="hora-input"
+                    name="hora_reserva"
+                    placeholder="Selecciona una hora"
+                    readonly
+                    required
+                >
+                <div class="popup-hora" id="hora-popup">
+                    <div class="scroll-horas" id="hora-scroll"></div>
+                    <span class="separador-hora">:</span>
+                    <div class="scroll-minutos" id="minuto-scroll"></div>
+                </div>
+            </div>
         </div>
-
-        <div class="grupo-form">
+        <div class="grupo-campo">
             <label>Número de personas</label>
-            <input type="number" min="1" max="20">
+            <input
+                type="number"
+                name="numero_personas"
+                min="1"
+                max="20"
+                required
+            >
         </div>
-        <div class="grupo-form">
+        <div class="grupo-campo">
             <label>Tipo de reserva</label>
-            <select>
-                <option>Mesa</option>
-                <option>Producto</option>
-            </select>
+            <div class="select-personalizado" id="select-reserva">
+                <input type="hidden" name="tipo_reserva" id="tipo-reserva" value="mesa">
+                <button type="button" class="select-boton">
+                    <span id="texto-tipo-reserva">Mesa</span>
+                    <span class="select-flecha">⌄</span>
+                </button>
+                <div class="select-opciones">
+                    <button type="button" class="select-opcion active" data-value="mesa">Mesa</button>
+                    <button type="button" class="select-opcion" data-value="producto">Producto</button>
+                </div>
+            </div>
         </div>
-        <div class="grupo-form">
-            <label>Producto</label>
-            <select>
-                <option>Espresso</option>
-                <option>Capuccino</option>
-                <option>Latte</option>
-            </select>
-        </div>
-        <div class="grupo-form">
-            <label>Comentarios</label>
-            <textarea rows="5" placeholder="Escribe algo..."></textarea>
-        </div>
-        <button type="submit" class="btn-reserva">
+        <button type="submit" class="boton-reserva">
             Reservar ahora
         </button>
     </form>

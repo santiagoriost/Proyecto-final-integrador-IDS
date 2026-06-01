@@ -1,5 +1,8 @@
 from flask import Blueprint, jsonify, request
 from db.db_conn import get_connection
+from datetime import datetime, timedelta
+from flask_mail import Message
+from extensions import mail
 
 reservas_bp = Blueprint("reservas", __name__)
 
@@ -67,57 +70,130 @@ def listar_reservas():
             conn.close()
 
 @reservas_bp.route("/", methods=["POST"])
+@reservas_bp.route("/", methods=["POST"])
 def agregar_reserva():
     conn = None
     cursor = None
+
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
         datos = request.get_json()
 
-        Atributos_necesarios = ["usuario_reserva", "producto_reserva", "fecha_entrega"]
+        atributos_necesarios = [
+            "nombre_cliente",
+            "correo_cliente",
+            "tipo_reserva",
+            "fecha_reserva",
+            "hora_reserva"
+        ]
 
-        for atributo in Atributos_necesarios:
+        for atributo in atributos_necesarios:
             if atributo not in datos:
                 return jsonify({"error": f"Falta el atributo '{atributo}'"}), 400
+
             if str(datos[atributo]).strip() == "":
                 return jsonify({"error": f"El atributo '{atributo}' tiene un valor vacío"}), 400
-        query_usuario = "SELECT id_cuenta FROM cuentas WHERE id_cuenta = %s"
-        cursor.execute(query_usuario, (datos["usuario_reserva"],))
-        usuario = cursor.fetchone()
 
-        if not usuario:
-            return jsonify({"error": "usuario no encontrado"}), 404     
-        
+        nombre_cliente = datos["nombre_cliente"]
+        correo_cliente = datos["correo_cliente"]
+        tipo_reserva = datos["tipo_reserva"]
+        fecha_reserva = datos["fecha_reserva"]
+        fecha_mysql = datetime.strptime(
+            fecha_reserva,
+            "%d/%m/%Y"
+        ).strftime("%Y-%m-%d")
+        hora_reserva = datos["hora_reserva"]
+        numero_personas = datos.get("numero_personas")
+        producto_reserva = datos.get("producto_reserva")
+        comentarios = datos.get("comentarios")
 
-        query_producto = "SELECT id_producto FROM productos WHERE id_producto = %s"
-        cursor.execute(query_producto, (datos["producto_reserva"],))
-        producto = cursor.fetchone()
-
-        if not producto:
-            return jsonify({"error": "producto no encontrado"}), 404
-            
-        valores = (
-            datos["usuario_reserva"],
-            datos["producto_reserva"],
-            datos["fecha_entrega"]
+        fecha_hora_reserva = datetime.strptime(
+            f"{fecha_reserva} {hora_reserva}",
+            "%d/%m/%Y %H:%M"
         )
-            
-        query = """
-        INSERT INTO reservas (usuario_reserva, producto_reserva, fecha_entrega)
-        VALUES (%s, %s, %s)"""
-        cursor.execute(query, valores)
+
+        limite_inicio = fecha_hora_reserva - timedelta(minutes=20)
+        limite_fin = fecha_hora_reserva + timedelta(minutes=20)
+        query_validar_reserva = """
+        SELECT id_reserva
+        FROM reservas
+        WHERE fecha_reserva = %s
+        AND TIMESTAMP(fecha_reserva, hora_reserva) BETWEEN %s AND %s
+        AND estado != 'Cancelada'
+        """
+        cursor.execute(
+            query_validar_reserva,
+            (fecha_mysql, limite_inicio, limite_fin)
+        )
+        reserva_existente = cursor.fetchone()
+        if reserva_existente:
+            return jsonify({
+                "error": "Ya existe una reserva asociada a este correo en un rango cercano de 20 minutos"
+            }), 400
+        query_insertar = """
+        INSERT INTO reservas (
+            nombre_cliente,
+            correo_cliente,
+            tipo_reserva,
+            fecha_reserva,
+            hora_reserva,
+            numero_personas,
+            producto_reserva,
+            comentarios,
+            estado
+        )
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        valores = (
+            nombre_cliente,
+            correo_cliente,
+            tipo_reserva,
+            fecha_mysql,
+            hora_reserva,
+            numero_personas,
+            producto_reserva,
+            comentarios,
+            "En proceso"
+        )
+        cursor.execute(query_insertar, valores)
         conn.commit()
+        mensaje = Message(
+            subject="Reserva confirmada - Cafeteria 11",
+            sender="jcunduri@fi.uba.ar",
+            recipients=[correo_cliente]
+        )
+
+        mensaje.body = f"""
+        Hola {nombre_cliente},
+
+        Tu reserva fue realizada con éxito 😎
+
+        📅 Fecha: {fecha_reserva}
+        ⏰ Hora: {hora_reserva}
+        👥 Personas: {numero_personas}
+        ☕ Tipo: {tipo_reserva}
+
+        Gracias por reservar en Cafeteria 11.
+        """
+        mail.send(mensaje)
 
         return jsonify({
             "id": cursor.lastrowid,
-            "usuario_reserva": datos["usuario_reserva"],
-            "producto_reserva": datos["producto_reserva"],
-            "fecha_entrega": datos["fecha_entrega"],
-            "estado": "en proceso"
+            "mensaje": "Reserva creada correctamente",
+            "reserva": {
+                "nombre_cliente": nombre_cliente,
+                "correo_cliente": correo_cliente,
+                "tipo_reserva": tipo_reserva,
+                "fecha_reserva": fecha_reserva,
+                "hora_reserva": hora_reserva,
+                "numero_personas": numero_personas,
+                "producto_reserva": producto_reserva,
+                "comentarios": comentarios,
+                "estado": "En proceso"
+            }
         }), 201
-        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
@@ -125,7 +201,6 @@ def agregar_reserva():
             cursor.close()
         if conn:
             conn.close()
- 
 @reservas_bp.route("/<int:id_reserva>", methods=["GET"])
 def obtener_reserva(id_reserva):
     conn = None

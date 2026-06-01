@@ -32,7 +32,8 @@
         0 0 35px rgba(255, 221, 190, 0.95);
     transform: translateY(-3px);
 }
-.form-reserva{
+
+.formulario-reserva{
     width: 100%;
     max-width: 950px;
     background: rgba(255, 255, 255, 0.90);
@@ -45,19 +46,19 @@
     grid-template-columns: 1fr 1fr;
     gap: 22px 28px;
 }
-.grupo-form{
+.grupo-campo{
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
-.grupo-form label{
+.grupo-campo label{
     font-size: 15px;
     color: #5b4636;
     font-weight: 700;
 }
-.grupo-form input,
-.grupo-form select,
-.grupo-form textarea{
+.grupo-campo input,
+.grupo-campo select,
+.grupo-campo textarea{
     padding: 16px 18px;
     border-radius: 18px;
     border: 1px solid #d7d2ce;
@@ -66,30 +67,27 @@
     color: #4b3a2d;
     transition: 0.3s ease;
 }
-.grupo-form input:hover,
-.grupo-form select:hover,
-.grupo-form textarea:hover{
+.grupo-campo input:hover,
+.grupo-campo select:hover,
+.grupo-campo textarea:hover{
     border-color: #b08968;
     transform: translateY(-2px);
 }
-.grupo-form input:focus,
-.grupo-form select:focus,
-.grupo-form textarea:focus{
+.grupo-campo input:focus,
+.grupo-campo select:focus,
+.grupo-campo textarea:focus{
     outline: none;
     border-color: #b08968;
     box-shadow:
         0 0 0 5px rgba(176,137,104,0.15),
         0 10px 25px rgba(73,44,29,0.08);
 }
-.grupo-form textarea{
+.grupo-campo textarea{
     resize: none;
     min-height: 140px;
 }
-.grupo-form:nth-last-child(2),
-.btn-reserva{
+.boton-reserva{
     grid-column: 1 / -1;
-}
-.btn-reserva{
     margin-top: 10px;
     padding: 18px;
     border: none;
@@ -103,13 +101,13 @@
     box-shadow:
         0 12px 28px rgba(111,78,55,0.25);
 }
-.btn-reserva:hover{
+.boton-reserva:hover{
     transform: translateY(-4px);
     box-shadow:
         0 18px 38px rgba(111,78,55,0.35);
     filter: brightness(1.05);
 }
-.btn-reserva:active{
+.boton-reserva:active{
     transform: scale(0.98);
     background: #ffd4a3d8;
     color: #6f4e37;
@@ -117,92 +115,251 @@
     box-shadow:
         0 8px 18px rgba(73,44,29,0.20);
 }
-/* Números del calendario más visibles */
+/* Calendario */
+
 .flatpickr-day{
     color: #3f2a1f !important;
     font-weight: 800 !important;
 }
-
 .flatpickr-day.prevMonthDay,
 .flatpickr-day.nextMonthDay{
     color: #9f8a7a !important;
     opacity: 0.55 !important;
 }
-
 .flatpickr-day:hover{
     background: #7A5238 !important;
     color: #fffaf5 !important;
-
     box-shadow:
         0 0 22px rgba(122, 82, 56, 0.38),
         0 10px 25px rgba(73, 44, 29, 0.25) !important;
-
     transform: translateY(-3px) scale(1.08);
 }
-
 .flatpickr-day.selected{
     background: #7A5238 !important;
     color: #fffaf5 !important;
-
     box-shadow:
         0 0 26px rgba(122, 82, 56, 0.45),
         0 12px 28px rgba(73, 44, 29, 0.30) !important;
 }
-
-.flatpickr-time{
-    width: 260px !important;
-    height: auto !important;
-
-    background: #F6EEE3 !important;
-    border-radius: 22px !important;
-
-    padding: 12px !important;
-
+.flatpickr-calendar{
+    background: rgba(247, 234, 214, 0.96) !important;
+    border: none !important;
+    border-radius: 24px !important;
+    backdrop-filter: blur(10px);
     box-shadow:
-        0 18px 40px rgba(73, 44, 29, 0.22) !important;
+        0 20px 45px rgba(73,44,29,0.22) !important;
 }
-
-.flatpickr-time .numInputWrapper{
-    width: 72px !important;
+/* Selector de hora */
+.grupo-hora{
+    position: relative;
 }
-
-.flatpickr-time input,
-.flatpickr-time .flatpickr-am-pm{
-    height: 42px !important;
-    line-height: 42px !important;
-
-    background: #E8D3BE !important;
-    color: #3f2a1f !important;
-
-    border-radius: 14px !important;
-
-    font-size: 16px !important;
-    font-weight: 800 !important;
-
-    text-align: center !important;
-
-    transition: 0.25s ease !important;
+.caja-hora{
+    width: 100%;
 }
-
-.flatpickr-time .flatpickr-time-separator{
-    color: #3f2a1f !important;
-    font-size: 18px !important;
-    font-weight: 900 !important;
-}
-
-.flatpickr-time input:hover,
-.flatpickr-time .flatpickr-am-pm:hover{
-    background: #7A5238 !important;
-    color: #fffaf5 !important;
-
+.popup-hora{
+    position: absolute;
+    top: 78px;
+    left: 0;
+    width: 100px;
+    background: rgba(247, 234, 214, 0.96);
+    border-radius: 24px;
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(10px);
     box-shadow:
-        0 0 18px rgba(122, 82, 56, 0.35);
+        0 20px 45px rgba(73,44,29,0.22);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: 0.3s ease;
+    z-index: 50;
+}
+.caja-hora.active .popup-hora{
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.scroll-horas,
+.scroll-minutos{
+    width: 78px;
+    height: 240px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-right: 4px;
+    scrollbar-width: none;
+}
+.scroll-horas::-webkit-scrollbar,
+.scroll-minutos::-webkit-scrollbar{
+    display: none;
+}
+.item-hora,
+.item-minuto{
+    border: none;
+    outline: none;
+    appearance: none;
+    min-height: 46px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16px;
+    background: #E8D3BE;
+    color: #3f2a1f;
+    font-size: 18px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+.item-hora:hover,
+.item-minuto:hover{
+    background: #7A5238;
+    color: #fffaf5;
+    transform: translateY(-2px);
+    box-shadow:
+        0 0 22px rgba(122,82,56,0.35);
+}
+.item-hora.active,
+.item-minuto.active{
+    background: #43342C;
+    color: white;
+    box-shadow:
+        0 10px 24px rgba(73,44,29,0.28);
+}
+.toast{
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    min-width: 320px;
+    max-width: 420px;
+    padding: 18px 22px;
+    border-radius: 18px;
+    color: white;
+    font-weight: 700;
+    font-size: 15px;
+    backdrop-filter: blur(12px);
+    box-shadow:
+        0 15px 35px rgba(0,0,0,0.18);
+    z-index: 9999;
+    animation:
+        aparecerToast 0.45s ease,
+        desaparecerToast 0.45s ease 4s forwards;
+}
+.toast--success{
+    background: linear-gradient(
+        135deg,
+        #3f7d5f,
+        #58a17c
+    );
+}
+.toast--error{
+    background: linear-gradient(
+        135deg,
+        #9b3d3d,
+        #d15d5d
+    );
+}
+@keyframes aparecerToast{
+    from{
+        opacity: 0;
+        transform:
+            translateX(120px)
+            scale(0.92);
+    }
+    to{
+        opacity: 1;
+        transform:
+            translateX(0)
+            scale(1);
+    }
+}
+@keyframes desaparecerToast{
+    to{
+        opacity: 0;
+        transform:
+            translateX(120px)
+            scale(0.92);
+    }
+}
+.select-personalizado{
+    position: relative;
+}
 
+.select-boton{
+    width: 100%;
+    padding: 16px 18px;
+
+    border-radius: 18px;
+    border: 1px solid #d7d2ce;
+    background: rgba(255,255,255,0.75);
+    color: #4b3a2d;
+    font-size: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.select-boton:hover{
+    border-color: #b08968;
     transform: translateY(-2px);
 }
-
-.flatpickr-time input:focus{
-    outline: none !important;
-    background: #7A5238 !important;
-    color: #fffaf5 !important;
+.select-personalizado.active .select-boton{
+    border-color: #b08968;
+    box-shadow:
+        0 0 0 5px rgba(176,137,104,0.15),
+        0 10px 25px rgba(73,44,29,0.08);
+}
+.select-flecha{
+    font-size: 18px;
+    transition: 0.3s ease;
+}
+.select-personalizado.active .select-flecha{
+    transform: rotate(180deg);
+}
+.select-opciones{
+    position: absolute;
+    top: 62px;
+    left: 0;
+    width: 100%;
+    background: rgba(247, 234, 214, 0.96);
+    border-radius: 18px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow:
+        0 20px 45px rgba(73,44,29,0.22);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: 0.25s ease;
+    z-index: 80;
+}
+.select-personalizado.active .select-opciones{
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.select-opcion{
+    border: none;
+    outline: none;
+    padding: 14px;
+    border-radius: 14px;
+    background: #E8D3BE;
+    color: #3f2a1f;
+    font-weight: 800;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+.select-opcion:hover,
+.select-opcion.active{
+    background: #43342C;
+    color: white;
+    box-shadow:
+        0 10px 24px rgba(73,44,29,0.28);
 }

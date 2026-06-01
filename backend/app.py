@@ -6,12 +6,17 @@ from routes.admin import administradores_bp
 from routes.reservas import reservas_bp
 from routes.reseñas import reseñas_bp 
 from routes.locales import locales_bp  
-
+from extensions import mail
 app = Flask(__name__)
+app.config["MAIL_SERVER"] = "smtp.gmail.com"
+app.config["MAIL_PORT"] = 587
+app.config["MAIL_USE_TLS"] = True
 
+app.config["MAIL_USERNAME"] = "jcunduri@fi.uba.ar"
+app.config["MAIL_PASSWORD"] = "iozymlankfcbasbk"
 app.config["SECRET_KEY"] = "despues_vemos_que_pongo"
 jwt = JWTManager(app)
-
+mail.init_app(app)
 
 app.register_blueprint(productos_bp, url_prefix="/productos")
 app.register_blueprint(usuarios_bp, url_prefix="/usuarios")
