@@ -49,3 +49,22 @@ CREATE TABLE reservas(
     FOREIGN KEY(usuario_reserva) REFERENCES usuarios(id_usuario),
     FOREIGN KEY(producto_reserva) REFERENCES productos(id_producto)
 );
+
+INSERT INTO productos (nombre, descripcion, precio, categoria, imagen_url, disponible, destacado) VALUES
+('Espresso Doble', 'Dos shots de espresso corto con un perfil intenso, notas de chocolate amargo y una crema densa.', 2200.0, 'Café', 'https://images.unsplash.com/photo-1510972527409-cef1903972fa?q=80&w=500', 1, 0),
+
+('Flat White', 'Doble shot de espresso con una capa fina de leche vaporizada de textura sedosa. El balance perfecto.', 2800.0, 'Café', 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?q=80&w=500', 1, 1),
+
+('Capuccino Tradicional', 'Espresso, leche vaporizada y mucha espuma de leche, espolvoreado con cacao fino o canela.', 2700.0, 'Café', 'https://images.unsplash.com/photo-1534778101976-62847782c213?q=80&w=500', 1, 0),
+
+('Iced Latte Vainilla', 'Espresso frío combinado con leche, un toque de jarabe artesanal de vainilla y hielo picado.', 3100.0, 'Bebidas Frías', 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?q=80&w=500', 1, 1),
+
+('Croissant de Almendras', 'Crujiente croissant de masa hojaldrada, relleno y cubierto con crema de almendras tostadas.', 2500.0, 'Pastelería', 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=500', 1, 1),
+
+('Cookie New York con Chips', 'Galleta gigante, súper húmeda por dentro, repleta de trozos de chocolate con leche y semi-amargo.', 1800.0, 'Pastelería', 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?q=80&w=500', 1, 0),
+
+('Cinnamon Roll', 'Rollo de canela tibio, suave y esponjoso, cubierto con un glaseado clásico de queso crema.', 2300.0, 'Pastelería', 'https://images.unsplash.com/photo-1509365465985-25d11c17e812?q=80&w=500', 0, 0),
+
+('Tostado de Jamón y Queso', 'En pan de masa madre casero, con jamón cocido seleccionado y abundante queso dambo derretido.', 3900.0, 'Salado', 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?q=80&w=500', 1, 0),
+
+('Avocado Toast Premium', 'Tostada de masa madre con palta fresca machacada, huevo soft, semillas de sésamo y un hilo de aceite de oliva.', 4500.0, 'Salado', 'https://images.unsplash.com/photo-1603046891744-1f76eb10aec1?q=80&w=500', 1, 1);
