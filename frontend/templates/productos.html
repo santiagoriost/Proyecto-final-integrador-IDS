@@ -10,17 +10,13 @@
     {% for producto in productos %}
     <div class="producto">
         </div class= "imagen_producto">
-            <img src="{{ url_for('static', filename='imagenes/foto_productos/' + producto.imagen) }}" alt="{{ producto.nombre }}">
+             <img src="{{ url_for('static', filename='imagenes/foto_productos/americano.jpg') }}" alt="{{ producto.nombre }}">
         <div class="informacion_producto">
             <h3>{{ producto.nombre }}</h3>
-            <p>{{ producto.descripcion }}</p>
+            <p>{{ producto.tipo }}</p>
             <p>Precio: ${{ producto.precio }}</p>
         </div>
     </div>
     {% endfor %}
 </div>
 {% endblock %}
-
-
-
-

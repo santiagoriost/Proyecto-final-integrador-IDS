@@ -52,7 +52,7 @@ def pagina_productos():
     lista_productos = []
     links_hateos = {}
     try:
-        respuesta = "http://localhost:5001/productos/"
+        respuesta = "http://localhost:5001/productos"
         limit = request.args.get("_limit", 10)
         offset = request.args.get("_offset", 0)
         url = f"{respuesta}?_limit={limit}&_offset={offset}"
