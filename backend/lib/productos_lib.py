@@ -15,14 +15,26 @@ def obtener_producto(id_producto, cursor):
     return producto
 
 def validar_tipo_dato(datos, atributo):
-    if str(datos[atributo]).strip() == "":
+    valor = datos[atributo]
+    if str(valor).strip() == "":
         return jsonify({"error": "el atributo %s tiene un valor vacio" %atributo}), 400
-    elif atributo == "precio" and not isinstance(datos["precio"], (int, float)):
-        return jsonify({"error": "atributo %s no es un dato de tipo INT / FLOAT" %atributo}), 400
-    elif atributo in ("stock", "local_producto") and not str(datos[atributo]).isdigit():
-        return jsonify({"error": "atributo %s tiene que ser de tipo INT" %atributo}), 400
-    elif atributo in ("nombre", "tipo") and not isinstance(datos[atributo], str):
-        return jsonify({"error": "el atributo %s tiene que ser tipo str" %atributo}), 400
+    elif atributo == "precio":
+        try:
+            datos["precio"] = float(valor)
+            if datos["precio"] < 0:
+                return jsonify({"error": "el precio no puede ser negativo"}), 400
+        except (ValueError, TypeError):
+            return jsonify({"error": "atributo %s no es un dato de tipo INT / FLOAT" %atributo}), 400
+    elif atributo in ("stock", "local_producto"):
+        try:
+            datos[atributo] = int(valor)
+            if datos[atributo] < 0:
+                return jsonify({"error": "el atributo %s no puede ser negativo" %atributo}), 400
+        except (ValueError, TypeError):
+            return jsonify({"error": "el atributo %s tiene que ser de tipo INT" %atributo}), 400
+    elif atributo in ("nombre", "tipo"):
+        if not isinstance(valor, str):
+            return jsonify({"error": "el atributo %s tiene que ser tipo str" %atributo}), 400
 
 def validar_atributos_necesarios(datos):
     if not datos:
