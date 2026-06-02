@@ -1,20 +1,16 @@
-<<<<<<< HEAD
 from flask import Blueprint, request, jsonify, render_template
-=======
 from flask import Blueprint, request, jsonify, render_template, redirect, flash, url_for
->>>>>>> refs/remotes/origin/main
 import requests
 inicio_bp = Blueprint("inicio", __name__)
+
 @inicio_bp.route("/", methods=["GET"])
 def pagina_inicio():
     return render_template("inicio.html")
+
 @inicio_bp.route("/reservas", methods=["GET"])
 def pagina_reservas():
     return render_template("reservas.html")
-<<<<<<< HEAD
 
-    
-=======
 @inicio_bp.route("/reservas", methods=["POST"])
 def crear_reserva():
     datos_reserva = {
@@ -50,4 +46,28 @@ def crear_reserva():
     return redirect(
         url_for("inicio.pagina_reservas")
     )
->>>>>>> refs/remotes/origin/main
+
+@inicio_bp.route("/productos/", methods=["GET"])
+def pagina_productos():
+    lista_productos = []
+    links_hateos = {}
+    try:
+        respuesta = "http://localhost:5001/productos/"
+        limit = request.args.get("_limit", 10)
+        offset = request.args.get("_offset", 0)
+        url = f"{respuesta}?_limit={limit}&_offset={offset}"
+        respuesta = requests.get(url)
+        if respuesta.status_code == 200:
+            datos = respuesta.json()
+            lista_productos = datos.get("productos", [])
+            links_hateos = datos.get("_links", {})
+        else:
+            flash("Error al cargar los productos. Menu no disponible", "error")
+    except Exception as e:
+        flash('error al conectar con el servidor del menu', 'error')
+    return render_template('productos.html', productos=lista_productos, links=links_hateos)
+    
+    
+    
+        
+    

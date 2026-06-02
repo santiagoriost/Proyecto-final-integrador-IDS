@@ -9,7 +9,7 @@
 <div class="contenedor_productos_menu">
     {% for producto in productos %}
     <div class="producto">
-        </div cass= "imagen_producto">
+        </div class= "imagen_producto">
             <img src="{{ url_for('static', filename='imagenes/foto_productos/' + producto.imagen) }}" alt="{{ producto.nombre }}">
         <div class="informacion_producto">
             <h3>{{ producto.nombre }}</h3>
