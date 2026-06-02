@@ -1,10 +1,10 @@
-from flask import request, Blueprint, render_template, flash, url_for, redirect
+from flask import request, Blueprint, render_template, flash, url_for, redirect, session
 import requests
 API_URL = "http://localhost:5001/productos"
 
 dashboard_bp = Blueprint("dashboard", __name__)
 
-@dashboard_bp.route("/productos/", methods=["GET"])
+@dashboard_bp.route("/productos", methods=["GET"])
 def dashboard_productos():
     try:
         limit = request.args.get("_limit", 10)
@@ -20,30 +20,31 @@ def dashboard_productos():
         flash('Datos no encontrados', 'error')
         return render_template('dashboard_productos.html')
 
-@dashboard_bp.route("/producto/<int:id_producto>/", methods=["GET", "POST"])
+@dashboard_bp.route("/producto/<int:id_producto>", methods=["GET", "POST"])
 def gestionar_producto(id_producto):
+    token = session.get("token")
+    if token:
+        headers = {"Authorization": f"Bearer {token}"}
     if request.method == "POST":
-        nombre = request.form.get("fproducto_nombre", "").strip()
-        precio = request.form.get("fproducto_precio", "").strip()
-        stock = request.form.get("fproducto_stock", "").strip()
-        tipo = request.form.get("fproducto_tipo", "").strip()
-        local = request.form.get("fproducto_local", "").strip()
         datos = {
-            "nombre": nombre,
-            "precio": precio,
-            "stock": stock,
-            "tipo": tipo,
-            "local": local
+            "nombre": request.form.get("fproducto_nombre", "").strip(),
+            "precio": request.form.get("fproducto_precio", "").strip(),
+            "stock": request.form.get("fproducto_stock", "").strip(),
+            "tipo": request.form.get("fproducto_tipo", "").strip(),
+            "local_producto": request.form.get("fproducto_local_id", "").strip()
         }
         try:
-            respuesta = requests.patch(f"{API_URL}/{id_producto}", json=datos)
+            respuesta = requests.patch(f"{API_URL}/{id_producto}", json=datos, headers=headers)
             if respuesta.status_code == 200:
                 flash("Producto modificado correctamente", "success")
                 return redirect(url_for('dashboard.dashboard_productos'))
+            else:
+                datos_error = respuesta.json()
+                flash(f"No se pudo modificar: {datos_error}", "error")
         except Exception as e:
             flash(f"Error: {str(e)}", "error")
     
-    respuesta = requests.get(f"{API_URL}/{id_producto}")
+    respuesta = requests.get(f"{API_URL}/{id_producto}", headers=headers)
     if respuesta.status_code == 200:
         datos = respuesta.json()
         return render_template("dashboard_producto_BM.html", producto=datos)
@@ -52,8 +53,11 @@ def gestionar_producto(id_producto):
 
 @dashboard_bp.route("/producto/<int:id_producto>/eliminar", methods=["POST"])
 def eliminar_producto(id_producto):
+    token = session.get("token")
+    if token:
+        headers = {"Authorization": f"Bearer {token}"}
     try:
-        response = requests.delete(f"{API_URL}/{id_producto}")
+        response = requests.delete(f"{API_URL}/{id_producto}", headers=headers)
         if response.status_code == 200:
             flash("Producto eliminado correctamente", "success")
             return redirect(url_for('dashboard.dashboard_productos'))

@@ -18,7 +18,8 @@
                 <label for="tipo_producto">Categoria:</label>
                 <input type="text" id="tipo_producto" name="fproducto_tipo" value="{{producto.tipo}}">
                 <label for="local_producto">Local:</label>
-                <input type="text" id="local_producto" name="fproducto_local" value="{{producto.local}}">
+                <input type="text" name="fproducto_local" value="{{producto.local}}" disabled>
+                <input type="number" id="local_producto" name="fproducto_local_id" value="{{producto.local_producto}}">
             </div>
             <div class="form_bttn_modificar">
                 <button type="submit">Guardar</button>
