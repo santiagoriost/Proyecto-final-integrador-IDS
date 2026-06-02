@@ -29,7 +29,8 @@ def listar_productos():
                 "precio": producto["precio"],
                 "stock": producto["stock"],
                 "tipo": producto["tipo"],
-                "local": nombre_local
+                "local": nombre_local,
+                "local_producto": producto["local_producto"]
             })
         base_url = request.base_url
         links = generar_links(base_url, limit, cant_productos, offset)
@@ -78,7 +79,8 @@ def agregar_producto():
             "precio": datos["precio"],
             "stock": datos["stock"],
             "tipo": datos["tipo"],
-            "local": local_nombre
+            "local": local_nombre,
+            "local_producto": datos["local_producto"]
         }), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -139,7 +141,8 @@ def listar_producto(id_producto):
             "precio": producto["precio"],
             "stock": producto["stock"],
             "tipo": producto["tipo"],
-            "local": local_nombre
+            "local": local_nombre,
+            "local_producto": producto["local_producto"]
         }), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -221,7 +224,7 @@ def modificar_producto(id_producto):
         if not obtener_producto(id_producto, cursor):
             return jsonify({"error": "producto no encontrado"}), 404
         
-        atributos_validos = ["nombre", "precio", "stock", "tipo", "local"]
+        atributos_validos = ["nombre", "precio", "stock", "tipo", "local_producto"]
         query = "UPDATE productos SET "
         sentencias = []
         valores = []
