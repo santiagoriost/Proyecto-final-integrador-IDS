@@ -55,22 +55,3 @@ CREATE TABLE reservas (
     FOREIGN KEY (usuario_reserva) REFERENCES usuarios(id_usuario),
     FOREIGN KEY (producto_reserva) REFERENCES productos(id_producto)
 );
-
-INSERT INTO productos (nombre, descripcion, precio, categoria) VALUES
-('Espresso Doble', 'Dos shots de espresso corto con un perfil intenso, notas de chocolate amargo y una crema densa.', 2200.0, 'Café'),
-
-('Flat White', 'Doble shot de espresso con una capa fina de leche vaporizada de textura sedosa. El balance perfecto.', 2800.0, 'Café'),
-
-('Capuccino Tradicional', 'Espresso, leche vaporizada y mucha espuma de leche, espolvoreado con cacao fino o canela.', 2700.0, 'Café'),
-
-('Iced Latte Vainilla', 'Espresso frío combinado con leche, un toque de jarabe artesanal de vainilla y hielo picado.', 3100.0, 'Bebidas Frías'),
-
-('Croissant de Almendras', 'Crujiente croissant de masa hojaldrada, relleno y cubierto con crema de almendras tostadas.', 2500.0, 'Pastelería'),
-
-('Cookie New York con Chips', 'Galleta gigante, súper húmeda por dentro, repleta de trozos de chocolate con leche y semi-amargo.', 1800.0, 'Pastelería'),
-
-('Cinnamon Roll', 'Rollo de canela tibio, suave y esponjoso, cubierto con un glaseado clásico de queso crema.', 2300.0, 'Pastelería', 0, 0),
-
-('Tostado de Jamón y Queso', 'En pan de masa madre casero, con jamón cocido seleccionado y abundante queso dambo derretido.', 3900.0, 'Salado'),
-
-('Avocado Toast Premium', 'Tostada de masa madre con palta fresca machacada, huevo soft, semillas de sésamo y un hilo de aceite de oliva.', 4500.0, 'Salado');
