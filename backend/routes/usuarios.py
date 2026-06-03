@@ -4,6 +4,7 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 from db.db_conn import get_connection
 import secrets 
 from datetime import timedelta, datetime
+import traceback
 
 
 usuarios_bp = Blueprint("usuarios", __name__)
@@ -48,6 +49,8 @@ def register():
             "rol": rol
         }), 201
     except Exception as e:
+        print("error:", e)
+        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
     finally:        
         if cursor:

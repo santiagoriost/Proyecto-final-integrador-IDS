@@ -1,0 +1,32 @@
+.contenedor_form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(211 211 211 / 50%);
+    gap: 10px;
+    margin: 100px 670px;
+    padding: 30px;
+    border-style: hidden;
+    border-radius: 15px;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form_group{
+    display: flex;
+    flex-direction: column;
+}
+
+.form_actions{
+    margin: 20px;
+}
+
+.form_group input{
+    margin-bottom: 15px;
+    padding: 5px;
+}
