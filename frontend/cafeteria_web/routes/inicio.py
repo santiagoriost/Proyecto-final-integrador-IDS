@@ -52,7 +52,7 @@ def pagina_productos():
     lista_productos = []
     links_hateos = {}
     try:
-        respuesta = "http://localhost:5001/productos/"
+        respuesta = "http://localhost:5001/productos"
         limit = request.args.get("_limit", 10)
         offset = request.args.get("_offset", 0)
         url = f"{respuesta}?_limit={limit}&_offset={offset}"
@@ -61,6 +61,7 @@ def pagina_productos():
             datos = respuesta.json()
             lista_productos = datos.get("productos", [])
             links_hateos = datos.get("_links", {})
+            return render_template('productos.html', productos=lista_productos, links=links_hateos)
         else:
             flash("Error al cargar los productos. Menu no disponible", "error")
     except Exception as e:

@@ -4,17 +4,23 @@
 {% block title %}Productos-Menu{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/producto.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apex-grid/dist/themes/bootstrap.css">
 {% endblock %}
 {% block contenido %}
 <div class="contenedor_productos_menu">
     {% for producto in productos %}
     <div class="producto">
-        </div class= "imagen_producto">
-            <img src="{{ url_for('static', filename='imagenes/foto_productos/' + producto.imagen) }}" alt="{{ producto.nombre }}">
+        <div class= "imagen_producto">
+            <img src="{{ url_for('static', filename='imagenes/foto_productos/americano.jpg') }}" alt="{{ producto.nombre }}">
+        </div>
         <div class="informacion_producto">
             <h3>{{ producto.nombre }}</h3>
-            <p>{{ producto.descripcion }}</p>
             <p>Precio: ${{ producto.precio }}</p>
+            <div class="ventana_emergente">
+                <h4>Descripción:</h4>
+                <p>aca hiria un jinja la descripcion del producto que va conectada a la db, tkm uwu ! </p>
+                
+            </div>
         </div>
     </div>
     {% endfor %}
