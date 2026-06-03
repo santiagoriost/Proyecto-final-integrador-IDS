@@ -66,7 +66,7 @@ def pagina_productos():
             flash("Error al cargar los productos. Menu no disponible", "error")
     except Exception as e:
         flash('error al conectar con el servidor del menu', 'error')
-    return render_template('productos.html', productos=lista_productos, links=links_hateos)
+    return render_template('productos.html')
     
     
     

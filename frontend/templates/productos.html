@@ -1,30 +1,52 @@
 {% extends "base.html" %}
 
+{% block title %}Productos - Menú{% endblock %}
 
-{% block title %}Productos-Menu{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/producto.css') }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apex-grid/dist/themes/bootstrap.css">
 {% endblock %}
+
 {% block contenido %}
 <div class="contenedor_productos_menu">
     {% for producto in productos %}
     <div class="producto">
-        <div class= "imagen_producto">
+        <div class="imagen_producto">
             <img src="{{ url_for('static', filename='imagenes/foto_productos/americano.jpg') }}" alt="{{ producto.nombre }}">
         </div>
+        
         <div class="informacion_producto">
             <h3>{{ producto.nombre }}</h3>
             <p>Precio: ${{ producto.precio }}</p>
+            
             <div class="ventana_emergente">
                 <h4>Descripción:</h4>
-                <p>aca hiria un jinja la descripcion del producto que va conectada a la db, tkm uwu ! </p>
-                
-            </div>
+                <p>{{ producto.descripcion }}</p> </div>
         </div>
     </div>
     {% endfor %}
 </div>
+
+{% if links %}
+<div class="contenedor_paginacion_productos">
+    {% if links._first %}
+        <a href="{{ url_for('inicio.pagina_productos')}}?_limit=10&_offset=0" class="btn_pag">Inicio</a>
+    {% endif %}
+
+    {% if links._prev %}
+        <a href="{{url_for('inicio.pagina_productos')}}?{{links._prev.href.split('?')[1]}}" class="btn_pag">Anterior</a>
+    {% endif %}
+
+    {% if links._next %}
+        <a href="{{url_for('inicio.pagina_productos')}}?{{links._next.href.split('?')[1]}}" class="btn_pag">Siguiente</a>
+    {% endif %}
+
+    {% if links._last %}
+        <a href="{{url_for('inicio.pagina_productos')}}?{{links._last.href.split('?')[1]}}" class="btn_pag">Último</a>
+    {% endif %}
+</div>
+{% endif %}
+
 {% endblock %}
 
 
