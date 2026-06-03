@@ -15,28 +15,14 @@ def listar_productos():
         limit = int(request.args.get("_limit", 10))
         offset = int(request.args.get("_offset", 0))
 
-       # lista_productos = obtener_registros(cursor, limit, offset)
-       # if not lista_productos:
-       #     return jsonify({"error": "productos no encontrados"}), 404
-       # cant_productos = cantidad_productos(cursor)
-        
-        productos = []
-        #ACA HARDCODEE LOS PRODUCTOS PORQUE NO ME ANDABA LA CONSULTA, SI QUEDARA TIEMPO LO ARREGLARIA, PERO QUEDA COMO EJEMPLO DE RESPUESTA PARA EL FRONTEND PARA PODER HACER EL CSS
-        lista_productos = [
-            {"id_producto": 1, "nombre": "Espresso Doble", "precio": 2200, "stock": 10, "tipo": "Café", "local_producto": 1},
-            {"id_producto": 2, "nombre": "Flat White", "precio": 2800, "stock": 10, "tipo": "Café", "local_producto": 1},
-            {"id_producto": 3, "nombre": "Capuccino", "precio": 2700, "stock": 10, "tipo": "Café", "local_producto": 1},
-            {"id_producto": 4, "nombre": "Muffin de Chocolate", "precio": 1500, "stock": 20, "tipo": "Repostería", "local_producto": 1},
-            {"id_producto": 5, "nombre": "Té Verde", "precio": 1800, "stock": 15, "tipo": "Té", "local_producto": 1},
-            {"id_producto": 6, "nombre": "Sándwich de Pollo", "precio": 3500, "stock": 8, "tipo": "Comida", "local_producto": 1},
-            {"id_producto": 7, "nombre": "Limonada", "precio": 1200, "stock": 25, "tipo": "Bebida", "local_producto": 1},
-            {"id_producto": 8, "nombre": "Brownie", "precio": 1600, "stock": 12, "tipo": "Repostería", "local_producto": 1},
-        ]
-        cant_productos = 3
+        lista_productos = obtener_registros(cursor, limit, offset)
+        if not lista_productos:
+            return jsonify({"error": "productos no encontrados"}), 404
+        cant_productos = cantidad_productos(cursor)
 
+        productos = []
         for producto in lista_productos:
-            #nombre_local = obtener_nombre_local(producto["local_producto"], cursor)
-            nombre_local = "cafeteria 11"
+            nombre_local = obtener_nombre_local(producto["local_producto"], cursor)
             productos.append({
                 "id": producto["id_producto"],
                 "nombre": producto["nombre"],
@@ -205,7 +191,8 @@ def actualizar_producto(id_producto):
             "precio": datos["precio"],
             "stock": datos["stock"],
             "tipo": datos["tipo"],
-            "local": local_nombre
+            "local": local_nombre,
+            "local_producto": datos["local_producto"]
         }
         return jsonify({
             "mensaje": "producto actualizado correctamente",
