@@ -5,7 +5,7 @@ API_RESERVAS_URL = "http://localhost:5001/reservas"
 
 dashboard_bp = Blueprint("dashboard", __name__)
 
-@dashboard_bp.route("/productos", methods=["GET"])
+@dashboard_bp.route("/productos/", methods=["GET"])
 def dashboard_productos():
     try:
         limit = request.args.get("_limit", 10)
