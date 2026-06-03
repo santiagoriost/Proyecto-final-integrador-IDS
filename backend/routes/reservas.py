@@ -32,10 +32,14 @@ def listar_reservas():
         for reserva in listar_reservas:
             reservas.append({
                 "id": reserva["id_reserva"],
-                "usuario": reserva["usuario_reserva"],
-                "producto": reserva["producto_reserva"],
-                "fecha_reserva": reserva["fecha_reserva"],
-                "fecha_entrega": reserva["fecha_entrega"],
+                "nombre_cliente": reserva["nombre_cliente"],
+                "correo_cliente": reserva["correo_cliente"],
+                "tipo_reserva": reserva["tipo_reserva"],
+                "fecha_reserva": str(reserva["fecha_reserva"]),
+                "hora_reserva": str(reserva["hora_reserva"]),
+                "numero_personas": reserva["numero_personas"],
+                "producto_reserva": reserva["producto_reserva"],
+                "comentarios": reserva["comentarios"],
                 "estado": reserva["estado"]
             })
         
@@ -68,8 +72,6 @@ def listar_reservas():
             cursor.close()
         if conn:
             conn.close()
-
-@reservas_bp.route("/", methods=["POST"])
 @reservas_bp.route("/", methods=["POST"])
 def agregar_reserva():
     conn = None
@@ -221,7 +223,7 @@ def obtener_reserva(id_reserva):
             "usuario": reserva["usuario_reserva"],
             "producto": reserva["producto_reserva"],
             "fecha_reserva": reserva["fecha_reserva"],
-            "fecha_entrega": reserva["fecha_entrega"],
+            "fecha_entrega": reserva["hora_reserva"],
             "estado": reserva["estado"]
         }), 200
     except Exception as e:
@@ -251,9 +253,9 @@ def eliminar_reserva(id_reserva):
         cursor.execute(query_eliminar, (id_reserva,))
         conn.commit()
 
-        return jsonify({"message": "reserva eliminada correctamente",
-                        "reserva_eliminada": reserva
-                        }), 200 
+        return jsonify({
+            "message": "reserva eliminada correctamente"
+        }), 200
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -262,7 +264,68 @@ def eliminar_reserva(id_reserva):
             cursor.close()
         if conn:
             conn.close()
+@reservas_bp.route("/<int:id_reserva>/estado", methods=["PATCH"])
+def actualizar_estado_reserva(id_reserva):
+    conn = None
+    cursor = None
 
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        datos = request.get_json()
+
+        if "estado" not in datos:
+            return jsonify({"error": "Falta el estado"}), 400
+
+        nuevo_estado = datos["estado"]
+
+        query = "SELECT * FROM reservas WHERE id_reserva = %s"
+        cursor.execute(query, (id_reserva,))
+        reserva = cursor.fetchone()
+
+        if not reserva:
+            return jsonify({"error": "Reserva no encontrada"}), 404
+
+        query_update = """
+        UPDATE reservas
+        SET estado = %s
+        WHERE id_reserva = %s
+        """
+
+        cursor.execute(query_update, (nuevo_estado, id_reserva))
+        conn.commit()
+
+        mensaje = Message(
+            subject="Actualización de reserva - Cafeteria 11",
+            sender="jcunduri@fi.uba.ar",
+            recipients=[reserva["correo_cliente"]]
+        )
+
+        mensaje.body = f"""
+            Hola {reserva["nombre_cliente"]},
+
+            El estado de tu reserva fue actualizado 😎
+
+            Nuevo estado: {nuevo_estado}
+
+            📅 Fecha: {reserva["fecha_reserva"]}
+            ⏰ Hora: {reserva["hora_reserva"]}
+
+            Gracias por usar Cafeteria 11.
+            """
+        mail.send(mensaje)
+        return jsonify({
+            "mensaje": "Estado actualizado correctamente",
+            "nuevo_estado": nuevo_estado
+        }), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
 @reservas_bp.route("/<int:id_reserva>", methods=["PUT"])
 def actualizar_reserva(id_reserva):
     conn = None

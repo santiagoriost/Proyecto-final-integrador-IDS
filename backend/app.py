@@ -7,7 +7,9 @@ from routes.reservas import reservas_bp
 from routes.reseñas import reseñas_bp 
 from routes.locales import locales_bp  
 from extensions import mail
+from flask_cors import CORS
 app = Flask(__name__)
+CORS(app)
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"] = 587
 app.config["MAIL_USE_TLS"] = True

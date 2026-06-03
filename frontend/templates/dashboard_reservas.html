@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block title %}Dashboard Reservas{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard_reservas.css') }}">
+{% endblock %}
+{% block contenido %}
+<div id="toast" class="toast"></div>
+<div id="modalEliminar" class="modal-overlay">
+    <div class="modal-card">
+        <h2>Eliminar reserva</h2>
+        <p>¿Seguro que deseas eliminar esta reserva?</p>
+
+        <div class="modal-actions">
+            <button id="btnCancelarModal" class="btn-modal cancelar-modal">
+                Cancelar
+            </button>
+
+            <button id="btnConfirmarEliminar" class="btn-modal eliminar-modal">
+                Sí, eliminar
+            </button>
+        </div>
+    </div>
+</div>
+<section class="admin-reservas">
+    <div class="dashboard-header">
+        <div>
+            <p class="dashboard-label">ADMIN ACCESS</p>
+            <h1>Reservas</h1>
+            <span>Gestiona las reservas de mesas y productos</span>
+        </div>
+    </div>
+    <div class="stats-grid">
+        <article class="stat-card">
+            <span>Total reservas</span>
+            <strong>{{ reservas|length }}</strong>
+            <small>Registradas actualmente</small>
+        </article>
+        <article class="stat-card">
+            <span>En proceso</span>
+            <strong>{{ reservas|selectattr("estado", "equalto", "En proceso")|list|length }}</strong>
+            <small>Pendientes por revisar</small>
+        </article>
+        <article class="stat-card">
+            <span>Confirmadas</span>
+            <strong>{{ reservas|selectattr("estado", "equalto", "Confirmada")|list|length }}</strong>
+            <small>Reservas aprobadas</small>
+        </article>
+    </div>
+    <div class="reservas-panel">
+        <div class="panel-header">
+            <h2>Lista de reservas</h2>
+            <input type="text" placeholder="Buscar reserva...">
+        </div>
+        {% if reservas %}
+        <div class="reservas-lista">
+            {% for reserva in reservas %}
+            <article class="reserva-card">
+                <div class="reserva-info">
+                    <h3>{{ reserva.nombre_cliente }}</h3>
+                    <p>{{ reserva.correo_cliente }}</p>
+                    <div class="reserva-detalles">
+                        <span>📅 {{ reserva.fecha_reserva }}</span>
+                        <span>⏰ {{ reserva.hora_reserva }}</span>
+                        <span>👥 {{ reserva.numero_personas }}</span>
+                        <span>☕ {{ reserva.tipo_reserva }}</span>
+                    </div>
+                    {% if reserva.comentarios %}
+                    <p class="comentario">“{{ reserva.comentarios }}”</p>
+                    {% endif %}
+                </div>
+                <div class="reserva-actions">
+                    <span class="estado estado-proceso">{{ reserva.estado }}</span>
+                    <button class="btn aceptar btn-estado"
+                        data-id="{{ reserva.id }}"
+                        data-estado="Confirmada">
+                        Confirmar
+                    </button>                    
+                    <button class="btn cancelar btn-estado"
+                        data-id="{{ reserva.id }}"
+                        data-estado="Cancelada">
+                        Cancelar
+                    </button>
+
+                    <button class="btn eliminar btn-eliminar"
+                        data-id="{{ reserva.id }}">
+                        Eliminar
+                    </button>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+            <p class="sin-reservas">No hay reservas registradas.</p>
+        {% endif %}
+    </div>
+</section>
+<script>
+    let reservaAEliminar = null;
+    const modalEliminar = document.getElementById("modalEliminar");
+    const btnCancelarModal = document.getElementById("btnCancelarModal");
+    const btnConfirmarEliminar = document.getElementById("btnConfirmarEliminar");
+    function mostrarToast(mensaje, tipo = "success") {
+        const toast = document.getElementById("toast");
+        toast.textContent = mensaje;
+        toast.className = `toast show ${tipo}`;
+        setTimeout(() => {
+            toast.classList.remove("show");
+        }, 3000);
+    }
+    document.querySelectorAll(".btn-estado").forEach(boton => {
+        boton.addEventListener("click", async () => {
+            const idReserva = boton.dataset.id;
+            const nuevoEstado = boton.dataset.estado;
+            try {
+                const respuesta = await fetch(
+                    `http://127.0.0.1:5001/reservas/${idReserva}/estado`,
+                    {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            estado: nuevoEstado
+                        })
+                    }
+                );
+                const datos = await respuesta.json();
+                if (respuesta.ok) {
+                    mostrarToast("Estado actualizado 😎", "success");
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1200);
+                } else {
+                    mostrarToast(datos.error || "Error al actualizar", "error");
+                }
+            } catch (error) {
+                console.error(error);
+                mostrarToast("Error del servidor", "error");
+            }
+        });
+    });
+    document.querySelectorAll(".btn-eliminar").forEach(boton => {
+    boton.addEventListener("click", () => {
+        reservaAEliminar = boton.dataset.id;
+        modalEliminar.classList.add("show");
+    });
+});
+
+    btnCancelarModal.addEventListener("click", () => {
+        modalEliminar.classList.remove("show");
+        reservaAEliminar = null;
+    });
+
+    btnConfirmarEliminar.addEventListener("click", async () => {
+        try {
+            const respuesta = await fetch(
+                `http://127.0.0.1:5001/reservas/${reservaAEliminar}`,
+                {
+                    method: "DELETE"
+                }
+            );
+        const datos = await respuesta.json();
+        if (respuesta.ok) {
+            mostrarToast("Reserva eliminada 😎", "success");
+            modalEliminar.classList.remove("show");
+            reservaAEliminar = null;
+
+            setTimeout(() => {
+                location.reload();
+            }, 1200);
+        } else {
+            mostrarToast(datos.error || "Error al eliminar", "error");
+        }
+    } catch (error) {
+        console.error(error);
+        mostrarToast("Error del servidor", "error");
+    }
+    });
+</script>
+{% endblock %}

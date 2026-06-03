@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Estadísticas{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard_estadisticas.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block contenido %}
+<section class="dashboard-stats">
+    <div class="stats-header">
+        <p>ADMIN ACCESS</p>
+        <h1>Estadísticas de Cafetería 11</h1>
+        <span>Resumen visual de reservas y actividad del local</span>
+    </div>
+    <div class="kpi-grid">
+        <article class="kpi-card">
+            <span>Total reservas</span>
+            <strong id="totalReservas">0</strong>
+        </article>
+        <article class="kpi-card">
+            <span>Confirmadas</span>
+            <strong id="reservasConfirmadas">0</strong>
+        </article>
+        <article class="kpi-card">
+            <span>En proceso</span>
+            <strong id="reservasProceso">0</strong>
+        </article>
+        <article class="kpi-card">
+            <span>Canceladas</span>
+            <strong id="reservasCanceladas">0</strong>
+        </article>
+    </div>
+    <div class="charts-grid">
+        <article class="chart-card">
+            <h2>Reservas por estado</h2>
+            <canvas id="graficoEstados"></canvas>
+        </article>
+        <article class="chart-card">
+            <h2>Tipos de reserva</h2>
+            <canvas id="graficoTipos"></canvas>
+        </article>
+        <article class="chart-card chart-wide">
+            <h2>Reservas por fecha</h2>
+            <canvas id="graficoFechas"></canvas>
+        </article>
+    </div>
+</section>
+<script src="{{ url_for('static', filename='js/dashboard_estadisticas.js') }}"></script>
+{% endblock %}

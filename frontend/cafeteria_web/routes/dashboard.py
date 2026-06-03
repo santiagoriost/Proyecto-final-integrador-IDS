@@ -1,6 +1,7 @@
 from flask import request, Blueprint, render_template, flash, url_for, redirect, session
 import requests
 API_URL = "http://localhost:5001/productos"
+API_RESERVAS_URL = "http://localhost:5001/reservas"
 
 dashboard_bp = Blueprint("dashboard", __name__)
 
@@ -65,3 +66,31 @@ def eliminar_producto(id_producto):
     except Exception as e:
         flash(f"error: {str(e)}", "error")
     return redirect(url_for('dashboard.dashboard_productos'))
+
+@dashboard_bp.route("/reservas", methods=["GET"])
+def dashboard_reservas():
+    try:
+        limit = request.args.get("limit", 10)
+        offset = request.args.get("offset", 0) 
+        url = f"{API_RESERVAS_URL}/?limit={limit}&offset={offset}"
+        respuesta = requests.get(url)
+
+        if respuesta.status_code == 200:
+            datos = respuesta.json()
+            lista_reservas = datos.get("reservas", [])
+            links_hateos = datos.get("_links", {})
+            return render_template(
+                "dashboard_reservas.html",
+                reservas=lista_reservas,
+                links=links_hateos
+            )
+        flash("No se encontraron reservas", "error")
+        return render_template("dashboard_reservas.html", reservas=[])
+
+    except Exception as e:
+        flash(f"Error al cargar reservas: {str(e)}", "error")
+        return render_template("dashboard_reservas.html", reservas=[])
+
+@dashboard_bp.route("/estadisticas", methods=["GET"])
+def dashboard_estadisticas():
+    return render_template("dashboard_estadisticas.html")

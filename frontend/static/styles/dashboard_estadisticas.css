@@ -1,0 +1,64 @@
+.dashboard-stats {
+    min-height: 100vh;
+    padding: 40px;
+    background: #f6eee7;
+    color: #3b2418;
+}
+.stats-header {
+    margin-bottom: 30px;
+}
+.stats-header p {
+    color: #9b765d;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+.stats-header h1 {
+    font-size: 42px;
+    margin: 8px 0;
+}
+.stats-header span {
+    color: #7a6151;
+}
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 30px;
+}
+.kpi-card {
+    background: #fffaf5;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+.kpi-card span {
+    color: #8d705e;
+}
+.kpi-card strong {
+    display: block;
+    margin-top: 10px;
+    font-size: 38px;
+}
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+.chart-card {
+    background: #fffaf5;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+.chart-card h2 {
+    margin-top: 0;
+    margin-bottom: 18px;
+}
+.chart-wide {
+    grid-column: span 2;
+}
+canvas {
+    width: 100% !important;
+    max-height: 350px;
+}

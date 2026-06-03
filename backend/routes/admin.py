@@ -7,36 +7,62 @@ administradores_bp = Blueprint("administradores", __name__)
 @administradores_bp.route("/dashboard/stats", methods=["GET"])
 @jwt_required()
 def dashboard():
-   
     conn = None
     cursor = None
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-        
         usuario_logueado = get_jwt_identity()
         if usuario_logueado["rol"] != "admin":
             return jsonify({"error": "Acceso denegado"}), 403
-        
+        cursor.execute("SELECT COUNT(*) AS total FROM productos")
+        total_productos = cursor.fetchone()["total"]
+        cursor.execute("SELECT COUNT(*) AS total FROM reservas")
+        total_reservas = cursor.fetchone()["total"]
+        cursor.execute("SELECT COUNT(*) AS total FROM usuarios")
+        total_usuarios = cursor.fetchone()["total"]
+        cursor.execute("SELECT COUNT(*) AS total FROM locales")
+        total_locales = cursor.fetchone()["total"]
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM reservas
+            WHERE estado = 'Confirmada'
+        """)
+        reservas_confirmadas = cursor.fetchone()["total"]
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM reservas
+            WHERE estado = 'Cancelada'
+        """)
+        reservas_canceladas = cursor.fetchone()["total"]
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM reservas
+            WHERE estado = 'En proceso'
+        """)
+        reservas_en_proceso = cursor.fetchone()["total"]
         return jsonify({
             "mensaje": "Bienvenido al dashboard de administradores",
             "estadisticas": {
-                "total_productos": 0,
+                "total_productos": total_productos,
+                "total_reservas": total_reservas,
+                "total_usuarios": total_usuarios,
+                "total_locales": total_locales,
+                "reservas_confirmadas": reservas_confirmadas,
+                "reservas_canceladas": reservas_canceladas,
+                "reservas_en_proceso": reservas_en_proceso,
                 "total_ventas": 0,
-                "total_clientes": 0,
-                "total_reservas": 0,
-                "total_usuarios": 0,
-                "total_locales": 0
+                "total_clientes": total_usuarios
             }
         }), 200
     except Exception as e:
-        return jsonify({"error": "Error interno del servidor"}), 500
+        return jsonify({"error": str(e)}), 500
+
     finally:
         if cursor:
             cursor.close()
         if conn:
             conn.close()
-
 @administradores_bp.route("/dashboard/usuarios", methods=["GET"])
 @jwt_required()
 def obtener_usuarios():

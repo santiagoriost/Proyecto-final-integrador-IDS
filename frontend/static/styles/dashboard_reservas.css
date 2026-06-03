@@ -1,0 +1,222 @@
+.admin-reservas {
+    min-height: 100vh;
+    padding: 40px;
+    background: #f6eee7;
+    color: #3b2418;
+}
+.dashboard-header {
+    margin-bottom: 24px;
+}
+.dashboard-label {
+    color: #9b765d;
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-weight: bold;
+}
+.dashboard-header h1 {
+    font-size: 42px;
+    margin: 5px 0;
+}
+.dashboard-header span {
+    color: #7d6252;
+}
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 24px;
+}
+.stat-card {
+    background: #fffaf5;
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 8px 25px rgba(91, 60, 43, 0.12);
+}
+.stat-card span {
+    color: #8a6a58;
+}
+.stat-card strong {
+    display: block;
+    font-size: 34px;
+    margin: 8px 0;
+}
+.stat-card small {
+    color: #9c7c68;
+}
+.reservas-panel {
+    background: #fffaf5;
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow: 0 8px 25px rgba(91, 60, 43, 0.12);
+}
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 18px;
+}
+.panel-header input {
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid #d8c1ad;
+    background: #fff;
+}
+.reservas-lista {
+    display: grid;
+    gap: 16px;
+}
+.reserva-card {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 18px;
+    background: #f1dfcf;
+    border: 1px solid #dec4af;
+}
+.reserva-info h3 {
+    margin: 0;
+    font-size: 24px;
+}
+.reserva-info p {
+    margin: 5px 0;
+    color: #6f5140;
+}
+.reserva-detalles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 14px 0;
+}
+.reserva-detalles span {
+    background: #fff8f0;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 14px;
+}
+.comentario {
+    font-style: italic;
+}
+.reserva-actions {
+    min-width: 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.estado {
+    text-align: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-weight: bold;
+    font-size: 13px;
+}
+.estado-proceso {
+    background: #fff1bd;
+    color: #8a6500;
+}
+.btn {
+    border: none;
+    padding: 10px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.aceptar {
+    background: #6d8f5f;
+    color: white;
+}
+.cancelar {
+    background: #b9855b;
+    color: white;
+}
+.eliminar {
+    background: #7b3f32;
+    color: white;
+}
+.sin-reservas {
+    color: #7d6252;
+}
+.toast {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    background: #3b2418;
+    color: white;
+    padding: 16px 22px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+
+    transition: all 0.3s ease;
+}
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+.toast.success {
+    background: #6d8f5f;
+}
+.toast.error {
+    background: #8b3d2f;
+}
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s ease;
+    z-index: 99999;
+    backdrop-filter: blur(5px);
+}
+.modal-overlay.show {
+    opacity: 1;
+    pointer-events: all;
+}
+.modal-card {
+    width: 400px;
+    background: #fffaf5;
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    transform: translateY(20px);
+    transition: 0.3s ease;
+}
+.modal-overlay.show .modal-card {
+    transform: translateY(0);
+}
+.modal-card h2 {
+    margin-top: 0;
+    color: #3b2418;
+}
+.modal-card p {
+    color: #7a6151;
+    margin-bottom: 24px;
+}
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+.btn-modal {
+    border: none;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.cancelar-modal {
+    background: #ddd3cb;
+    color: #4e3c30;
+}
+.eliminar-modal {
+    background: #7b3f32;
+    color: white;
+}
