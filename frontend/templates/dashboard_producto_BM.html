@@ -1,12 +1,12 @@
-{% extends "base.html" %}
+{% extends "base_admin.html" %}
 {% block title %}Producto{% endblock %}
 {% block extra_css %}
-<link rel="stylesheet" href="{{url_for('static', filename='styles/dashboard_producto.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='styles/dashboard_producto_abm.css')}}">
 {% endblock %}
 {% block contenido %}
 <div class="contenedor_producto">
     <h2>Detalle del producto {{producto.id}}</h2>
-    <div>
+    <div class="contenedor_form">
         <form action="{{url_for('dashboard.gestionar_producto', id_producto = producto.id)}}" method="post">
             <div class="form_producto">
                 <label for="nombre_producto">Nombre:</label>
@@ -21,12 +21,10 @@
                 <input type="text" name="fproducto_local" value="{{producto.local}}" disabled>
                 <input type="number" id="local_producto" name="fproducto_local_id" value="{{producto.local_producto}}">
             </div>
-            <div class="form_bttn_modificar">
-                <button type="submit">Guardar</button>
-            </div>
+            <button type="submit" class="form_bttn_modificar">Guardar</button>
         </form>
         <form action="{{url_for('dashboard.eliminar_producto', id_producto = producto.id)}}" method="post">
-            <button type="submit" class="bttn_eliminar">Eliminar</button>
+            <button type="submit" class="form_bttn_eliminar">Eliminar</button>
         </form>
     </div>
 </div>

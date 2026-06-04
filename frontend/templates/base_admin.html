@@ -23,7 +23,7 @@
         <nav class="admin-menu">
             <a href="#" class="admin-link">⌂ Dashboard</a>
             <a href="{{ url_for('dashboard.dashboard_reservas') }}" class="admin-link active">▣ Reservas</a>
-            <a href="#" class="admin-link">☕ Productos</a>
+            <a href="{{ url_for('dashboard.dashboard_productos') }}" class="admin-link">☕ Productos</a>
             <a href="#" class="admin-link">▥ Ventas</a>
             <a href="#" class="admin-link">☆ Más Vendidos</a>
             <a href="#" class="admin-link">☏ Reseñas</a>
@@ -63,6 +63,17 @@
         </header>
 
         <section class="admin-content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-container">
+                        {% for category, message in messages %}
+                        <div class="toast toast--{{ category }}">
+                            <span>{{ message }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}   
             {% block contenido %}{% endblock %}
         </section>
     </main>

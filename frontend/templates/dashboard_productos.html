@@ -1,7 +1,7 @@
-{% extends "base.html" %}
+{% extends "base_admin.html" %}
 {% block title %}Dashboard Productos{% endblock %}
 {% block extra_css %}
-<link rel="stylesheet" href="{{url_for('static', filename='styles/dashboard.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='styles/dashboard_productos.css')}}">
 {% endblock %}
 {% block contenido %}
 <div class="contenedor_dashboard">
@@ -35,6 +35,7 @@
             </tbody>
         </table>
     </div>
+    <a href="{{url_for('dashboard.agregar_producto')}}">Agregar producto</a>
 </div>
 {% if links %}
 <div class="contenedor_paginacion">

@@ -58,14 +58,40 @@ def eliminar_producto(id_producto):
     if token:
         headers = {"Authorization": f"Bearer {token}"}
     try:
-        response = requests.delete(f"{API_URL}/{id_producto}", headers=headers)
-        if response.status_code == 200:
+        respuesta = requests.delete(f"{API_URL}/{id_producto}", headers=headers)
+        if respuesta.status_code == 200:
             flash("Producto eliminado correctamente", "success")
             return redirect(url_for('dashboard.dashboard_productos'))
         flash("No se pudo eliminar el producto", "error")
     except Exception as e:
         flash(f"error: {str(e)}", "error")
     return redirect(url_for('dashboard.dashboard_productos'))
+
+@dashboard_bp.route("/producto", methods=["GET", "POST"])
+def agregar_producto():
+    token = session.get("token")
+    if token:
+        headers = {"Authorization": f"Bearer {token}"}
+    if request.method == "POST":
+        datos = {
+            "nombre": request.form.get("fproducto_nombre", "").strip(),
+            "precio": request.form.get("fproducto_precio", "").strip(),
+            "stock": request.form.get("fproducto_stock", "").strip(),
+            "tipo": request.form.get("fproducto_tipo", "").strip(),
+            "local_producto": request.form.get("fproducto_local_id", "").strip()
+        }
+        try:
+            respuesta = requests.post(API_URL, json=datos, headers=headers)
+            if respuesta.status_code == 200:
+                flash("Producto agregado correctamente", "success")
+                return redirect(url_for('dashboard.dashboard_productos'))
+            else:
+                datos_error = respuesta.json()
+                flash(f"No se pudo agregar el producto: {datos_error}", "error")
+        except Exception as e:
+            flash(f"Error en el backend: {str(e)}", "error")
+    return render_template('dashboard_producto_altas.html')
+
 
 @dashboard_bp.route("/admin/reservas", methods=["GET"])
 def dashboard_reservas():
