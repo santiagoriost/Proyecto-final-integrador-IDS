@@ -1,222 +1,538 @@
-.admin-reservas {
-    min-height: 100vh;
-    padding: 40px;
-    background: #f6eee7;
-    color: #3b2418;
-}
-.dashboard-header {
-    margin-bottom: 24px;
-}
-.dashboard-label {
-    color: #9b765d;
-    font-size: 12px;
-    letter-spacing: 2px;
-    font-weight: bold;
-}
-.dashboard-header h1 {
-    font-size: 42px;
-    margin: 5px 0;
-}
-.dashboard-header span {
-    color: #7d6252;
-}
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-    margin-bottom: 24px;
-}
-.stat-card {
-    background: #fffaf5;
-    border-radius: 18px;
-    padding: 22px;
-    box-shadow: 0 8px 25px rgba(91, 60, 43, 0.12);
-}
-.stat-card span {
-    color: #8a6a58;
-}
-.stat-card strong {
-    display: block;
-    font-size: 34px;
-    margin: 8px 0;
-}
-.stat-card small {
-    color: #9c7c68;
-}
-.reservas-panel {
-    background: #fffaf5;
-    border-radius: 22px;
-    padding: 24px;
-    box-shadow: 0 8px 25px rgba(91, 60, 43, 0.12);
-}
-.panel-header {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    align-items: center;
-    margin-bottom: 18px;
-}
-.panel-header input {
-    padding: 12px 16px;
-    border-radius: 12px;
-    border: 1px solid #d8c1ad;
-    background: #fff;
-}
-.reservas-lista {
-    display: grid;
-    gap: 16px;
-}
-.reserva-card {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 20px;
-    border-radius: 18px;
-    background: #f1dfcf;
-    border: 1px solid #dec4af;
-}
-.reserva-info h3 {
-    margin: 0;
-    font-size: 24px;
-}
-.reserva-info p {
-    margin: 5px 0;
-    color: #6f5140;
-}
-.reserva-detalles {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin: 14px 0;
-}
-.reserva-detalles span {
-    background: #fff8f0;
-    padding: 8px 12px;
-    border-radius: 999px;
-    font-size: 14px;
-}
-.comentario {
-    font-style: italic;
-}
-.reserva-actions {
-    min-width: 160px;
+.reservas-admin{
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 20px;
 }
-.estado {
-    text-align: center;
-    padding: 8px 12px;
-    border-radius: 999px;
-    font-weight: bold;
-    font-size: 13px;
-}
-.estado-proceso {
-    background: #fff1bd;
-    color: #8a6500;
-}
-.btn {
-    border: none;
-    padding: 10px 14px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: bold;
-}
-.aceptar {
-    background: #6d8f5f;
-    color: white;
-}
-.cancelar {
-    background: #b9855b;
-    color: white;
-}
-.eliminar {
-    background: #7b3f32;
-    color: white;
-}
-.sin-reservas {
-    color: #7d6252;
-}
-.toast {
-    position: fixed;
-    top: 30px;
-    right: 30px;
-    background: #3b2418;
-    color: white;
-    padding: 16px 22px;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    z-index: 9999;
-    opacity: 0;
-    transform: translateY(-20px);
-    pointer-events: none;
 
-    transition: all 0.3s ease;
+.reservas-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-.toast.show {
+
+.reservas-header h1{
+    font-size: 2.1rem;
+    color: #372721;
+}
+
+.reservas-header p{
+    color: #372721;
+    margin-top: 6px;
+}
+
+.reservas-header-actions{
+    display: flex;
+    gap: 14px;
+}
+
+.btn-soft{
+    border: 1px solid rgba(255,255,255,0.45);
+    border-radius: 16px;
+    padding: 13px 20px;
+    font-weight: 700;
+    cursor: pointer;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 12px 28px rgba(90, 65, 55, 0.12);
+}
+
+.btn-exportar{
+    background: rgba(232, 246, 237, 0.72);
+    color: #357655;
+}
+
+.btn-nueva{
+    background: rgba(245, 182, 200, 0.76);
+    color: #7d2d38;
+}
+
+.stats-grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+.stat-card,
+.filters-card,
+.reservas-table-card{
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.30);
+    box-shadow:
+        0 18px 45px rgba(60,40,30,0.13),
+        inset 0 1px 0 rgba(255,255,255,0.14);
+}
+
+.stat-card{
+    border-radius: 22px;
+    padding: 18px 22px;
+    min-height: 118px;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+
+.stat-icon{
+    width: 50px;
+    height: 50px;
+    border-radius: 17px;
+    display: grid;
+    place-items: center;
+    font-size: 1.3rem;
+}
+
+.stat-icon.pink{ background: rgba(255,214,221,0.9); color: #d94466; }
+.stat-icon.yellow{ background: rgba(255,240,201,0.9); color: #d89100; }
+.stat-icon.green{ background: rgba(217,242,216,0.9); color: #348d48; }
+.stat-icon.purple{ background: rgba(234,220,255,0.9); color: #7c48b5; }
+
+.stat-card span{
+    color: #8a6252;
+    font-size: 0.9rem;
+}
+
+.stat-card strong{
+    display: block;
+    font-size: 1.8rem;
+    margin: 4px 0;
+    color: #2f1d16;
+}
+
+.stat-card small{
+    color: #9b7b6e;
+}
+
+.filters-card{
+    border-radius: 22px;
+    padding: 14px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 14px;
+    align-items: center;
+}
+
+.filter-search{
+    background: rgba(255,255,255,0.58);
+    border: 1px solid rgba(255,255,255,0.46);
+    border-radius: 15px;
+    padding: 13px 15px;
+    backdrop-filter: blur(14px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-search input{
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+}
+
+.btn-filtro{
+    background: rgba(255,225,223,0.82);
+    color: #9b3d3d;
+}
+
+/* CUSTOM SELECT */
+
+.custom-select{
+    position: relative;
+    z-index: 100;
+}
+.custom-select-btn{
+    width: 100%;
+    min-height: 47px;
+    border: 1px solid rgba(255,255,255,0.46);
+    border-radius: 15px;
+    padding: 0 15px;
+    background: rgba(255,255,255,0.58);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    color: #4b3028;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.custom-options{
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    background: rgba(255,250,245,0.92);
+    border: 1px solid rgba(255,255,255,0.65);
+    border-radius: 16px;
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    box-shadow: 0 18px 40px rgba(50,30,25,0.25);
+    padding: 8px;
+    display: none;
+    z-index: 99999;
+}
+
+.custom-select.open .custom-options{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.custom-options button{
+    border: none;
+    background: transparent;
+    padding: 11px 12px;
+    text-align: left;
+    border-radius: 12px;
+    color: #3A2A23;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.custom-options button:hover{
+    background: rgba(245,182,200,0.45);
+}
+
+.reservas-table-card{
+    border-radius: 24px;
+    padding: 16px;
+    overflow-x: auto;
+    overflow-y: visible;
+}
+
+.reservas-table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.reservas-table th{
+    text-align: left;
+    font-size: 0.86rem;
+    color: #8a6252;
+    font-weight: 700;
+    padding: 14px 16px;
+}
+
+.reservas-table td{
+    padding: 14px 16px;
+    border-top: 1px solid rgba(255,255,255,0.22);
+    color: #3a2a23;
+}
+
+.cliente-cell{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.cliente-avatar{
+    width: 44px;
+    height: 44px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #ffd6dd, #f4b6c2);
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    color: #9b2f45;
+}
+
+.cliente-cell small,
+.fecha-cell span{
+    display: block;
+    color: #8a6252;
+    margin-top: 4px;
+}
+
+.estado-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 13px;
+    border-radius: 999px;
+    font-size: 0.84rem;
+    font-weight: 700;
+}
+
+.estado-pill.confirmada{
+    background: rgba(221,243,220,0.86);
+    color: #318447;
+}
+
+.estado-pill.proceso{
+    background: rgba(255,240,201,0.86);
+    color: #bd7b00;
+}
+
+.estado-pill.cancelada{
+    background: rgba(255,224,226,0.86);
+    color: #c83f55;
+}
+
+.acciones-cell{
+    display: flex;
+    gap: 9px;
+}
+
+.btn-icon{
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 13px;
+    cursor: pointer;
+    font-weight: 800;
+}
+
+.btn-icon.confirmar{
+    background: rgba(221,243,220,0.86);
+    color: #318447;
+}
+
+.btn-icon.cancelar{
+    background: rgba(255,240,201,0.86);
+    color: #bd7b00;
+}
+
+.btn-icon.eliminar{
+    background: rgba(255,224,226,0.86);
+    color: #c83f55;
+}
+
+.toast{
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+    padding: 14px 20px;
+    border-radius: 16px;
+    background: #3a2a23;
+    color: white;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 0.25s ease;
+    z-index: 9999;
+}
+
+.toast.show{
     opacity: 1;
     transform: translateY(0);
 }
-.toast.success {
-    background: #6d8f5f;
+
+.toast.error{
+    background: #9d3b3b;
 }
-.toast.error {
-    background: #8b3d2f;
-}
-.modal-overlay {
+
+.modal-overlay{
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.45);
-    display: flex;
-    justify-content: center;
+    background: rgba(45, 32, 26, 0.35);
+    backdrop-filter: blur(8px);
+
+    display: none;
     align-items: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: 0.3s ease;
+    justify-content: center;
+
     z-index: 99999;
-    backdrop-filter: blur(5px);
 }
-.modal-overlay.show {
-    opacity: 1;
-    pointer-events: all;
+
+.modal-overlay.show{
+    display: flex;
 }
-.modal-card {
-    width: 400px;
-    background: #fffaf5;
+
+.modal-card{
+    position: relative;
+    z-index: 100000;
+
+    background: rgba(255,250,245,0.78);
+    backdrop-filter: blur(22px);
+    border: 1px solid rgba(255,255,255,0.7);
     border-radius: 24px;
-    padding: 30px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-    transform: translateY(20px);
-    transition: 0.3s ease;
+    padding: 28px;
+    width: 360px;
+    box-shadow: 0 24px 60px rgba(60,40,32,0.24);
 }
-.modal-overlay.show .modal-card {
-    transform: translateY(0);
+.modal-card h2{
+    margin-bottom: 8px;
 }
-.modal-card h2 {
-    margin-top: 0;
-    color: #3b2418;
-}
-.modal-card p {
-    color: #7a6151;
-    margin-bottom: 24px;
-}
-.modal-actions {
+
+.modal-actions{
     display: flex;
     justify-content: flex-end;
     gap: 12px;
+    margin-top: 22px;
 }
-.btn-modal {
+
+.btn-modal{
     border: none;
-    padding: 12px 18px;
-    border-radius: 12px;
-    font-weight: bold;
+    border-radius: 14px;
+    padding: 11px 16px;
+    font-weight: 700;
     cursor: pointer;
 }
-.cancelar-modal {
-    background: #ddd3cb;
-    color: #4e3c30;
+
+.cancelar-modal{
+    background: #f1e6dc;
+    color: #5f4136;
 }
-.eliminar-modal {
-    background: #7b3f32;
+
+.eliminar-modal{
+    background: #f3a6a0;
     color: white;
+}
+.filters-card{
+    border-radius: 22px;
+    padding: 14px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 14px;
+    align-items: center;
+
+    position: relative;
+    z-index: 1;
+}
+
+.reservas-table-card{
+    position: relative;
+    z-index: 1;
+}
+.modal-reserva{
+    width: 500px;
+}
+
+.form-group{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.form-group label{
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #5f4136;
+}
+
+.form-group input,
+.form-group select{
+    border: 1px solid rgba(255,255,255,0.45);
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(14px);
+    border-radius: 14px;
+    padding: 13px 14px;
+    outline: none;
+    color: #372721;
+}
+
+.form-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+.flatpickr-calendar{
+    background: rgba(255,250,245,0.88) !important;
+    backdrop-filter: blur(22px) !important;
+    border: 1px solid rgba(255,255,255,0.65) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 24px 60px rgba(60,40,32,0.28) !important;
+    overflow: hidden;
+}
+
+.flatpickr-months{
+    background: rgba(245,182,200,0.18) !important;
+}
+
+.flatpickr-monthDropdown-months,
+.numInputWrapper input{
+    background: transparent !important;
+    border: none !important;
+    color: #3A2A23 !important;
+    font-weight: 700 !important;
+}
+
+.flatpickr-weekday{
+    color: #8a6252 !important;
+    font-weight: 700 !important;
+}
+
+.flatpickr-day{
+    border-radius: 12px !important;
+    color: #3A2A23 !important;
+}
+
+.flatpickr-day:hover{
+    background: rgba(245,182,200,0.35) !important;
+    border-color: transparent !important;
+}
+
+.flatpickr-day.selected{
+    background: #F5B6C8 !important;
+    border-color: #F5B6C8 !important;
+    color: #3A2A23 !important;
+}
+
+.flatpickr-time{
+    background: rgba(255,250,245,0.88) !important;
+    border-top: 1px solid rgba(120,85,72,0.16) !important;
+}
+
+.flatpickr-time input,
+.flatpickr-time .flatpickr-am-pm{
+    color: #3A2A23 !important;
+}
+.glass-select{
+    width: 100%;
+    height: 52px;
+
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,0.78),
+            rgba(255,255,255,0.42)
+        );
+
+    border: 1px solid rgba(255,255,255,0.55);
+    border-radius: 16px;
+
+    padding: 0 18px;
+
+    color: #4b3028;
+    font-weight: 600;
+
+    backdrop-filter: blur(16px);
+
+    background-image:
+        linear-gradient(45deg, transparent 50%, #6f4c3f 50%),
+        linear-gradient(135deg, #6f4c3f 50%, transparent 50%);
+
+    background-position:
+        calc(100% - 18px) 50%,
+        calc(100% - 12px) 50%;
+
+    background-size: 6px 6px;
+    background-repeat: no-repeat;
+}
+
+.glass-select option{
+    background: #F6EEE3;
+    color: #3A2A23;
+}
+.flatpickr-time input{
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+}
+
+.flatpickr-time .numInputWrapper:hover{
+    background: rgba(245,182,200,0.16) !important;
+}
+
+.flatpickr-time{
+    height: 52px !important;
+}
+.filter-search,
+.custom-select-btn,
+.form-group input,
+.glass-select{
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }

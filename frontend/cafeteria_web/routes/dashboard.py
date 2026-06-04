@@ -67,7 +67,7 @@ def eliminar_producto(id_producto):
         flash(f"error: {str(e)}", "error")
     return redirect(url_for('dashboard.dashboard_productos'))
 
-@dashboard_bp.route("/reservas", methods=["GET"])
+@dashboard_bp.route("/admin/reservas", methods=["GET"])
 def dashboard_reservas():
     try:
         limit = request.args.get("limit", 10)

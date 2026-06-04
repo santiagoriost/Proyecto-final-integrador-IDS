@@ -8,6 +8,8 @@ from routes.reseñas import reseñas_bp
 from routes.locales import locales_bp  
 from extensions import mail
 from flask_cors import CORS
+from routes.ventas import ventas_bp
+
 app = Flask(__name__)
 CORS(app)
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
@@ -26,6 +28,7 @@ app.register_blueprint(administradores_bp, url_prefix="/administradores")
 app.register_blueprint(reseñas_bp, url_prefix="/reseñas")
 app.register_blueprint(reservas_bp, url_prefix="/reservas")
 app.register_blueprint(locales_bp, url_prefix="/locales")
+app.register_blueprint(ventas_bp, url_prefix="/ventas")
 
 if __name__ == "__main__":
     app.run(port=5001, debug=True)

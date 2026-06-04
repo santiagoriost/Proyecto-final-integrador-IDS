@@ -1,0 +1,269 @@
+:root{
+    --bg: #F6EEE3;
+    --text: #3A2A23;
+    --muted: #8a6252;
+    --dark-solid: #3A2A23;
+    --pink: #F5B6C8;
+    --purple: #D8C2F0;
+    --shadow: 0 25px 70px rgba(70, 45, 35, 0.24);
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body.admin-body{
+    min-height: 100vh;
+    display: flex;
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+
+    background:
+        url("../imagenes/fondo-cafes.webp");
+
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll;
+}
+
+/* SIDEBAR */
+
+.admin-sidebar{
+    margin: 22px 0 22px 22px;
+    width: 290px;
+    padding: 16px;
+    border-radius: 34px;
+
+    background: rgba(60, 38, 30, 0.28);
+
+    backdrop-filter: blur(26px) saturate(140%);
+    -webkit-backdrop-filter: blur(26px) saturate(140%);
+
+    border: 1px solid rgba(255,255,255,0.18);
+
+    box-shadow:
+        0 20px 55px rgba(40,25,20,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-brand{
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 28px;
+    padding: 28px 18px;
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+    text-align: center;
+    margin-bottom: 22px;
+}
+
+.brand-logo,
+.brand-icon{
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 14px;
+    border-radius: 22px;
+    background: rgba(246,238,227,0.22);
+    border: 1px solid rgba(255,255,255,0.26);
+    display: grid;
+    place-items: center;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+.logo-cup{
+    font-size: 2rem;
+    filter: drop-shadow(0 8px 14px rgba(0,0,0,0.35));
+}
+
+.admin-brand h1{
+    font-size: 1.25rem;
+    color: #fff;
+}
+
+.admin-brand span{
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.72);
+    letter-spacing: 2px;
+}
+
+.admin-menu{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.10);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 24px;
+    padding: 14px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.10);
+}
+
+.menu-section{
+    margin: 18px 12px 8px;
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 1.5px;
+}
+
+.admin-link{
+    text-decoration: none;
+    color: rgba(255,255,255,0.86);
+    padding: 13px 15px;
+    border-radius: 16px;
+    font-size: 0.94rem;
+    transition: 0.25s ease;
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.admin-link:hover,
+.admin-link.active{
+    background: rgba(246,238,227,0.86);
+    color: var(--dark-solid);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.16);
+    transform: translateX(4px);
+}
+
+.admin-sidebar-footer{
+    margin-top: 22px;
+}
+
+.logout-link{
+    display: block;
+    text-decoration: none;
+    color: #fff;
+    background: rgba(255,255,255,0.12);
+    padding: 13px 15px;
+    border-radius: 16px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+/* MAIN */
+
+.admin-main{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 22px 22px 22px 0;
+    gap: 18px;
+    margin-left: 18px;
+}
+/* TOPBAR */
+
+.admin-topbar{
+    height: 76px;
+    border-radius: 26px;
+    background: rgba(255, 250, 245, 0.233);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.296);
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 22px;
+}
+
+.menu-toggle{
+    border: none;
+    background: var(--dark-solid);
+    color: white;
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    cursor: pointer;
+}
+
+.admin-search{
+    width: min(440px, 45%);
+    background: rgba(255,250,245,0.72);
+    border: 1px solid rgba(120, 85, 72, 0.16);
+    border-radius: 999px;
+    padding: 12px 18px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.admin-search input{
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text);
+}
+
+.admin-user{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text);
+}
+
+.notification,
+.theme-icon{
+    width: 40px;
+    height: 40px;
+    background: rgba(255,250,245,0.75);
+    border: 1px solid rgba(120, 85, 72, 0.16);
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.admin-avatar{
+    width: 42px;
+    height: 42px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+}
+
+.admin-user-info{
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-user-info small{
+    color: rgba(58,42,35,0.72);
+}
+
+/* CONTENT */
+
+.admin-content{
+    flex: 1;
+    margin-top: 0;
+    border-radius: 34px;
+    padding: 34px;
+    overflow-y: auto;
+
+    background: rgba(255, 250, 245, 0.233);
+    border: 1px solid rgba(255,255,255,0.28);
+
+    box-shadow:
+        0 25px 70px rgba(70,45,35,0.22),
+        inset 0 1px 0 rgba(255,255,255,0.18);
+
+    backdrop-filter: blur(22px) saturate(130%);
+    -webkit-backdrop-filter: blur(22px) saturate(130%);
+}

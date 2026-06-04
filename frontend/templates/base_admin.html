@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin | Cafetería 11{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/admin.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="admin-body">
+
+    <aside class="admin-sidebar">
+        <div class="admin-brand">
+            <div class="brand-logo">
+    <span class="logo-cup">☕</span>
+    </div>
+    <h1>Cafetería 11</h1>
+    <span>PANEL ADMIN</span>
+        </div>
+
+        <nav class="admin-menu">
+            <a href="#" class="admin-link">⌂ Dashboard</a>
+            <a href="{{ url_for('dashboard.dashboard_reservas') }}" class="admin-link active">▣ Reservas</a>
+            <a href="#" class="admin-link">☕ Productos</a>
+            <a href="#" class="admin-link">▥ Ventas</a>
+            <a href="#" class="admin-link">☆ Más Vendidos</a>
+            <a href="#" class="admin-link">☏ Reseñas</a>
+            <a href="#" class="admin-link">⚘ Servicios Extras</a>
+
+            <p class="menu-section">ANALÍTICAS</p>
+
+            <a href="{{ url_for('dashboard.dashboard_estadisticas') }}" class="admin-link">◔ Estadísticas</a>
+            <a href="#" class="admin-link">▤ Reportes</a>
+            <a href="#" class="admin-link">↺ Historial</a>
+        </nav>
+
+        <div class="admin-sidebar-footer">
+            <a href="#" class="logout-link">↪ Cerrar sesión</a>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-topbar">
+            <button class="menu-toggle">☰</button>
+
+            <div class="admin-search">
+                <span>⌕</span>
+                <input type="text" placeholder="Buscar reservas, clientes...">
+            </div>
+
+            <div class="admin-user">
+                <span class="notification">🔔</span>
+                <span class="theme-icon">☼</span>
+                <div class="admin-avatar">A</div>
+                <div class="admin-user-info">
+                    <strong>Admin</strong>
+                    <small>Administrador</small>
+                </div>
+                <span>⌄</span>
+            </div>
+        </header>
+
+        <section class="admin-content">
+            {% block contenido %}{% endblock %}
+        </section>
+    </main>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
