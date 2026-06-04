@@ -113,7 +113,7 @@ def logout():
     #Aca el logout se maneja en el front end asi que aca no va mas nada
     return jsonify({"message": "Logout exitoso"}), 200
 
-@usuarios_bp.route("/profile", methods=["GET"])
+@usuarios_bp.route("/me", methods=["GET"])
 @jwt_required()
 def mostrar_perfil():
     conn = None
@@ -124,7 +124,7 @@ def mostrar_perfil():
 
         id_usuario = get_jwt_identity()
         datos_usuario = get_jwt()
-        return jsonify({"usuario": { "id": id_usuario, "nombre": datos_usuario.get("nombre"), "rol": datos_usuario.get("rol")}}), 200
+        return jsonify({"usuario": { "id": id_usuario, "nombre": datos_usuario.get("nombre"), "apellido": datos_usuario.get("apellido"), "email": datos_usuario.get("email"), "rol": datos_usuario.get("rol")}}), 200
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -207,10 +207,10 @@ def mostrar_usuario(id):
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
-        id_usuario = get_jwt_identity()
+        #id_usuario = get_jwt_identity()
         datos_usuario = get_jwt()
         
-        if datos_usuario.get("rol") != "admin" and id_usuario != str(id):
+        if datos_usuario.get("rol") != "admin":
             return jsonify({"error": "Acceso denegado"}), 403
         
         query_mostrar_user = "SELECT * FROM usuarios WHERE id_usuario = %s"
@@ -221,7 +221,8 @@ def mostrar_usuario(id):
         if not usuario:
             return jsonify({"error": "Usuario no encontrado"}), 404
         
-        return jsonify({"usuario": usuario}), 200
+        usuario_a_mostrar = {"id": usuario["id_usuario"], "nombre": usuario["nombre"], "apellido": usuario["apellido"], "email": usuario["email"], "rol": usuario["rol"]}
+        return jsonify({"usuario": usuario_a_mostrar}), 200
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
