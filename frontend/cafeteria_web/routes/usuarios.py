@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, request, redirect, flash, url_for,
 import requests
 API_URL = "http://localhost:5001/usuarios/login"
 API_REGISTER = "http://localhost:5001/usuarios/register"
+API_FORGOT_PASSWORD = "http://localhost:5001/usuarios/forgot-password"
+API_RESET_PASSWORD = "http://localhost:5001/usuarios/reset-password"
 usuarios_bp = Blueprint("usuarios", __name__)
 
 @usuarios_bp.route("/login/", methods=["GET", "POST"])
@@ -59,3 +61,54 @@ def manejo_register():
             flash(f"Error con el servidor: {str(e)}", 'error')
     
     return render_template("register.html")
+
+@usuarios_bp.route("/forgot-password/", methods=["GET", "POST"])
+def manejo_forgot_password():
+    if request.method == "POST":
+        email = request.form.get("email", "").strip()
+        if not email:
+            flash('Correo electrónico no ingresado.', 'error')
+            return redirect(url_for('usuarios.manejo_forgot_password'))
+        
+        datos_email = {
+            "email": email
+        }
+        try:
+            respuesta = requests.put(API_FORGOT_PASSWORD, json=datos_email)
+            if respuesta.status_code == 200:
+                flash('Se ha enviado un correo para restablecer tu contraseña.', 'success')
+                return redirect(url_for('usuarios.manejo_login'))
+            elif respuesta.status_code == 404:
+                flash('usuario no encontrado.', 'error')
+        except Exception as e:
+            flash('Error con el servidor', 'error')
+    return render_template("forgot_password.html")
+
+@usuarios_bp.route("/reset-password/", methods=["GET", "POST"])
+def manejo_reset_password():
+    token = request.args.get("token")
+    if request.method == "POST":
+        nueva_clave = request.form.get("nueva_clave", "").strip()
+        if not nueva_clave:
+            flash('Nueva contraseña no ingresada.', 'error')
+            return redirect(url_for('usuarios.manejo_reset_password', token=token))
+        confirmar_clave = request.form.get("confirmar_clave", "").strip()
+        if nueva_clave != confirmar_clave:
+            flash('Las contraseñas no coinciden.', 'error')
+            return redirect(url_for('usuarios.manejo_reset_password', token=token))
+        datos_reset = {
+            "token": token,
+            "nueva_clave": nueva_clave
+        }
+        try:
+            respuesta = requests.post(API_RESET_PASSWORD, json=datos_reset)
+            if respuesta.status_code == 200:
+                flash('Contraseña restablecida correctamente. Por favor, inicie sesión.', 'success')
+                return redirect(url_for('usuarios.manejo_login'))
+            elif respuesta.status_code == 400:
+                flash('Token inválido o expirado.', 'error')
+        except Exception as e:
+            flash('Error con el servidor', 'error')
+    return render_template("reset_password.html")
+        
+        

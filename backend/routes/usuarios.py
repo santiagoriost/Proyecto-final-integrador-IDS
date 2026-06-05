@@ -4,6 +4,8 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 from db.db_conn import get_connection
 import secrets 
 from datetime import timedelta, datetime
+from flask_mail import Message
+from extensions import mail
 import traceback
 
 
@@ -332,9 +334,11 @@ def forgot_password():
         cursor.execute(actualizar_token_query, (reset_token, expiration_time, usuario["id_usuario"]))
         conn.commit()
 
-        reset_link = f"http://localhost:3000/reset-password?token={reset_token}"
+        reset_link = f"http://localhost:5001/reset-password?token={reset_token}"
 
-        #aca se manda el mail con el link pero se hace con el front tambien
+        msg = Message("Restablecer contraseña", recipients=[email])
+        msg.body = f"Hola,\n\nRecibimos una solicitud para restablecer tu contraseña. Haz clic en el siguiente enlace para restablecerla:\n\n{reset_link}\n\nSi no solicitaste este cambio, puedes ignorar este correo.\n\nSaludos."
+        mail.send(msg)
 
         return jsonify({"message": "Se mando el mail para restablecer tu contraseña", "reset_link": reset_link}), 200
     
@@ -346,7 +350,7 @@ def forgot_password():
         if conn:
             conn.close()
 
-@usuarios_bp.route("/change-password", methods=["POST"])
+@usuarios_bp.route("/reset-password", methods=["POST"])
 def change_password():
     conn = None
     cursor = None
@@ -361,19 +365,21 @@ def change_password():
         if not reset_token or not nueva_clave:
             return jsonify({"error": "Faltan campos obligatorios"}), 400
         
-        query_validar_token = "SELECT id_usuario, reset_token_expiration FROM usuarios WHERE reset_token = %s"
-        cursor.execute(query_validar_token, (reset_token,))
+        query_validacion_token = "SELECT id_usuario, reset_token_expiration FROM usuarios WHERE reset_token = %s"
+        cursor.execute(query_validacion_token, (reset_token,))
         usuario = cursor.fetchone()
         if not usuario:
             return jsonify({"error": "Token inválido"}), 400
         
+        if usuario["reset_token_expiration"] < datetime.now():
+            return jsonify({"error": "Token expirado"}), 400
+        
         nueva_clave_hashed = bcrypt.generate_password_hash(nueva_clave).decode("utf-8")
-
         query_actualizar_clave = "UPDATE usuarios SET clave = %s, reset_token = NULL, reset_token_expiration = NULL WHERE id_usuario = %s"
         cursor.execute(query_actualizar_clave, (nueva_clave_hashed, usuario["id_usuario"]))
         conn.commit()
 
-        return jsonify({"message": "Contraseña actualizada correctamente"}), 200
+        return jsonify({"message": "Contraseña restablecida correctamente"}), 200
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
