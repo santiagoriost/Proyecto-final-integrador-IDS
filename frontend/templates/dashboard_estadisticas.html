@@ -47,5 +47,8 @@
         </article>
     </div>
 </section>
+<script id="reservas-json" type="application/json">
+    {{ reservas | tojson }}
+</script>
 <script src="{{ url_for('static', filename='js/dashboard_estadisticas.js') }}"></script>
 {% endblock %}
