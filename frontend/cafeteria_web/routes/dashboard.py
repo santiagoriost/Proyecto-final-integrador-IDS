@@ -16,11 +16,24 @@ def dashboard_productos():
             datos = respuesta.json()
             lista_productos = datos.get("productos", [])
             links_hateos = datos.get("_links", {})
-            return render_template('dashboard_productos.html', productos = lista_productos, links = links_hateos)
+            return render_template(
+                "dashboard_productos.html",
+                productos=lista_productos,
+                links=links_hateos
+            )
+        flash("No se pudieron cargar los productos", "error")
+        return render_template(
+            "dashboard_productos.html",
+            productos=[],
+            links={}
+        )
     except Exception as e:
-        flash('Datos no encontrados', 'error')
-        return render_template('dashboard_productos.html')
-
+        flash(f"Error: {str(e)}", "error")
+        return render_template(
+            "dashboard_productos.html",
+            productos=[],
+            links={}
+        )
 @dashboard_bp.route("/producto/<int:id_producto>", methods=["GET", "POST"])
 def gestionar_producto(id_producto):
     token = session.get("token")
@@ -92,15 +105,13 @@ def agregar_producto():
             flash(f"Error en el backend: {str(e)}", "error")
     return render_template('dashboard_producto_altas.html')
 
-
 @dashboard_bp.route("/admin/reservas", methods=["GET"])
 def dashboard_reservas():
     try:
         limit = request.args.get("limit", 10)
-        offset = request.args.get("offset", 0) 
+        offset = request.args.get("offset", 0)
         url = f"{API_RESERVAS_URL}/?limit={limit}&offset={offset}"
         respuesta = requests.get(url)
-
         if respuesta.status_code == 200:
             datos = respuesta.json()
             lista_reservas = datos.get("reservas", [])
@@ -110,13 +121,113 @@ def dashboard_reservas():
                 reservas=lista_reservas,
                 links=links_hateos
             )
-        flash("No se encontraron reservas", "error")
-        return render_template("dashboard_reservas.html", reservas=[])
-
+        flash("No se pudieron cargar las reservas", "error")
+        return render_template(
+            "dashboard_reservas.html",
+            reservas=[],
+            links={}
+        )
     except Exception as e:
         flash(f"Error al cargar reservas: {str(e)}", "error")
-        return render_template("dashboard_reservas.html", reservas=[])
+        return render_template(
+            "dashboard_reservas.html",
+            reservas=[],
+            links={}
+        )
+@dashboard_bp.route(
+    "/admin/reservas/<int:id_reserva>/estado",
+    methods=["POST"]
+)
+def cambiar_estado_reserva(id_reserva):
+    estado = request.form.get("estado")
+    datos = {
+        "estado": estado
+    }
+    try:
+        respuesta = requests.patch(
+            f"http://127.0.0.1:5001/reservas/{id_reserva}/estado",
+            json=datos
+        )
+        if respuesta.status_code == 200:
+            flash("Estado actualizado 😎", "success")
+        else:
+            flash("No se pudo actualizar", "error")
+    except Exception as e:
+        flash(f"Error: {str(e)}", "error")
+    return redirect(url_for("dashboard.dashboard_reservas"))
+
+@dashboard_bp.route("/admin/ventas", methods=["GET"])
+def dashboard_ventas():
+    productos = []
+    ventas = []
+    try:
+        respuesta_productos = requests.get("http://127.0.0.1:5001/productos/")
+        if respuesta_productos.status_code == 200:
+            datos_productos = respuesta_productos.json()
+            productos = datos_productos.get("productos", [])
+        respuesta_ventas = requests.get("http://127.0.0.1:5001/ventas/")
+        if respuesta_ventas.status_code == 200:
+            datos_ventas = respuesta_ventas.json()
+            ventas = datos_ventas.get("ventas", [])
+    except Exception as e:
+        print(e)
+    return render_template(
+        "dashboard_ventas.html",
+        productos=productos,
+        ventas=ventas
+    )
+
+@dashboard_bp.route(
+    "/admin/ventas/registrar",
+    methods=["POST"]
+)
+def registrar_venta_admin():
+    producto_id = request.form.get("producto_id")
+    cantidad = request.form.get("cantidad")
+    datos = {
+        "productos": [
+            {
+                "producto_id": int(producto_id),
+                "cantidad": int(cantidad)
+            }
+        ]
+    }
+    try:
+        respuesta = requests.post(
+            "http://127.0.0.1:5001/ventas/",
+            json=datos
+        )
+        if respuesta.status_code == 201:
+
+            flash("Venta registrada 😎", "success")
+        else:
+            datos_error = respuesta.json()
+            flash(
+                datos_error.get(
+                    "error",
+                    "No se pudo registrar"
+                ),
+                "error"
+            )
+    except Exception as e:
+        flash(f"Error: {str(e)}", "error")
+    return redirect(
+        url_for("dashboard.dashboard_ventas")
+    )
 
 @dashboard_bp.route("/estadisticas", methods=["GET"])
 def dashboard_estadisticas():
-    return render_template("dashboard_estadisticas.html")
+    reservas = []
+    try:
+        respuesta = requests.get(
+            "http://127.0.0.1:5001/reservas/?limit=100"
+        )
+        if respuesta.status_code == 200:
+            datos = respuesta.json()
+            reservas = datos.get("reservas", [])
+    except Exception as e:
+        print(e)
+    return render_template(
+        "dashboard_estadisticas.html",
+        reservas=reservas
+    )

@@ -1,16 +1,30 @@
 {% extends "base_admin.html" %}
 {% block title %}Dashboard Productos{% endblock %}
+
 {% block extra_css %}
-<link rel="stylesheet" href="{{url_for('static', filename='styles/dashboard_productos.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard_productos.css') }}">
 {% endblock %}
+
 {% block contenido %}
-<div class="contenedor_dashboard">
-    <div class="tabla_responsiva">
+<section class="productos-admin">
+
+    <div class="productos-header">
+        <div>
+            <h1>Productos</h1>
+            <p>Gestiona el menú, precios y stock de Cafetería 11</p>
+        </div>
+
+        <a href="{{ url_for('dashboard.agregar_producto') }}" class="btn-nuevo-producto">
+            ＋ Agregar producto
+        </a>
+    </div>
+
+    <div class="productos-table-card">
         <table class="tabla_productos">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nombre</th>
+                    <th>Producto</th>
                     <th>Precio</th>
                     <th>Stock</th>
                     <th>Tipo</th>
@@ -18,43 +32,26 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
+
             <tbody>
-                    {% for producto in productos %}
-                    <tr>
-                        <td>{{producto.id}}</td>
-                        <td>{{producto.nombre}}</td>
-                        <td>{{producto.precio}}</td>
-                        <td>{{producto.stock}}</td>
-                        <td>{{producto.tipo}}</td>
-                        <td>{{producto.local}}</td>
-                        <td>
-                            <a href="{{url_for('dashboard.gestionar_producto', id_producto=producto.id)}}" class="bttn_editar">Editar</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
+                {% for producto in productos %}
+                <tr>
+                    <td>{{ producto.id }}</td>
+                    <td>{{ producto.nombre }}</td>
+                    <td>${{ producto.precio }}</td>
+                    <td>{{ producto.stock }}</td>
+                    <td>{{ producto.tipo }}</td>
+                    <td>{{ producto.local }}</td>
+                    <td>
+                        <a href="{{ url_for('dashboard.gestionar_producto', id_producto=producto.id) }}" class="btn-editar">
+                            Editar
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
-    <a href="{{url_for('dashboard.agregar_producto')}}">Agregar producto</a>
-</div>
-{% if links %}
-<div class="contenedor_paginacion">
-    {% if links._first %}
-        <a href="{{url_for('dashboard.dashboard_productos')}}?_limit=10&_offset=0" class="btn_pag">Inicio</a>
-    {% endif %}
 
-    {% if links._prev %}
-        <a href="{{url_for('dashboard.dashboard_productos')}}?{{links._prev.href.split('?')[1]}}" class="btn_pag">Anterior</a>
-    {% endif %}
-
-    {% if links._next %}
-        <a href="{{url_for('dashboard.dashboard_productos')}}?{{links._next.href.split('?')[1]}}" class="btn_pag">Siguiente</a>
-    {% endif %}
-
-    {% if links._last %}
-        <a href="{{url_for('dashboard.dashboard_productos')}}?{{links._last.href.split('?')[1]}}" class="btn_pag">Ultimo</a>
-    {% endif %}
-</div>
-{% endif %}
-<!-- <script src="{{url_for('static', filename='js/dashboard.js')}}"></script> -->
+</section>
 {% endblock %}

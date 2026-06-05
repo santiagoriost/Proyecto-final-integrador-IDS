@@ -115,42 +115,6 @@ if (inputBusqueda) {
 if (btnFiltro) {
     btnFiltro.addEventListener("click", aplicarFiltros);
 }
-/* ESTADOS */
-document.querySelectorAll(".btn-estado").forEach(boton => {
-    boton.addEventListener("click", async () => {
-        const idReserva = boton.dataset.id;
-        const nuevoEstado = boton.dataset.estado;
-
-        try {
-            const respuesta = await fetch(
-                `http://127.0.0.1:5001/reservas/${idReserva}/estado`,
-                {
-                    method: "PATCH",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        estado: nuevoEstado
-                    })
-                }
-            );
-
-            const datos = await respuesta.json();
-            if (respuesta.ok) {
-                mostrarToast("Estado actualizado 😎", "success");
-
-                setTimeout(() => {
-                    location.reload();
-                }, 1200);
-            } else {
-                mostrarToast(datos.error || "Error al actualizar", "error");
-            }
-        } catch (error) {
-            console.error(error);
-            mostrarToast("Error del servidor", "error");
-        }
-    });
-});
 /* ELIMINAR */
 document.querySelectorAll(".btn-eliminar").forEach(boton => {
     boton.addEventListener("click", () => {

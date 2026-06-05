@@ -23,10 +23,17 @@ def manejo_login():
             respuesta = requests.post(API_URL, json=datos_usuario)
             if respuesta.status_code == 200:
                 datos_api = respuesta.json()
+
                 session["token"] = datos_api.get("token")
-                session["usuario"] = datos_api.get("usuario")
+                session["usuario"] = datos_api.get("usuario", {})
+                session["rol"] = datos_api.get("usuario", {}).get("rol")
+
                 flash('Inicio de sesion exitoso.', 'success')
-                return redirect(url_for('inicio.pagina_inicio'))
+
+                if session["rol"] == "admin":
+                        return redirect(url_for("dashboard.dashboard_reservas"))
+
+                return redirect(url_for("inicio.pagina_inicio"))
             elif respuesta.status_code == 404:
                 flash('Datos incorrectos, usuario no encontrado', 'error')
         except Exception as e:

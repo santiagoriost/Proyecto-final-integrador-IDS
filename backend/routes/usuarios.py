@@ -75,21 +75,20 @@ def login():
         if not email or not clave:
             return jsonify({"error": "Faltan campos obligatorios"}), 400
         
-        query_usuario = "SELECT * FROM usuarios WHERE email = %s"
+        query_usuario = "SELECT * FROM usuarios WHERE correo = %s"
         cursor.execute(query_usuario, (email,))
         usuario = cursor.fetchone()
 
         if not usuario: 
             return jsonify({"error": "Usuario no encontrado"}), 404
         
-        password_valida = bcrypt.check_password_hash(usuario["clave"], clave)
+        password_valida = bcrypt.check_password_hash(usuario["contraseña"], clave)
         if not password_valida:
             return jsonify({"error": "Contraseña incorrecta"}), 401
         
         claims = {
             "nombre": usuario["nombre"],
-            "apellido": usuario["apellido"],
-            "email": usuario["email"],
+            "correo": usuario["correo"],
             "rol": usuario["rol"]
         }
         token = create_access_token(identity=str(usuario["id_usuario"]), additional_claims=claims)
@@ -97,8 +96,7 @@ def login():
         return jsonify({"message": "Login exitoso", "token": token, "usuario": {
             "id": usuario["id_usuario"],
             "nombre": usuario["nombre"],
-            "apellido": usuario["apellido"],
-            "email": usuario["email"],
+            "correo": usuario["correo"],
             "rol": usuario["rol"]
         }}), 200
     

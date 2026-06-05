@@ -1,0 +1,104 @@
+const productoVenta = document.getElementById("productoVenta");
+const cantidadVenta = document.getElementById("cantidadVenta");
+const totalVenta = document.getElementById("totalVenta");
+
+const customSelect = document.querySelector(".ventas-product-select");
+const customBtn = customSelect.querySelector(".custom-select-btn");
+const customText = customSelect.querySelector(".custom-select-text");
+const customOptions = customSelect.querySelectorAll(".custom-options button");
+
+function actualizarTotal(){
+    const productoSeleccionado = document.querySelector(
+        `.custom-options button[data-value="${productoVenta.value}"]`
+    );
+
+    if(!productoSeleccionado){
+        totalVenta.textContent = "0.00";
+        return;
+    }
+
+    const precio = parseFloat(productoSeleccionado.dataset.precio);
+    const cantidad = parseInt(cantidadVenta.value || 0);
+
+    totalVenta.textContent = (precio * cantidad).toFixed(2);
+}
+
+customBtn.addEventListener("click", () => {
+    customSelect.classList.toggle("active");
+});
+
+customOptions.forEach(option => {
+    option.addEventListener("click", () => {
+        productoVenta.value = option.dataset.value;
+        customText.textContent = option.textContent;
+        customSelect.classList.remove("active");
+        actualizarTotal();
+    });
+});
+
+document.addEventListener("click", (e) => {
+    if(!customSelect.contains(e.target)){
+        customSelect.classList.remove("active");
+    }
+});
+
+cantidadVenta.addEventListener("input", actualizarTotal);
+
+const filtroFechaDesde = document.getElementById("filtroFechaDesde");
+const filtroFechaHasta = document.getElementById("filtroFechaHasta");
+const filtroTotalMin = document.getElementById("filtroTotalMin");
+const filtroTotalMax = document.getElementById("filtroTotalMax");
+const btnLimpiarFiltrosVentas = document.getElementById("btnLimpiarFiltrosVentas");
+
+function filtrarVentas(){
+    const filas = document.querySelectorAll("tbody tr");
+
+    filas.forEach(fila => {
+        const fechaTexto = fila.children[1].textContent.trim();
+        const totalTexto = fila.children[2].textContent.replace("$", "").trim();
+
+        const total = parseFloat(totalTexto);
+        const fechaVenta = new Date(fechaTexto);
+
+        const desde = filtroFechaDesde.value ? new Date(filtroFechaDesde.value) : null;
+        const hasta = filtroFechaHasta.value ? new Date(filtroFechaHasta.value) : null;
+
+        const totalMin = filtroTotalMin.value ? parseFloat(filtroTotalMin.value) : null;
+        const totalMax = filtroTotalMax.value ? parseFloat(filtroTotalMax.value) : null;
+
+        let visible = true;
+
+        if(desde && fechaVenta < desde) visible = false;
+        if(hasta && fechaVenta > hasta) visible = false;
+        if(totalMin !== null && total < totalMin) visible = false;
+        if(totalMax !== null && total > totalMax) visible = false;
+
+        fila.style.display = visible ? "" : "none";
+    });
+}
+
+filtroFechaDesde.addEventListener("input", filtrarVentas);
+filtroFechaHasta.addEventListener("input", filtrarVentas);
+filtroTotalMin.addEventListener("input", filtrarVentas);
+filtroTotalMax.addEventListener("input", filtrarVentas);
+
+btnLimpiarFiltrosVentas.addEventListener("click", () => {
+    filtroFechaDesde.value = "";
+    filtroFechaHasta.value = "";
+    filtroTotalMin.value = "";
+    filtroTotalMax.value = "";
+
+    filtrarVentas();
+});
+
+if (window.flatpickr) {
+    flatpickr("#filtroFechaDesde", {
+        dateFormat: "Y-m-d",
+        monthSelectorType: "static"
+    });
+
+    flatpickr("#filtroFechaHasta", {
+        dateFormat: "Y-m-d",
+        monthSelectorType: "static"
+    });
+}

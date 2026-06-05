@@ -1,0 +1,271 @@
+.ventas-admin{
+    padding: 2rem;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 30px;
+    color: #3d2b2b;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+.ventas-admin h1{
+    font-size: 3rem;
+    margin-bottom: .3rem;
+    color: #fff;
+}
+.ventas-admin p{
+    color: #3d2b2b;
+    margin-bottom: 2rem;
+}
+#formVenta{
+    display: grid;
+    grid-template-columns: 1.4fr 0.7fr 0.7fr auto;
+    gap: 16px;
+    align-items: end;
+    margin-top: 28px;
+    margin-bottom: 2rem;
+}
+#formVenta label{
+    color: #3d2b2b;
+    display: block;
+    margin-bottom: .5rem;
+    font-weight: 700;
+}
+#formVenta select,
+#formVenta input{
+    width: 100%;
+    height: 52px;
+    padding: 0 1rem;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.14);
+    color: #3d2b2b;
+    font-weight: 700;
+    outline: none;
+}
+#formVenta option{
+    color: #3d2b2b;
+    background: #f6eee3;
+}
+.total-box{
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #4b3131;
+    font-weight: 800;
+}
+#totalVenta{
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: #4b3131;
+}
+#formVenta button{
+    height: 52px;
+    min-width: 180px;
+    border: none;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #f1bfd0, #e7a9bf);
+    color: #4b3131;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all .25s ease;
+    box-shadow:
+        0 8px 20px rgba(231,169,191,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.35);
+}
+#formVenta button:hover{
+    transform: translateY(-2px);
+}
+h3{
+    color: #fff;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+table{
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.08);
+}
+thead{
+    background: rgba(255,255,255,0.12);
+}
+th{
+    padding: 1rem;
+    text-align: left;
+    color: #f7d7df;
+}
+td{
+    padding: 1.1rem 1.2rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    color: #fff7f2;
+    font-size: 1rem;
+    font-weight: 600;
+
+    text-shadow:
+        0 2px 10px rgba(0,0,0,0.18);
+}
+tbody tr{
+    transition: all .2s ease;
+}
+tbody tr:hover{
+    background: rgba(255,255,255,0.07);
+    transform: scale(1.003);
+}
+.ventas-filtros{
+    display: grid;
+    grid-template-columns: 1fr auto 1fr 1fr 1fr auto;
+    gap: 12px;
+    align-items: end;
+    margin: 24px 0;
+}
+.filtro-grupo{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.filtro-grupo label{
+    color: #fff7f2;
+    font-size: .85rem;
+    font-weight: 800;
+    text-shadow: 0 2px 8px rgba(0,0,0,.22);
+}
+.filtro-separador{
+    height: 48px;
+    display: grid;
+    place-items: center;
+    color: #fff7f2;
+    font-weight: 900;
+    font-size: 1.1rem;
+}
+.ventas-filtros input,
+.ventas-filtros button{
+    height: 48px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.14);
+    color: #3d2b2b;
+    font-weight: 700;
+    padding: 0 16px;
+    outline: none;
+}
+.ventas-filtros button{
+    background: linear-gradient(135deg, #f1bfd0, #e7a9bf);
+    cursor: pointer;
+}
+.ventas-product-select{
+    position: relative;
+}
+.custom-select-btn{
+    width: 100%;
+    height: 52px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.14);
+    padding: 0 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #3d2b2b;
+    font-weight: 700;
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+.custom-options{
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.18);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 14px 32px rgba(0,0,0,0.22);
+    z-index: 100;
+}
+.custom-options button{
+    border: none;
+    border-radius: 12px;
+    padding: 12px 14px;
+    text-align: left;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    cursor: pointer;
+    transition: .2s ease;
+}
+.custom-options button:hover{
+    background: rgba(255,255,255,0.18);
+}
+.ventas-product-select.active .custom-options{
+    display: flex;
+}
+.flatpickr-calendar{
+    background: rgba(255,255,255,0.12) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 22px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.25);
+    color: white;
+}
+.flatpickr-months .flatpickr-month{
+    color: white;
+}
+.flatpickr-current-month input.cur-year{
+    color: white !important;
+}
+.flatpickr-weekday{
+    color: #f7d7df !important;
+    font-weight: 700;
+}
+.flatpickr-day{
+    color: white;
+    border-radius: 12px;
+}
+.flatpickr-day:hover{
+    background: rgba(255,255,255,0.14);
+}
+.flatpickr-day.selected{
+    background: #e7a9bf !important;
+    border-color: #e7a9bf !important;
+    color: #3d2b2b !important;
+}
+.flatpickr-day.today{
+    border-color: #f1bfd0;
+}
+.flatpickr-monthDropdown-months,
+.numInput.cur-year{
+    background: transparent !important;
+    color: white !important;
+}
+.flatpickr-prev-month svg,
+.flatpickr-next-month svg{
+    fill: white !important;
+}
+.flatpickr-monthDropdown-months{
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: rgba(255,255,255,0.08) !important;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 4px 10px;
+    color: white !important;
+    font-weight: 700;
+}
+.flatpickr-monthDropdown-months option{
+    background: #5f4a44;
+    color: white;
+}

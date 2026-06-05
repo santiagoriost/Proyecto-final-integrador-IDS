@@ -149,10 +149,17 @@
 
                     <td>
                         <div class="acciones-cell">
-                            <button class="btn-icon btn-estado confirmar"
-                                data-id="{{ reserva.id }}"
-                                data-estado="Confirmada">✓</button>
+                            <form method="POST"
+                                action="{{ url_for('dashboard.cambiar_estado_reserva', id_reserva=reserva.id) }}"
+                                class="form-estado">
 
+                            <input type="hidden" name="estado" value="Confirmada">
+
+                            <button type="submit"
+                                class="btn-icon btn-estado confirmar">
+                                ✓
+                            </button>
+                        </form>
                             <button class="btn-icon btn-estado cancelar"
                                 data-id="{{ reserva.id }}"
                                 data-estado="Cancelada">×</button>

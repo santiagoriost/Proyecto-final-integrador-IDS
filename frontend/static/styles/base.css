@@ -16,7 +16,7 @@ body{
 }
 /* Main */
 main{
-    flex: 1;    /*Mantiene al footer abajo en la pagina*/
+    flex: 1;   
     padding: 20px;
 }
 /* Flash */

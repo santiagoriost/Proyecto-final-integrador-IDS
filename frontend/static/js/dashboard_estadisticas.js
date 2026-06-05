@@ -5,7 +5,6 @@ async function cargarEstadisticas() {
         );
         const datos = await respuesta.json();
         const reservas = datos.reservas || [];
-
 // KPIs
         const total = reservas.length;
         const confirmadas = reservas.filter(
@@ -24,9 +23,7 @@ async function cargarEstadisticas() {
             proceso;
         document.getElementById("reservasCanceladas").textContent =
             canceladas;
-
 //GRÁFICO ESTADOS 
-
         new Chart(
             document.getElementById("graficoEstados"),
             {

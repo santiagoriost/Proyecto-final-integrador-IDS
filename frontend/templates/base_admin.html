@@ -22,22 +22,22 @@
 
         <nav class="admin-menu">
             <a href="#" class="admin-link">⌂ Dashboard</a>
-            <a href="{{ url_for('dashboard.dashboard_reservas') }}" class="admin-link active">▣ Reservas</a>
+            <a href="{{ url_for('dashboard.dashboard_reservas') }}" class="admin-link">▣ Reservas</a>
             <a href="{{ url_for('dashboard.dashboard_productos') }}" class="admin-link">☕ Productos</a>
-            <a href="#" class="admin-link">▥ Ventas</a>
+            <a href="{{ url_for('dashboard.dashboard_ventas') }}" class="admin-link">▥ Ventas</a>
             <a href="#" class="admin-link">☆ Más Vendidos</a>
             <a href="#" class="admin-link">☏ Reseñas</a>
             <a href="#" class="admin-link">⚘ Servicios Extras</a>
-
             <p class="menu-section">ANALÍTICAS</p>
-
             <a href="{{ url_for('dashboard.dashboard_estadisticas') }}" class="admin-link">◔ Estadísticas</a>
             <a href="#" class="admin-link">▤ Reportes</a>
             <a href="#" class="admin-link">↺ Historial</a>
         </nav>
-
+        <button id="btnLogout" class="logout-link">
+                    ↪ Cerrar sesión
+        </button>
         <div class="admin-sidebar-footer">
-            <a href="#" class="logout-link">↪ Cerrar sesión</a>
+            <script src="{{ url_for('static', filename='js/admin_logout.js') }}"></script>
         </div>
     </aside>
 
@@ -79,5 +79,6 @@
     </main>
 
     {% block extra_js %}{% endblock %}
+<script src="{{ url_for('static', filename='js/admin_logout.js') }}"></script>
 </body>
 </html>
