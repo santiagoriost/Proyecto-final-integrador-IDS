@@ -4,6 +4,7 @@ API_URL = "http://localhost:5001/usuarios/login"
 API_REGISTER = "http://localhost:5001/usuarios/register"
 API_FORGOT_PASSWORD = "http://localhost:5001/usuarios/forgot-password"
 API_RESET_PASSWORD = "http://localhost:5001/usuarios/reset-password"
+API_PERFIL = "http://localhost:5001/usuarios/me"
 usuarios_bp = Blueprint("usuarios", __name__)
 
 @usuarios_bp.route("/login/", methods=["GET", "POST"])
@@ -110,5 +111,30 @@ def manejo_reset_password():
         except Exception as e:
             flash('Error con el servidor', 'error')
     return render_template("reset_password.html")
-        
-        
+
+@usuarios_bp.route("/logout/")
+def manejo_logout():
+    session.pop("token", None)
+    flash('Sesión cerrada exitosamente.', 'success')
+    return redirect(url_for('inicio.pagina_inicio'))
+
+@usuarios_bp.route("/perfil/")
+def manejo_perfil():
+    token = session.get("token")
+    if not token:
+        flash('Debes iniciar sesión para ver tu perfil.', 'error')
+        return redirect(url_for('usuarios.manejo_login'))
+    
+    try:
+        headers = {"Authorization": f"Bearer {token}"}
+        respuesta = requests.get(API_PERFIL, headers=headers)
+        if respuesta.status_code != 200:
+            flash('Error al obtener el perfil.', 'error')
+            return redirect(url_for('inicio.pagina_inicio'))
+        datos_perfil = respuesta.json()
+        return render_template("perfil.html", perfil=datos_perfil)
+    except Exception as e:
+        flash('Error con el servidor', 'error')
+        return redirect(url_for('inicio.pagina_inicio'))
+    
+    

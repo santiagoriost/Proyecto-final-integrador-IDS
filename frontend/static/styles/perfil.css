@@ -1,0 +1,16 @@
+.contenedor_perfil{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(211 211 211 / 50%);
+    gap: 30px;
+    margin: 100px 670px;
+    padding: 50px;
+    border-style: hidden;
+    border-radius: 15px;
+}
+
+.dato{
+    font-size: 18px;
+}

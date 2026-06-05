@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}mi perfil{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{url_for('static', filename='styles/perfil.css')}}">
+{% endblock %}
+
+{% block contenido %}
+<div class="perfil-container">
+    <h1>Mi Perfil</h1>
+    <div class="datos-perfil">
+        <p><strong>Nombre:</strong> {{ usuario.nombre }}</p>
+        <p><strong>Apellido:</strong> {{ usuario.apellido }}</p>
+        <p><strong>Email:</strong> {{ usuario.email }}</p>
+        <p><strong>Role:</strong> {{ usuario.rol }}</p>
+    </div>
+</div>
+{% endblock %}
