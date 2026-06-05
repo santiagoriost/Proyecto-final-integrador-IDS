@@ -24,6 +24,7 @@ def manejo_login():
             if respuesta.status_code == 200:
                 datos_api = respuesta.json()
                 session["token"] = datos_api.get("token")
+                session["usuario"] = datos_api.get("usuario")
                 flash('Inicio de sesion exitoso.', 'success')
                 return redirect(url_for('inicio.pagina_inicio'))
             elif respuesta.status_code == 404:
@@ -115,6 +116,7 @@ def manejo_reset_password():
 @usuarios_bp.route("/logout/")
 def manejo_logout():
     session.pop("token", None)
+    session.pop("usuario", None)
     flash('Sesión cerrada exitosamente.', 'success')
     return redirect(url_for('inicio.pagina_inicio'))
 
@@ -132,9 +134,9 @@ def manejo_perfil():
             flash('Error al obtener el perfil.', 'error')
             return redirect(url_for('inicio.pagina_inicio'))
         datos_perfil = respuesta.json()
-        return render_template("perfil.html", perfil=datos_perfil)
+        return render_template("perfil.html", usuario=datos_perfil.get("usuario"))
     except Exception as e:
-        flash('Error con el servidor', 'error')
+        flash(f'Error con el servidor: {str(e)}', 'error')
         return redirect(url_for('inicio.pagina_inicio'))
     
     
