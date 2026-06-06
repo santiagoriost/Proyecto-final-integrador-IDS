@@ -218,16 +218,24 @@ def registrar_venta_admin():
 @dashboard_bp.route("/estadisticas", methods=["GET"])
 def dashboard_estadisticas():
     reservas = []
+    ventas = []
     try:
-        respuesta = requests.get(
+        respuesta_reservas = requests.get(
             "http://127.0.0.1:5001/reservas/?limit=100"
         )
-        if respuesta.status_code == 200:
-            datos = respuesta.json()
-            reservas = datos.get("reservas", [])
+        if respuesta_reservas.status_code == 200:
+            datos_reservas = respuesta_reservas.json()
+            reservas = datos_reservas.get("reservas", [])
+        respuesta_ventas = requests.get(
+            "http://127.0.0.1:5001/ventas/"
+        )
+        if respuesta_ventas.status_code == 200:
+            datos_ventas = respuesta_ventas.json()
+            ventas = datos_ventas.get("ventas", [])
     except Exception as e:
         print(e)
     return render_template(
         "dashboard_estadisticas.html",
-        reservas=reservas
+        reservas=reservas,
+        ventas=ventas
     )

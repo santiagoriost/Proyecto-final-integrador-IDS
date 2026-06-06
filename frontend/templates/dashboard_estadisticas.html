@@ -15,21 +15,21 @@
         <span>Resumen visual de reservas y actividad del local</span>
     </div>
     <div class="kpi-grid">
-        <article class="kpi-card">
-            <span>Total reservas</span>
+        <article class="kpi-card ingresos">
+            <span>Ingresos totales</span>
+            <strong id="ingresosTotales">$0</strong>
+        </article>
+        <article class="kpi-card ventas">
+            <span>Total ventas</span>
+            <strong id="totalVentas">0</strong>
+        </article>
+        <article class="kpi-card reservas">
+            <span>Reservas totales</span>
             <strong id="totalReservas">0</strong>
         </article>
-        <article class="kpi-card">
-            <span>Confirmadas</span>
-            <strong id="reservasConfirmadas">0</strong>
-        </article>
-        <article class="kpi-card">
-            <span>En proceso</span>
-            <strong id="reservasProceso">0</strong>
-        </article>
-        <article class="kpi-card">
-            <span>Canceladas</span>
-            <strong id="reservasCanceladas">0</strong>
+        <article class="kpi-card estrella">
+            <span>Producto estrella</span>
+            <strong id="productoEstrella">---</strong>
         </article>
     </div>
     <div class="charts-grid">
@@ -49,6 +49,9 @@
 </section>
 <script id="reservas-json" type="application/json">
     {{ reservas | tojson }}
+</script>
+<script id="ventas-json" type="application/json">
+    {{ ventas | tojson }}
 </script>
 <script src="{{ url_for('static', filename='js/dashboard_estadisticas.js') }}"></script>
 {% endblock %}

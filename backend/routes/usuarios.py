@@ -88,7 +88,8 @@ def login():
         
         claims = {
             "nombre": usuario["nombre"],
-            "correo": usuario["correo"],
+            "apellido": usuario["apellido"],
+            "email": usuario["correo"],
             "rol": usuario["rol"]
         }
         token = create_access_token(identity=str(usuario["id_usuario"]), additional_claims=claims)
@@ -96,11 +97,15 @@ def login():
         return jsonify({"message": "Login exitoso", "token": token, "usuario": {
             "id": usuario["id_usuario"],
             "nombre": usuario["nombre"],
-            "correo": usuario["correo"],
+            "apellido": usuario["apellido"],
+            "email": usuario["email"],
             "rol": usuario["rol"]
         }}), 200
     
     except Exception as e:
+        import traceback
+        traceback.print_exc()
+
         return jsonify({"error": str(e)}), 500
     finally:        
         if cursor:
