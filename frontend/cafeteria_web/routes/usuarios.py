@@ -106,7 +106,7 @@ def manejo_reset_password():
             flash('Las contraseñas no coinciden.', 'error')
             return redirect(url_for('usuarios.manejo_reset_password', token=token))
         datos_reset = {
-            "token": token,
+            "reset_token": token,
             "nueva_clave": nueva_clave
         }
         try:
