@@ -51,6 +51,25 @@
                 {% endfor %}
             </tbody>
         </table>
+    {% if links %}
+        <div class="contenedor_paginacion">
+            {% if links._first %}
+                <a href="{{url_for('dashboard.dashboard_productos')}}?_limit=10&_offset=0" class="btn_pag">Inicio</a>
+            {% endif %}
+
+            {% if links._prev %}
+                <a href="{{url_for('dashboard.dashboard_productos')}}?{{links._prev.href.split('?')[1]}}" class="btn_pag">Anterior</a>
+            {% endif %}
+
+            {% if links._next %}
+                <a href="{{url_for('dashboard.dashboard_productos')}}?{{links._next.href.split('?')[1]}}" class="btn_pag">Siguiente</a>
+            {% endif %}
+
+            {% if links._last %}
+                <a href="{{url_for('dashboard.dashboard_productos')}}?{{links._last.href.split('?')[1]}}" class="btn_pag">Ultimo</a>
+            {% endif %}
+        </div>
+    {% endif %}
     </div>
 
 </section>
