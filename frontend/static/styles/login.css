@@ -2,26 +2,80 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-family: sans-serif;
     justify-content: center;
-    background-color: rgb(211 211 211 / 50%);
-    gap: 10px;
-    margin: 100px 670px;
-    padding: 30px;
+    background-color: #f59292d0;
+    color: #0c0606;
+    gap: 30px;
+    margin: 110px 670px;
+    padding: 50px;
     border-style: hidden;
     border-radius: 15px;
+
 }
-form{
+.form_email{
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    font-family: sans-serif;
+    text-decoration: underline;
+
+}
+
+.form_email input{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 5px;
+}
+.form_contraseña{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.form_contraseña input{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 5px;
+}
+.form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 .form_group{
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
 }
 .form_actions{
-    margin: 20px;
+    margin: 1px 50px;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
 }
-#email_usuario{
-    margin-bottom: 20px;
+.form_group input{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 5px;
+}
+
+.form_boton_forgot_password{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 1px 70px;
+}
+
+.form_boton_register{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 5px 50px;
 }

@@ -5,20 +5,24 @@
 {% endblock %}
 {% block contenido %}
 <div class="contenedor_form">
-<form action="{{url_for('usuarios.manejo_login')}}" method="post">
-    <div class="form_group">
-    <label for="email_usuario">Email:</label>
-    <input type="email" id="email_usuario" name="form_email" placeholder="Ingrese su email...">
-    <label for="clave_usuario">Contraseña:</label>
-    <input type="password" id="clave_usuario" name="form_clave" placeholder="Ingrese su contraseña...">
-    </div>
-
-    <div class="form_actions">
-        <button type="submit">Iniciar sesion</button>
-    </div>
-</form>
+    <form action="{{url_for('usuarios.manejo_login')}}" method="post">
+        <div class="form_email">
+            <label for="email_usuario">Email:</label>
+                <div class="form_email_input">
+                    <input type="email" id="email_usuario" name="form_email" placeholder="Ingrese su email...">
+                        <div class="form_contraseña">
+                            <label for="clave_usuario">Contraseña:</label>
+                                <div class="form_contraseña_input">
+                                    <input type="password" id="clave_usuario" name="form_clave" placeholder="Ingrese su contraseña...">
+                                        <div class="form_actions">
+                                            <button type="submit">Iniciar sesion</button>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </div>
+    </form> 
 <a href="{{url_for('usuarios.manejo_forgot_password')}}"><button id="nueva_clave_bttn">¿Olvidaste tu contraseña?</button></a>
 <a href="{{url_for('usuarios.manejo_register')}}"><button type="button" id="nueva_cuenta_bttn">Crear cuenta nueva</button></a>
 </div>
-
 {% endblock %}

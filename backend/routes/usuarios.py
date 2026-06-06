@@ -321,7 +321,7 @@ def forgot_password():
         cursor = conn.cursor(dictionary=True)
 
         datos = request.get_json()
-        email = datos.get ("email")
+        email = datos.get("email")
         if not email:
             return jsonify({"error": "El campo email es obligatorio"}), 400
         
@@ -339,13 +339,15 @@ def forgot_password():
 
         reset_link = f"http://localhost:5002/reset-password?token={reset_token}"
 
-        msg = Message("Restablecer contraseña", recipients=[email])
+        msg = Message("Restablecer contraseña", recipients=[email], sender="jcunduri@fi.uba.ar")
         msg.body = f"Hola,\n\nRecibimos una solicitud para restablecer tu contraseña. Haz clic en el siguiente enlace para restablecerla:\n\n{reset_link}\n\nSi no solicitaste este cambio, puedes ignorar este correo.\n\nSaludos."
         mail.send(msg)
+
 
         return jsonify({"message": "Se mando el mail para restablecer tu contraseña", "reset_link": reset_link}), 200
     
     except Exception as e:
+        print(e)
         return jsonify({"error": str(e)}), 500
     finally:
         if cursor:

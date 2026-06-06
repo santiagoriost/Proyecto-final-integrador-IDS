@@ -3,12 +3,14 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: rgb(211 211 211 / 50%);
+    background-color: #f59292d0;
     gap: 10px;
     margin: 100px 670px;
     padding: 30px;
     border-style: hidden;
     border-radius: 15px;
+    font-family: sans-serif;
+
 }
 
 form{
@@ -20,6 +22,7 @@ form{
 .form_group{
     display: flex;
     flex-direction: column;
+    text-decoration: underline;
 }
 
 .form_actions{
