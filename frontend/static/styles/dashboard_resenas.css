@@ -1,0 +1,110 @@
+.resenas-admin {
+    padding: 2rem;
+}
+
+.resenas-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary, #fff);
+    margin-bottom: 0.3rem;
+}
+
+.resenas-header p {
+    color: var(--text-secondary, #ccc);
+    margin-bottom: 2rem;
+}
+
+.resenas-filtros-card {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-search {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    flex: 1;
+    min-width: 200px;
+}
+
+.filter-search input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary, #fff);
+    font-size: 0.95rem;
+    width: 100%;
+}
+
+.resenas-tabla-card {
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.12);
+    overflow: hidden;
+}
+
+.resenas-tabla-wrapper {
+    overflow-x: auto;
+}
+
+.resenas-tabla {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.resenas-tabla thead tr {
+    background: rgba(255,255,255,0.08);
+}
+
+.resenas-tabla thead th {
+    padding: 1rem 1.2rem;
+    text-align: left;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary, #bbb);
+}
+
+.resenas-tabla tbody tr {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    transition: background 0.2s;
+}
+
+.resenas-tabla tbody tr:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+.resenas-tabla tbody td {
+    padding: 1rem 1.2rem;
+    color: var(--text-primary, #fff);
+    font-size: 0.95rem;
+}
+
+.puntuacion-pill {
+    padding: 0.3rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.puntuacion-pill.p5 { background: rgba(100, 200, 100, 0.2); color: #a8d8a8; }
+.puntuacion-pill.p4 { background: rgba(150, 200, 100, 0.2); color: #c8e8a8; }
+.puntuacion-pill.p3 { background: rgba(200, 180, 80, 0.2);  color: #e8d898; }
+.puntuacion-pill.p2 { background: rgba(220, 140, 60, 0.2);  color: #e8b878; }
+.puntuacion-pill.p1 { background: rgba(220, 80, 80, 0.2);   color: #e89898; }
+
+.sin-datos {
+    text-align: center;
+    padding: 2rem !important;
+    color: var(--text-secondary, #bbb);
+    font-style: italic;
+}

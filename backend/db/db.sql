@@ -62,3 +62,19 @@ CREATE TABLE historial_acciones (
     detalle TEXT,
     fecha TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE ventas (
+    id_venta INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    total DECIMAL(10,2) NOT NULL,
+    fecha_venta TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE detalle_ventas (
+    id_detalle INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    venta_id INT NOT NULL,
+    producto_id INT NOT NULL,
+    cantidad INT NOT NULL,
+    precio_unitario DECIMAL(6,2) NOT NULL,
+    subtotal DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (venta_id) REFERENCES ventas(id_venta),
+    FOREIGN KEY (producto_id) REFERENCES productos(id_producto)
+);

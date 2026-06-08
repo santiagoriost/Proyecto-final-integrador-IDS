@@ -12,25 +12,26 @@
 <body class="admin-body">
 
     <aside class="admin-sidebar">
+
+    <div>
         <div class="admin-brand">
             <div class="brand-logo">
-    <span class="logo-cup">☕</span>
-    </div>
-    <h1>Cafetería 11</h1>
-    <span>PANEL ADMIN</span>
-        </div>
+                <img src="{{ url_for('static', filename='imagenes/cafeteria_logo.webp') }}" 
+                     alt="Logo Cafetería 11" 
+                     class="logo-cup">
+            </div>
 
+            <h1>Cafetería 11</h1>
+            <span>PANEL ADMIN</span>
+        </div>
         <nav class="admin-menu">
-            <a href="#" class="admin-link">⌂ Dashboard</a>
             <a href="{{ url_for('dashboard.dashboard_reservas') }}" class="admin-link">▣ Reservas</a>
-            <a href="{{ url_for('dashboard.dashboard_productos') }}" class="admin-link">☕ Productos</a>
+            <a href="{{ url_for('dashboard.dashboard_productos') }}" class="admin-link">🞇 Productos</a>
             <a href="{{ url_for('dashboard.dashboard_ventas') }}" class="admin-link">▥ Ventas</a>
-            <a href="#" class="admin-link">☆ Más Vendidos</a>
-            <a href="#" class="admin-link">☏ Reseñas</a>
-            <a href="#" class="admin-link">⚘ Servicios Extras</a>
+            <a href="{{ url_for('dashboard.dashboard_mas_vendidos') }}" class="admin-link">☆ Más Vendidos</a>
+            <a href="{{ url_for('dashboard.dashboard_resenas') }}" class="admin-link">⊞ Reseñas</a>
             <p class="menu-section">ANALÍTICAS</p>
             <a href="{{ url_for('dashboard.dashboard_estadisticas') }}" class="admin-link">◔ Estadísticas</a>
-            <a href="{{ url_for('dashboard.dashboard_reportes') }}"  class="admin-link">▤ Reportes</a>
             <a href="{{ url_for('dashboard.dashboard_historial') }}" class="admin-link">↺ Historial</a>
         </nav>
         <button id="btnLogout" class="logout-link">
@@ -63,17 +64,19 @@
         </header>
 
         <section class="admin-content">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    <div class="flash-container">
-                        {% for category, message in messages %}
-                        <div class="toast toast--{{ category }}">
-                            <span>{{ message }}</span>
+            {% if request.endpoint != "dashboard.dashboard_ventas" %}
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-container">
+                            {% for category, message in messages %}
+                            <div class="toast toast--{{ category }}">
+                                <span>{{ message }}</span>
+                            </div>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            {% endwith %}   
+                    {% endif %}
+                {% endwith %}
+            {% endif %} 
             {% block contenido %}{% endblock %}
         </section>
     </main>

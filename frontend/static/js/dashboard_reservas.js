@@ -143,7 +143,7 @@ if (btnConfirmarEliminar) {
             const datos = await respuesta.json();
 
             if (respuesta.ok) {
-                mostrarToast("Reserva eliminada 😎", "success");
+                mostrarToast("Reserva eliminada ", "success");
                 modalEliminar.classList.remove("show");
                 reservaAEliminar = null;
 
@@ -198,7 +198,7 @@ if (formNuevaReserva) {
 
             if (respuesta.ok) {
                 mostrarToast(
-                    "Reserva creada 😎",
+                    "Reserva creada ",
                     "success"
                 );
                 modalNuevaReserva.classList.remove("show");
@@ -253,7 +253,7 @@ if (btnExportarReservas) {
 
         URL.revokeObjectURL(url);
 
-        mostrarToast("Reservas exportadas 😎", "success");
+        mostrarToast("Reservas exportadas ", "success");
     });
 }
 if (window.flatpickr) {

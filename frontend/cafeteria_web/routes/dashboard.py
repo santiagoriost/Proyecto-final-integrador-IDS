@@ -157,7 +157,12 @@ def cambiar_estado_reserva(id_reserva):
             json=datos
         )
         if respuesta.status_code == 200:
-            flash("Estado actualizado 😎", "success")
+            registrar_accion(
+                "Estado de reserva actualizado",
+                "reserva",
+                f"Reserva #{id_reserva} cambió a estado {estado}"
+            )
+            flash("Estado actualizado ", "success")
         else:
             flash("No se pudo actualizar", "error")
     except Exception as e:
@@ -206,7 +211,12 @@ def registrar_venta_admin():
             json=datos
         )
         if respuesta.status_code == 201:
-            flash("Venta registrada 😎", "success")
+            registrar_accion(
+                "Venta registrada",
+                "venta",
+                f"Se registró una venta del producto ID {producto_id} por cantidad {cantidad}"
+            )
+            flash("venta registrada", "success")
         else:
             datos_error = respuesta.json()
             flash(
@@ -246,31 +256,7 @@ def dashboard_estadisticas():
         reservas=reservas,
         ventas=ventas
     )
-@dashboard_bp.route("/admin/reportes", methods=["GET"])
-def dashboard_reportes():
-    reservas = []
-    ventas = []
-    productos = []
-    try:
-        respuesta_reservas = requests.get("http://127.0.0.1:5001/reservas/?limit=100")
-        if respuesta_reservas.status_code == 200:
-            reservas = respuesta_reservas.json().get("reservas", [])
 
-        respuesta_ventas = requests.get("http://127.0.0.1:5001/ventas/")
-        if respuesta_ventas.status_code == 200:
-            ventas = respuesta_ventas.json().get("ventas", [])
-
-        respuesta_productos = requests.get("http://127.0.0.1:5001/productos/")
-        if respuesta_productos.status_code == 200:
-            productos = respuesta_productos.json().get("productos", [])
-    except Exception as e:
-        print(e)
-    return render_template(
-        "dashboard_reportes.html",
-        reservas=reservas,
-        ventas=ventas,
-        productos=productos
-    )
 @dashboard_bp.route("/admin/historial", methods=["GET"])
 def dashboard_historial():
     historial = []
@@ -281,3 +267,53 @@ def dashboard_historial():
     except Exception as e:
         print(e)
     return render_template("dashboard_historial.html", historial=historial)
+
+@dashboard_bp.route("/admin/mas-vendidos", methods=["GET"])
+def dashboard_mas_vendidos():
+    mas_vendidos = []
+    try:
+        respuesta = requests.get("http://127.0.0.1:5001/ventas/mas-vendidos")
+        if respuesta.status_code == 200:
+            mas_vendidos = respuesta.json().get("mas_vendidos", [])
+    except Exception as e:
+        print(e)
+    return render_template(
+        "dashboard_mas_vendidos.html",
+        mas_vendidos=mas_vendidos
+    )
+
+@dashboard_bp.route("/admin/resenas")
+def dashboard_resenas():
+    token = session.get("token")
+
+    if not token:
+        flash("Debes iniciar sesión", "error")
+        return redirect(url_for("usuarios.manejo_login"))
+    try:
+        headers = {
+            "Authorization": f"Bearer {token}"
+        }
+        respuesta = requests.get(
+            "http://127.0.0.1:5001/reseñas/",
+            headers=headers
+        )
+        if respuesta.status_code != 200:
+            flash(
+                "No se pudieron obtener las reseñas",
+                "error"
+            )
+            return render_template(
+                "dashboard_resenas.html",
+                resenas=[]
+            )
+        datos = respuesta.json()
+        return render_template(
+            "dashboard_resenas.html",
+            resenas=datos.get("resenas", [])
+        )
+    except Exception as e:
+        flash(f"Error: {str(e)}", "error")
+        return render_template(
+            "dashboard_resenas.html",
+            resenas=[]
+        )

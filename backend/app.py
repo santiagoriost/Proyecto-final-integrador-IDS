@@ -4,7 +4,7 @@ from routes.productos import productos_bp
 from routes.usuarios import usuarios_bp
 from routes.admin import administradores_bp
 from routes.reservas import reservas_bp
-from routes.reseñas import reseñas_bp 
+from routes.resenas import resenas_bp 
 from routes.locales import locales_bp  
 from extensions import mail
 from flask_cors import CORS
@@ -27,11 +27,11 @@ mail.init_app(app)
 app.register_blueprint(productos_bp, url_prefix="/productos")
 app.register_blueprint(usuarios_bp, url_prefix="/usuarios")
 app.register_blueprint(administradores_bp, url_prefix="/administradores")
-app.register_blueprint(reseñas_bp, url_prefix="/reseñas")
+app.register_blueprint(resenas_bp, url_prefix="/reseñas")
 app.register_blueprint(reservas_bp, url_prefix="/reservas")
 app.register_blueprint(locales_bp, url_prefix="/locales")
 app.register_blueprint(ventas_bp, url_prefix="/ventas")
-app.register_blueprint(historial_bp, url_prefix="/historial")
+app.register_blueprint(historial_bp)
 
 if __name__ == "__main__":
     app.run(port=5001, debug=True)

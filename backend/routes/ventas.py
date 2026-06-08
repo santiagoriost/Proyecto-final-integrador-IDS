@@ -109,3 +109,29 @@ def registrar_venta():
             cursor.close()
         if conn:
             conn.close()
+@ventas_bp.route("/mas-vendidos", methods=["GET"])
+def mas_vendidos():
+    conn = None
+    cursor = None
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("""
+            SELECT p.nombre, p.tipo, p.precio,
+                   SUM(dv.cantidad) as total_vendido,
+                   SUM(dv.subtotal) as total_ingresos
+            FROM detalle_ventas dv
+            JOIN productos p ON dv.producto_id = p.id_producto
+            GROUP BY p.id_producto
+            ORDER BY total_vendido DESC
+            LIMIT 10
+        """)
+        productos = cursor.fetchall()
+        return jsonify({"mas_vendidos": productos}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()

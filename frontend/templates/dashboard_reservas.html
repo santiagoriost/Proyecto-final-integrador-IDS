@@ -161,9 +161,16 @@
                                 ✓
                             </button>
                         </form>
-                            <button class="btn-icon btn-estado cancelar"
-                                data-id="{{ reserva.id }}"
-                                data-estado="Cancelada">×</button>
+                            <form method="POST"
+                                action="{{ url_for('dashboard.cambiar_estado_reserva', id_reserva=reserva.id) }}"
+                                class="form-estado">
+
+                                <input type="hidden" name="estado" value="Cancelada">
+
+                                <button type="submit" class="btn-icon btn-estado cancelar">
+                                    ✕
+                                </button>
+                            </form>
 
                             <button class="btn-icon btn-eliminar eliminar"
                                 data-id="{{ reserva.id }}">🗑</button>

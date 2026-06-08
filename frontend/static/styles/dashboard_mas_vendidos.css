@@ -1,0 +1,80 @@
+.mas-vendidos-admin {
+    padding: 2rem;
+}
+
+.mas-vendidos-admin h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary, #fff);
+    margin-bottom: 0.3rem;
+}
+
+.mas-vendidos-admin p {
+    color: var(--text-secondary, #ccc);
+    margin-bottom: 2rem;
+}
+
+.mv-tabla-wrapper {
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead tr {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+thead th {
+    padding: 1rem 1.2rem;
+    text-align: left;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary, #bbb);
+}
+
+tbody tr {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    transition: background 0.2s;
+}
+
+tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+tbody td {
+    padding: 1rem 1.2rem;
+    color: var(--text-primary, #fff);
+    font-size: 0.95rem;
+}
+
+.mv-rank {
+    font-weight: 700;
+    color: #c8a96e !important;
+    font-size: 1.1rem !important;
+}
+
+.mv-cantidad {
+    font-weight: 600;
+    color: #a8d8a8 !important;
+}
+
+.mv-ingresos {
+    font-weight: 600;
+    color: #c8a96e !important;
+}
+
+.mv-vacio {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary, #bbb);
+    font-style: italic;
+}

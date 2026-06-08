@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from db.db_conn import get_connection
 
-reseñas_bp = Blueprint("reseñas", __name__)
+resenas_bp = Blueprint("resenas", __name__)
 
 def validar_atributos_reseña(datos):
     if not datos:
@@ -26,7 +26,7 @@ def validar_atributos_reseña(datos):
         return jsonify({"error": "la puntuacion tiene que estar entre 1 y 5"}), 400
     
 
-@reseñas_bp.route("/", methods=["GET"])
+@resenas_bp.route("/", methods=["GET"])
 def listar_reseñas():
     conn = None
     cursor = None
@@ -37,21 +37,21 @@ def listar_reseñas():
         limit = int(request.args.get("_limit", 10))
         offset = int(request.args.get("_offset", 0))
 
-        query = "SELECT * FROM reseñas LIMIT %s OFFSET %s"
+        query = "SELECT * FROM resenas LIMIT %s OFFSET %s"
         cursor.execute(query, (limit, offset))
         lista_reseñas = cursor.fetchall()
 
         if not lista_reseñas:
             return jsonify({"error": "reseñas no encontradas"}), 404
 
-        query_cant_reseñas = "SELECT COUNT(*) as total FROM reseñas"
+        query_cant_reseñas = "SELECT COUNT(*) as total FROM resenas"
         cursor.execute(query_cant_reseñas)
         cant_reseñas = cursor.fetchone()["total"]
 
         reseñas = []
         for reseña in lista_reseñas:
             reseñas.append({
-                "id": reseña["id_reseña"],
+                "id": reseña["id_resena"],
                 "usuario": reseña["id_usuario"],
                 "producto": reseña["id_producto"],
                 "puntuacion": reseña["puntuacion"],
@@ -88,7 +88,7 @@ def listar_reseñas():
         if conn:
             conn.close()
 
-@reseñas_bp.route("/", methods=["POST"])
+@resenas_bp.route("/", methods=["POST"])
 def agregar_reseña():
     conn = None
     cursor = None
@@ -117,7 +117,7 @@ def agregar_reseña():
 
         valores = (datos["id_usuario"], datos["id_producto"], datos["puntuacion"], datos["comentario"])
         query = """
-        INSERT INTO reseñas(id_usuario, id_producto, puntuacion, comentario)
+        INSERT INTO resenas(id_usuario, id_producto, puntuacion, comentario)
         VALUES (%s, %s, %s, %s)
         """
 

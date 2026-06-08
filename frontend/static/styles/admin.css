@@ -56,8 +56,8 @@ body.admin-body{
 }
 .brand-logo,
 .brand-icon{
-    width: 64px;
-    height: 64px;
+    width: 94px;
+    height: 94px;
     margin: 0 auto 14px;
     border-radius: 22px;
     background: rgba(246,238,227,0.22);
@@ -68,8 +68,11 @@ body.admin-body{
     -webkit-backdrop-filter: blur(8px);
 }
 .logo-cup{
-    font-size: 2rem;
-    filter: drop-shadow(0 8px 14px rgba(0,0,0,0.35));
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    object-position: center;
+    filter: brightness(1.15) contrast(1.05);
 }
 .admin-brand h1{
     font-size: 1.25rem;

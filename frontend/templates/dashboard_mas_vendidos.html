@@ -1,0 +1,44 @@
+{% extends "base_admin.html" %}
+{% block title %}Más Vendidos{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard_mas_vendidos.css') }}">
+{% endblock %}
+
+{% block contenido %}
+<section class="mas-vendidos-admin">
+    <h1>Más Vendidos</h1>
+    <p>Productos con mayor cantidad de ventas registradas</p>
+
+    <div class="mv-tabla-wrapper">
+        {% if mas_vendidos %}
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Producto</th>
+                    <th>Tipo</th>
+                    <th>Precio unitario</th>
+                    <th>Unidades vendidas</th>
+                    <th>Total generado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in mas_vendidos %}
+                <tr>
+                    <td class="mv-rank">{{ loop.index }}</td>
+                    <td class="mv-nombre">{{ producto.nombre }}</td>
+                    <td class="mv-tipo">{{ producto.tipo or "—" }}</td>
+                    <td>${{ "%.2f"|format(producto.precio|float) }}</td>
+                    <td class="mv-cantidad">{{ producto.total_vendido }}</td>
+                    <td class="mv-ingresos">${{ "%.2f"|format(producto.total_ingresos|float) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="mv-vacio">No hay ventas registradas aún.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

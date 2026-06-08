@@ -251,6 +251,20 @@ def eliminar_reserva(id_reserva):
 
         query_eliminar = "DELETE FROM reservas WHERE id_reserva = %s"
         cursor.execute(query_eliminar, (id_reserva,))
+
+        query_historial = """
+        INSERT INTO historial_acciones (accion, tipo, detalle)
+        VALUES (%s, %s, %s)
+        """
+        cursor.execute(
+            query_historial,
+            (
+                "Reserva eliminada",
+                "reserva",
+                f"Se eliminó la reserva #{id_reserva} de {reserva['nombre_cliente']}"
+            )
+        )
+
         conn.commit()
 
         return jsonify({
