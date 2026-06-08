@@ -55,3 +55,10 @@ CREATE TABLE reservas (
     FOREIGN KEY (usuario_reserva) REFERENCES usuarios(id_usuario),
     FOREIGN KEY (producto_reserva) REFERENCES productos(id_producto)
 );
+CREATE TABLE historial_acciones (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    accion VARCHAR(255) NOT NULL,
+    tipo ENUM('reserva', 'venta', 'producto', 'usuario') NOT NULL,
+    detalle TEXT,
+    fecha TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

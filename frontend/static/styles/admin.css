@@ -17,13 +17,11 @@ body.admin-body{
     display: flex;
     color: var(--text);
     font-family: Arial, Helvetica, sans-serif;
-    background:
-        url("../imagenes/fondo-cafes.webp");
+    background: url("../imagenes/fondo-cafes.webp");
     background-size: cover;
     background-position: center;
     background-attachment: scroll;
 }
-
 /* SIDEBAR */
 .admin-sidebar{
     margin: 22px 0 22px 22px;
@@ -31,8 +29,8 @@ body.admin-body{
     padding: 16px;
     border-radius: 34px;
     background: rgba(60, 38, 30, 0.28);
-    backdrop-filter: blur(26px) saturate(140%);
-    -webkit-backdrop-filter: blur(26px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%); 
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
     border: 1px solid rgba(255,255,255,0.18);
     box-shadow:
         0 20px 55px rgba(40,25,20,0.35),
@@ -41,15 +39,17 @@ body.admin-body{
     flex-direction: column;
     justify-content: space-between;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
+    will-change: transform;
+    transform: translateZ(0);
 }
 .admin-brand{
     background: rgba(255,255,255,0.08);
     border: 1px solid rgba(255,255,255,0.14);
     border-radius: 28px;
     padding: 28px 18px;
-    backdrop-filter: blur(22px);
-    -webkit-backdrop-filter: blur(22px);
+    backdrop-filter: blur(12px); 
+    -webkit-backdrop-filter: blur(12px);
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
     text-align: center;
     margin-bottom: 22px;
@@ -64,8 +64,8 @@ body.admin-body{
     border: 1px solid rgba(255,255,255,0.26);
     display: grid;
     place-items: center;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(8px);  
+    -webkit-backdrop-filter: blur(8px);
 }
 .logo-cup{
     font-size: 2rem;
@@ -86,8 +86,8 @@ body.admin-body{
     gap: 10px;
     background: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.10);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(10px);          /* era 18px */
+    -webkit-backdrop-filter: blur(10px);
     border-radius: 24px;
     padding: 14px;
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.10);
@@ -106,8 +106,6 @@ body.admin-body{
     font-size: 0.94rem;
     transition: 0.25s ease;
     background: rgba(255,255,255,0.03);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
 }
 .admin-link:hover,
 .admin-link.active{
@@ -116,9 +114,11 @@ body.admin-body{
     box-shadow: 0 12px 28px rgba(0,0,0,0.16);
     transform: translateX(4px);
 }
+
 .admin-sidebar-footer{
     margin-top: 22px;
 }
+
 .logout-link{
     display: block;
     text-decoration: none;
@@ -126,10 +126,9 @@ body.admin-body{
     background: rgba(255,255,255,0.12);
     padding: 13px 15px;
     border-radius: 16px;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(8px); 
+    -webkit-backdrop-filter: blur(8px);
 }
-/* MAIN */
 .admin-main{
     flex: 1;
     display: flex;
@@ -138,19 +137,20 @@ body.admin-body{
     gap: 18px;
     margin-left: 18px;
 }
-/* TOPBAR */
 .admin-topbar{
     height: 76px;
     border-radius: 26px;
     background: rgba(255, 250, 245, 0.233);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.296);
     box-shadow: var(--shadow);
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 22px;
+    will-change: transform;
+    transform: translateZ(0);
 }
 .menu-toggle{
     border: none;
@@ -170,8 +170,6 @@ body.admin-body{
     display: flex;
     gap: 10px;
     align-items: center;
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
 }
 .admin-search input{
     width: 100%;
@@ -195,8 +193,6 @@ body.admin-body{
     border-radius: 14px;
     display: grid;
     place-items: center;
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
 }
 .admin-avatar{
     width: 42px;
@@ -226,8 +222,10 @@ body.admin-body{
     box-shadow:
         0 25px 70px rgba(70,45,35,0.22),
         inset 0 1px 0 rgba(255,255,255,0.18);
-    backdrop-filter: blur(22px) saturate(130%);
-    -webkit-backdrop-filter: blur(22px) saturate(130%);
+    backdrop-filter: blur(14px) saturate(130%);
+    -webkit-backdrop-filter: blur(14px) saturate(130%);
+    /* optimización de scroll */
+    will-change: scroll-position;
 }
 .logout-link{
     width: 100%;
@@ -244,6 +242,7 @@ body.admin-body{
     cursor: pointer;
     transition: .2s ease;
 }
+
 .logout-link:hover{
     background: rgba(255,255,255,0.22);
 }

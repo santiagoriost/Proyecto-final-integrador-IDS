@@ -47,7 +47,9 @@
         <button type="submit">Registrar venta</button>
     </form>
 </section>
-
+<div id="toastVenta" class="toast-venta">
+    Completa todos los campos 😎
+    </div>
 <div class="ventas-filtros">
     <div class="filtro-grupo">
         <label>Desde</label>
@@ -99,8 +101,25 @@
 {% else %}
 <p>No hay ventas registradas.</p>
 {% endif %}
-{% endblock %}
 
+<div id="toastVenta" class="toast-venta"></div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <script>
+                window.addEventListener("load", () => {
+                    mostrarToast(
+                        "{{ message }}",
+                        "{{ category }}"
+                    );
+                });
+            </script>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+{% endblock %}
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="{{ url_for('static', filename='js/dashboard_ventas.js') }}"></script>

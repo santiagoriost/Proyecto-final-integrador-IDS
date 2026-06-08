@@ -1,63 +1,123 @@
 .dashboard-stats {
-    min-height: 100vh;
-    padding: 40px;
-    background: #f6eee7;
-    color: #3b2418;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow: visible;
 }
+
+/* HEADER */
 .stats-header {
-    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-.stats-header p {
-    color: #9b765d;
-    font-size: 12px;
-    font-weight: bold;
+
+.stats-header-text p {
+    color: #372721;
+    font-size: 0.78rem;
+    font-weight: 700;
     letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
 }
-.stats-header h1 {
-    font-size: 42px;
-    margin: 8px 0;
+
+.stats-header-text h1 {
+    font-size: 2.1rem;
+    color: #372721;
 }
-.stats-header span {
-    color: #7a6151;
+
+.stats-header-text span {
+    color: #372721;
+    margin-top: 6px;
+    display: block;
 }
+
+/* KPI GRID */
 .kpi-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
-    margin-bottom: 30px;
+    gap: 14px;
 }
+
 .kpi-card {
-    background: #fffaf5;
-    border-radius: 20px;
-    padding: 24px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.30);
+    box-shadow:
+        0 18px 45px rgba(60,40,30,0.13),
+        inset 0 1px 0 rgba(255,255,255,0.14);
+    border-radius: 22px;
+    padding: 18px 22px;
+    min-height: 118px;
+    display: flex;
+    gap: 18px;
+    align-items: center;
 }
+
+.kpi-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 17px;
+    display: grid;
+    place-items: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.kpi-card.ingresos  .kpi-icon { background: rgba(217,242,216,0.9); color: #348d48; }
+.kpi-card.ventas    .kpi-icon { background: rgba(255,240,201,0.9); color: #d89100; }
+.kpi-card.reservas  .kpi-icon { background: rgba(255,214,221,0.9); color: #d94466; }
+.kpi-card.estrella  .kpi-icon { background: rgba(234,220,255,0.9); color: #7c48b5; }
+
+.kpi-info {
+    display: flex;
+    flex-direction: column;
+}
+
 .kpi-card span {
-    color: #8d705e;
+    color: #8a6252;
+    font-size: 0.9rem;
 }
+
 .kpi-card strong {
     display: block;
-    margin-top: 10px;
-    font-size: 38px;
+    font-size: 1.8rem;
+    margin: 4px 0;
+    color: #2f1d16;
 }
+
+.kpi-card small {
+    color: #9b7b6e;
+    font-size: 0.8rem;
+}
+
+/* CHARTS GRID */
 .charts-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    gap: 14px;
 }
+
 .chart-card {
-    background: #fffaf5;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.30);
+    box-shadow:
+        0 18px 45px rgba(60,40,30,0.13),
+        inset 0 1px 0 rgba(255,255,255,0.14);
     border-radius: 24px;
     padding: 24px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
 }
+
 .chart-card h2 {
-    margin-top: 0;
-    margin-bottom: 18px;
+    font-size: 1.1rem;
+    color: #372721;
+    margin-bottom: 20px;
+    font-weight: 700;
 }
+
 .chart-wide {
     grid-column: span 2;
 }
+
 canvas {
     width: 100% !important;
     max-height: 350px;

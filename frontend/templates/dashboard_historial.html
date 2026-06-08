@@ -1,0 +1,87 @@
+{% extends "base_admin.html" %}
+{% block title %}Historial{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard_historial.css') }}">
+{% endblock %}
+
+{% block contenido %}
+<section class="historial-admin">
+
+    <div class="historial-header">
+        <div>
+            <h1>Historial</h1>
+            <p>Registro cronológico de acciones en el panel</p>
+        </div>
+    </div>
+
+    <div class="historial-filtros-card">
+        <div class="filter-search">
+            <span>⌕</span>
+            <input type="text" id="buscarHistorial" placeholder="Buscar acción...">
+        </div>
+        <div class="custom-select" data-filter="tipo">
+            <button type="button" class="custom-select-btn">
+                <span class="custom-select-text">Todos los tipos</span>
+                <span>⌄</span>
+            </button>
+            <div class="custom-options">
+                <button type="button" data-value="todos">Todos los tipos</button>
+                <button type="button" data-value="reserva">Reservas</button>
+                <button type="button" data-value="venta">Ventas</button>
+                <button type="button" data-value="producto">Productos</button>
+                <button type="button" data-value="usuario">Usuarios</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="historial-tabla-card">
+        <div class="historial-tabla-wrapper">
+            <table class="historial-tabla" id="tablaHistorial">
+                <thead>
+                    <tr>
+                        <th>Fecha y hora</th>
+                        <th>Tipo</th>
+                        <th>Acción</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if historial %}
+                        {% for item in historial %}
+                        <tr data-tipo="{{ item.tipo }}">
+                            <td>
+                                <div class="fecha-cell">
+                                    <span>📅 {{ item.fecha[:10] }}</span>
+                                    <span>🕒 {{ item.fecha[11:19] }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="tipo-pill {{ item.tipo }}">
+                                    {% if item.tipo == 'reserva' %}📅
+                                    {% elif item.tipo == 'venta' %}🛒
+                                    {% elif item.tipo == 'producto' %}☕
+                                    {% else %}👤{% endif %}
+                                    {{ item.tipo | capitalize }}
+                                </span>
+                            </td>
+                            <td><strong>{{ item.accion }}</strong></td>
+                            <td><small>{{ item.detalle or '—' }}</small></td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="sin-datos">
+                                No hay acciones registradas aún
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+
+<script src="{{ url_for('static', filename='js/dashboard_historial.js') }}"></script>
+{% endblock %}

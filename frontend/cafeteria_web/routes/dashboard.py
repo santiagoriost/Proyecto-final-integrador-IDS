@@ -2,8 +2,16 @@ from flask import request, Blueprint, render_template, flash, url_for, redirect,
 import requests
 API_URL = "http://localhost:5001/productos"
 API_RESERVAS_URL = "http://localhost:5001/reservas"
-
+API_HISTORIAL_URL = "http://localhost:5001/historial"
 dashboard_bp = Blueprint("dashboard", __name__)
+def registrar_accion(accion, tipo, detalle=""):
+    try:
+        requests.post(
+            f"{API_HISTORIAL_URL}/",
+            json={"accion": accion, "tipo": tipo, "detalle": detalle}
+        )
+    except Exception as e:
+        print(f"Error registrando acción: {e}")
 
 @dashboard_bp.route("/productos/", methods=["GET"])
 def dashboard_productos():
@@ -198,7 +206,6 @@ def registrar_venta_admin():
             json=datos
         )
         if respuesta.status_code == 201:
-
             flash("Venta registrada 😎", "success")
         else:
             datos_error = respuesta.json()
@@ -239,3 +246,38 @@ def dashboard_estadisticas():
         reservas=reservas,
         ventas=ventas
     )
+@dashboard_bp.route("/admin/reportes", methods=["GET"])
+def dashboard_reportes():
+    reservas = []
+    ventas = []
+    productos = []
+    try:
+        respuesta_reservas = requests.get("http://127.0.0.1:5001/reservas/?limit=100")
+        if respuesta_reservas.status_code == 200:
+            reservas = respuesta_reservas.json().get("reservas", [])
+
+        respuesta_ventas = requests.get("http://127.0.0.1:5001/ventas/")
+        if respuesta_ventas.status_code == 200:
+            ventas = respuesta_ventas.json().get("ventas", [])
+
+        respuesta_productos = requests.get("http://127.0.0.1:5001/productos/")
+        if respuesta_productos.status_code == 200:
+            productos = respuesta_productos.json().get("productos", [])
+    except Exception as e:
+        print(e)
+    return render_template(
+        "dashboard_reportes.html",
+        reservas=reservas,
+        ventas=ventas,
+        productos=productos
+    )
+@dashboard_bp.route("/admin/historial", methods=["GET"])
+def dashboard_historial():
+    historial = []
+    try:
+        respuesta = requests.get(f"{API_HISTORIAL_URL}/")
+        if respuesta.status_code == 200:
+            historial = respuesta.json().get("historial", [])
+    except Exception as e:
+        print(e)
+    return render_template("dashboard_historial.html", historial=historial)

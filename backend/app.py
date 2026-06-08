@@ -9,6 +9,7 @@ from routes.locales import locales_bp
 from extensions import mail
 from flask_cors import CORS
 from routes.ventas import ventas_bp
+from routes.historial import historial_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -29,6 +30,7 @@ app.register_blueprint(reseñas_bp, url_prefix="/reseñas")
 app.register_blueprint(reservas_bp, url_prefix="/reservas")
 app.register_blueprint(locales_bp, url_prefix="/locales")
 app.register_blueprint(ventas_bp, url_prefix="/ventas")
+app.register_blueprint(historial_bp, url_prefix="/historial")
 
 if __name__ == "__main__":
     app.run(port=5001, debug=True)

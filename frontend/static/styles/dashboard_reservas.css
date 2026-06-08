@@ -1,51 +1,51 @@
-.reservas-admin{
+.reservas-admin {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    overflow: visible;
 }
 
-.reservas-header{
+.reservas-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.reservas-header h1{
+.reservas-header h1 {
     font-size: 2.1rem;
     color: #372721;
 }
 
-.reservas-header p{
+.reservas-header p {
     color: #372721;
     margin-top: 6px;
 }
 
-.reservas-header-actions{
+.reservas-header-actions {
     display: flex;
     gap: 14px;
 }
 
-.btn-soft{
+.btn-soft {
     border: 1px solid rgba(255,255,255,0.45);
     border-radius: 16px;
     padding: 13px 20px;
     font-weight: 700;
     cursor: pointer;
-    backdrop-filter: blur(16px);
     box-shadow: 0 12px 28px rgba(90, 65, 55, 0.12);
 }
 
-.btn-exportar{
+.btn-exportar {
     background: rgba(232, 246, 237, 0.72);
     color: #357655;
 }
 
-.btn-nueva{
+.btn-nueva {
     background: rgba(245, 182, 200, 0.76);
     color: #7d2d38;
 }
 
-.stats-grid{
+.stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 14px;
@@ -53,7 +53,7 @@
 
 .stat-card,
 .filters-card,
-.reservas-table-card{
+.reservas-table-card {
     background: rgba(255,255,255,0.18);
     border: 1px solid rgba(255,255,255,0.30);
     box-shadow:
@@ -61,7 +61,7 @@
         inset 0 1px 0 rgba(255,255,255,0.14);
 }
 
-.stat-card{
+.stat-card {
     border-radius: 22px;
     padding: 18px 22px;
     min-height: 118px;
@@ -70,7 +70,7 @@
     align-items: center;
 }
 
-.stat-icon{
+.stat-icon {
     width: 50px;
     height: 50px;
     border-radius: 17px;
@@ -79,74 +79,72 @@
     font-size: 1.3rem;
 }
 
-.stat-icon.pink{ background: rgba(255,214,221,0.9); color: #d94466; }
+.stat-icon.pink  { background: rgba(255,214,221,0.9); color: #d94466; }
 .stat-icon.yellow{ background: rgba(255,240,201,0.9); color: #d89100; }
-.stat-icon.green{ background: rgba(217,242,216,0.9); color: #348d48; }
+.stat-icon.green { background: rgba(217,242,216,0.9); color: #348d48; }
 .stat-icon.purple{ background: rgba(234,220,255,0.9); color: #7c48b5; }
 
-.stat-card span{
-    color: #8a6252;
-    font-size: 0.9rem;
-}
+.stat-card span   { color: #8a6252; font-size: 0.9rem; }
+.stat-card strong { display: block; font-size: 1.8rem; margin: 4px 0; color: #2f1d16; }
+.stat-card small  { color: #9b7b6e; }
 
-.stat-card strong{
-    display: block;
-    font-size: 1.8rem;
-    margin: 4px 0;
-    color: #2f1d16;
-}
-
-.stat-card small{
-    color: #9b7b6e;
-}
-
-.filters-card{
+/* ============================================
+   FILTERS — el z-index alto va ACÁ
+   ============================================ */
+.filters-card {
     border-radius: 22px;
     padding: 14px;
     display: grid;
     grid-template-columns: 2fr 1fr 1fr auto;
     gap: 14px;
     align-items: center;
+
+    position: relative;
+    z-index: 100;        /* ← por encima de la tabla */
+    overflow: visible;   /* ← nunca cortar el dropdown */
 }
 
-.filter-search{
+.filter-search {
     background: rgba(255,255,255,0.58);
     border: 1px solid rgba(255,255,255,0.46);
     border-radius: 15px;
     padding: 13px 15px;
-    backdrop-filter: blur(14px);
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.filter-search input{
+.filter-search input {
     border: none;
     outline: none;
     background: transparent;
     width: 100%;
 }
 
-.btn-filtro{
+.btn-filtro {
     background: rgba(255,225,223,0.82);
     color: #9b3d3d;
 }
 
-/* CUSTOM SELECT */
-
-.custom-select{
+/* ============================================
+   CUSTOM SELECT
+   ============================================ */
+.custom-select {
     position: relative;
-    z-index: 100;
+    z-index: 10;
 }
-.custom-select-btn{
+
+.custom-select.open {
+    z-index: 200;        /* ← sube solo cuando está abierto */
+}
+
+.custom-select-btn {
     width: 100%;
     min-height: 47px;
     border: 1px solid rgba(255,255,255,0.46);
     border-radius: 15px;
     padding: 0 15px;
     background: rgba(255,255,255,0.58);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
     color: #4b3028;
     font-weight: 600;
     display: flex;
@@ -155,7 +153,7 @@
     cursor: pointer;
 }
 
-.custom-options{
+.custom-options {
     position: absolute;
     top: calc(100% + 8px);
     left: 0;
@@ -168,16 +166,16 @@
     box-shadow: 0 18px 40px rgba(50,30,25,0.25);
     padding: 8px;
     display: none;
-    z-index: 99999;
+    z-index: 9999;       /* ← siempre arriba de todo */
 }
 
-.custom-select.open .custom-options{
+.custom-select.open .custom-options {
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
-.custom-options button{
+.custom-options button {
     border: none;
     background: transparent;
     padding: 11px 12px;
@@ -188,23 +186,32 @@
     font-weight: 600;
 }
 
-.custom-options button:hover{
+.custom-options button:hover {
     background: rgba(245,182,200,0.45);
 }
 
-.reservas-table-card{
+/* ============================================
+   TABLA — z-index BAJO y sin overflow en el card
+   ============================================ */
+.reservas-table-card {
     border-radius: 24px;
     padding: 16px;
-    overflow-x: auto;
-    overflow-y: visible;
+    position: relative;
+    z-index: 1;          /* ← por debajo de filters-card */
+    overflow: visible;   /* ← NO poner overflow-x: auto acá */
 }
 
-.reservas-table{
+/* El scroll va en un wrapper interno, no en el card */
+.reservas-table-wrapper {
+    overflow-x: auto;
+}
+
+.reservas-table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.reservas-table th{
+.reservas-table th {
     text-align: left;
     font-size: 0.86rem;
     color: #8a6252;
@@ -212,19 +219,19 @@
     padding: 14px 16px;
 }
 
-.reservas-table td{
+.reservas-table td {
     padding: 14px 16px;
     border-top: 1px solid rgba(255,255,255,0.22);
     color: #3a2a23;
 }
 
-.cliente-cell{
+.cliente-cell {
     display: flex;
     align-items: center;
     gap: 14px;
 }
 
-.cliente-avatar{
+.cliente-avatar {
     width: 44px;
     height: 44px;
     border-radius: 16px;
@@ -236,13 +243,13 @@
 }
 
 .cliente-cell small,
-.fecha-cell span{
+.fecha-cell span {
     display: block;
     color: #8a6252;
     margin-top: 4px;
 }
 
-.estado-pill{
+.estado-pill {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -252,27 +259,16 @@
     font-weight: 700;
 }
 
-.estado-pill.confirmada{
-    background: rgba(221,243,220,0.86);
-    color: #318447;
-}
+.estado-pill.confirmada { background: rgba(221,243,220,0.86); color: #318447; }
+.estado-pill.proceso    { background: rgba(255,240,201,0.86); color: #bd7b00; }
+.estado-pill.cancelada  { background: rgba(255,224,226,0.86); color: #c83f55; }
 
-.estado-pill.proceso{
-    background: rgba(255,240,201,0.86);
-    color: #bd7b00;
-}
-
-.estado-pill.cancelada{
-    background: rgba(255,224,226,0.86);
-    color: #c83f55;
-}
-
-.acciones-cell{
+.acciones-cell {
     display: flex;
     gap: 9px;
 }
 
-.btn-icon{
+.btn-icon {
     width: 38px;
     height: 38px;
     border: none;
@@ -281,22 +277,14 @@
     font-weight: 800;
 }
 
-.btn-icon.confirmar{
-    background: rgba(221,243,220,0.86);
-    color: #318447;
-}
+.btn-icon.confirmar { background: rgba(221,243,220,0.86); color: #318447; }
+.btn-icon.cancelar  { background: rgba(255,240,201,0.86); color: #bd7b00; }
+.btn-icon.eliminar  { background: rgba(255,224,226,0.86); color: #c83f55; }
 
-.btn-icon.cancelar{
-    background: rgba(255,240,201,0.86);
-    color: #bd7b00;
-}
-
-.btn-icon.eliminar{
-    background: rgba(255,224,226,0.86);
-    color: #c83f55;
-}
-
-.toast{
+/* ============================================
+   TOAST
+   ============================================ */
+.toast {
     position: fixed;
     right: 25px;
     bottom: 25px;
@@ -310,36 +298,28 @@
     z-index: 9999;
 }
 
-.toast.show{
-    opacity: 1;
-    transform: translateY(0);
-}
+.toast.show  { opacity: 1; transform: translateY(0); }
+.toast.error { background: #9d3b3b; }
 
-.toast.error{
-    background: #9d3b3b;
-}
-
-.modal-overlay{
+/* ============================================
+   MODALES
+   ============================================ */
+.modal-overlay {
     position: fixed;
     inset: 0;
     background: rgba(45, 32, 26, 0.35);
     backdrop-filter: blur(8px);
-
     display: none;
     align-items: center;
     justify-content: center;
-
     z-index: 99999;
 }
 
-.modal-overlay.show{
-    display: flex;
-}
+.modal-overlay.show { display: flex; }
 
-.modal-card{
+.modal-card {
     position: relative;
     z-index: 100000;
-
     background: rgba(255,250,245,0.78);
     backdrop-filter: blur(22px);
     border: 1px solid rgba(255,255,255,0.7);
@@ -348,191 +328,116 @@
     width: 360px;
     box-shadow: 0 24px 60px rgba(60,40,32,0.24);
 }
-.modal-card h2{
-    margin-bottom: 8px;
-}
 
-.modal-actions{
+.modal-card h2   { margin-bottom: 8px; }
+
+.modal-actions {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
     margin-top: 22px;
 }
 
-.btn-modal{
-    border: none;
-    border-radius: 14px;
-    padding: 11px 16px;
-    font-weight: 700;
-    cursor: pointer;
-}
+.btn-modal { border: none; border-radius: 14px; padding: 11px 16px; font-weight: 700; cursor: pointer; }
+.cancelar-modal { background: #f1e6dc; color: #5f4136; }
+.eliminar-modal { background: #f3a6a0; color: white; }
 
-.cancelar-modal{
-    background: #f1e6dc;
-    color: #5f4136;
-}
+.modal-reserva { width: 500px; }
 
-.eliminar-modal{
-    background: #f3a6a0;
-    color: white;
-}
-.filters-card{
-    border-radius: 22px;
-    padding: 14px;
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr auto;
-    gap: 14px;
-    align-items: center;
-
-    position: relative;
-    z-index: 1;
-}
-
-.reservas-table-card{
-    position: relative;
-    z-index: 1;
-}
-.modal-reserva{
-    width: 500px;
-}
-
-.form-group{
+.form-group {
     display: flex;
     flex-direction: column;
     gap: 8px;
     margin-bottom: 16px;
 }
 
-.form-group label{
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #5f4136;
-}
+.form-group label { font-size: 0.9rem; font-weight: 700; color: #5f4136; }
 
 .form-group input,
-.form-group select{
+.form-group select {
     border: 1px solid rgba(255,255,255,0.45);
     background: rgba(255,255,255,0.55);
-    backdrop-filter: blur(14px);
     border-radius: 14px;
     padding: 13px 14px;
     outline: none;
     color: #372721;
 }
 
-.form-grid{
+.form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 14px;
 }
-.flatpickr-calendar{
+
+/* ============================================
+   GLASS SELECT (modal)
+   ============================================ */
+.glass-select {
+    width: 100%;
+    height: 52px;
+    appearance: none;
+    -webkit-appearance: none;
+    background: linear-gradient(135deg, rgba(255,255,255,0.78), rgba(255,255,255,0.42));
+    border: 1px solid rgba(255,255,255,0.55);
+    border-radius: 16px;
+    padding: 0 18px;
+    color: #4b3028;
+    font-weight: 600;
+    background-image:
+        linear-gradient(45deg,  transparent 50%, #6f4c3f 50%),
+        linear-gradient(135deg, #6f4c3f 50%, transparent 50%);
+    background-position: calc(100% - 18px) 50%, calc(100% - 12px) 50%;
+    background-size: 6px 6px;
+    background-repeat: no-repeat;
+}
+
+.glass-select option { background: #F6EEE3; color: #3A2A23; }
+
+/* ============================================
+   FLATPICKR
+   ============================================ */
+.flatpickr-calendar {
     background: rgba(255,250,245,0.88) !important;
     backdrop-filter: blur(22px) !important;
     border: 1px solid rgba(255,255,255,0.65) !important;
     border-radius: 20px !important;
     box-shadow: 0 24px 60px rgba(60,40,32,0.28) !important;
-    overflow: hidden;
 }
 
-.flatpickr-months{
-    background: rgba(245,182,200,0.18) !important;
-}
+.flatpickr-months { background: rgba(245,182,200,0.18) !important; }
 
 .flatpickr-monthDropdown-months,
-.numInputWrapper input{
+.numInputWrapper input {
     background: transparent !important;
     border: none !important;
     color: #3A2A23 !important;
     font-weight: 700 !important;
 }
 
-.flatpickr-weekday{
-    color: #8a6252 !important;
-    font-weight: 700 !important;
-}
+.flatpickr-weekday { color: #8a6252 !important; font-weight: 700 !important; }
 
-.flatpickr-day{
-    border-radius: 12px !important;
-    color: #3A2A23 !important;
-}
+.flatpickr-day { border-radius: 12px !important; color: #3A2A23 !important; }
 
-.flatpickr-day:hover{
+.flatpickr-day:hover {
     background: rgba(245,182,200,0.35) !important;
     border-color: transparent !important;
 }
 
-.flatpickr-day.selected{
+.flatpickr-day.selected {
     background: #F5B6C8 !important;
     border-color: #F5B6C8 !important;
     color: #3A2A23 !important;
 }
 
-.flatpickr-time{
+.flatpickr-time {
     background: rgba(255,250,245,0.88) !important;
     border-top: 1px solid rgba(120,85,72,0.16) !important;
+    height: 52px !important;
 }
 
 .flatpickr-time input,
-.flatpickr-time .flatpickr-am-pm{
-    color: #3A2A23 !important;
-}
-.glass-select{
-    width: 100%;
-    height: 52px;
+.flatpickr-time .flatpickr-am-pm { color: #3A2A23 !important; }
 
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
+.flatpickr-time input { font-size: 1.2rem !important; font-weight: 700 !important; }
 
-    background:
-        linear-gradient(
-            135deg,
-            rgba(255,255,255,0.78),
-            rgba(255,255,255,0.42)
-        );
-
-    border: 1px solid rgba(255,255,255,0.55);
-    border-radius: 16px;
-
-    padding: 0 18px;
-
-    color: #4b3028;
-    font-weight: 600;
-
-    backdrop-filter: blur(16px);
-
-    background-image:
-        linear-gradient(45deg, transparent 50%, #6f4c3f 50%),
-        linear-gradient(135deg, #6f4c3f 50%, transparent 50%);
-
-    background-position:
-        calc(100% - 18px) 50%,
-        calc(100% - 12px) 50%;
-
-    background-size: 6px 6px;
-    background-repeat: no-repeat;
-}
-
-.glass-select option{
-    background: #F6EEE3;
-    color: #3A2A23;
-}
-.flatpickr-time input{
-    font-size: 1.2rem !important;
-    font-weight: 700 !important;
-}
-
-.flatpickr-time .numInputWrapper:hover{
-    background: rgba(245,182,200,0.16) !important;
-}
-
-.flatpickr-time{
-    height: 52px !important;
-}
-.filter-search,
-.custom-select-btn,
-.form-group input,
-.glass-select{
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-}
+.flatpickr-time .numInputWrapper:hover { background: rgba(245,182,200,0.16) !important; }

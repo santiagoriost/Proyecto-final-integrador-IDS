@@ -9,44 +9,72 @@
 
 {% block contenido %}
 <section class="dashboard-stats">
+
     <div class="stats-header">
-        <p>ADMIN ACCESS</p>
-        <h1>Estadísticas de Cafetería 11</h1>
-        <span>Resumen visual de reservas y actividad del local</span>
+        <div class="stats-header-text">
+            <p>ADMIN ACCESS</p>
+            <h1>Estadísticas de Cafetería 11</h1>
+            <span>Resumen visual de reservas y actividad del local</span>
+        </div>
     </div>
+
     <div class="kpi-grid">
         <article class="kpi-card ingresos">
-            <span>Ingresos totales</span>
-            <strong id="ingresosTotales">$0</strong>
+            <div class="kpi-icon">💰</div>
+            <div class="kpi-info">
+                <span>Ingresos totales</span>
+                <strong id="ingresosTotales">$0</strong>
+                <small>Acumulado total</small>
+            </div>
         </article>
+
         <article class="kpi-card ventas">
-            <span>Total ventas</span>
-            <strong id="totalVentas">0</strong>
+            <div class="kpi-icon">🛒</div>
+            <div class="kpi-info">
+                <span>Total ventas</span>
+                <strong id="totalVentas">0</strong>
+                <small>Transacciones registradas</small>
+            </div>
         </article>
+
         <article class="kpi-card reservas">
-            <span>Reservas totales</span>
-            <strong id="totalReservas">0</strong>
+            <div class="kpi-icon">📅</div>
+            <div class="kpi-info">
+                <span>Reservas totales</span>
+                <strong id="totalReservas">0</strong>
+                <small>Registradas actualmente</small>
+            </div>
         </article>
+
         <article class="kpi-card estrella">
-            <span>Producto estrella</span>
-            <strong id="productoEstrella">---</strong>
+            <div class="kpi-icon">⭐</div>
+            <div class="kpi-info">
+                <span>Producto estrella</span>
+                <strong id="productoEstrella">---</strong>
+                <small>Más vendido</small>
+            </div>
         </article>
     </div>
+
     <div class="charts-grid">
         <article class="chart-card">
             <h2>Reservas por estado</h2>
             <canvas id="graficoEstados"></canvas>
         </article>
+
         <article class="chart-card">
             <h2>Tipos de reserva</h2>
             <canvas id="graficoTipos"></canvas>
         </article>
+
         <article class="chart-card chart-wide">
-            <h2>Reservas por fecha</h2>
+            <h2>Ingresos por fecha</h2>
             <canvas id="graficoFechas"></canvas>
         </article>
     </div>
+
 </section>
+
 <script id="reservas-json" type="application/json">
     {{ reservas | tojson }}
 </script>

@@ -1,22 +1,30 @@
 const productoVenta = document.getElementById("productoVenta");
 const cantidadVenta = document.getElementById("cantidadVenta");
 const totalVenta = document.getElementById("totalVenta");
-
 const customSelect = document.querySelector(".ventas-product-select");
 const customBtn = customSelect.querySelector(".custom-select-btn");
 const customText = customSelect.querySelector(".custom-select-text");
 const customOptions = customSelect.querySelectorAll(".custom-options button");
-
+const toastVenta = document.getElementById("toastVenta");
+function mostrarToast(
+    mensaje,
+    tipo = "success"
+){
+    toastVenta.textContent = mensaje;
+    toastVenta.className =
+        `toast-venta show ${tipo}`;
+    setTimeout(() => {
+        toastVenta.classList.remove("show");
+    }, 2500);
+}
 function actualizarTotal(){
     const productoSeleccionado = document.querySelector(
         `.custom-options button[data-value="${productoVenta.value}"]`
     );
-
     if(!productoSeleccionado){
         totalVenta.textContent = "0.00";
         return;
     }
-
     const precio = parseFloat(productoSeleccionado.dataset.precio);
     const cantidad = parseInt(cantidadVenta.value || 0);
 
@@ -43,6 +51,16 @@ document.addEventListener("click", (e) => {
 });
 
 cantidadVenta.addEventListener("input", actualizarTotal);
+formVenta.addEventListener("submit", (event) => {
+    if(!productoVenta.value || !cantidadVenta.value){
+        event.preventDefault();
+        mostrarToast(
+            "selecciona un producto y cantidad",
+            "error"
+        );
+        return;
+    }
+});
 
 const filtroFechaDesde = document.getElementById("filtroFechaDesde");
 const filtroFechaHasta = document.getElementById("filtroFechaHasta");

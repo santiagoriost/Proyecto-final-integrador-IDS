@@ -1,0 +1,151 @@
+.historial-admin {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow: visible;
+}
+
+.historial-header h1 { font-size: 2.1rem; color: #372721; }
+.historial-header p  { color: #372721; margin-top: 6px; }
+
+/* FILTROS */
+.historial-filtros-card {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.30);
+    box-shadow: 0 18px 45px rgba(60,40,30,0.13), inset 0 1px 0 rgba(255,255,255,0.14);
+    border-radius: 22px;
+    padding: 14px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 14px;
+    align-items: center;
+    position: relative;
+    z-index: 100;
+    overflow: visible;
+}
+
+.filter-search {
+    background: rgba(255,255,255,0.58);
+    border: 1px solid rgba(255,255,255,0.46);
+    border-radius: 15px;
+    padding: 13px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-search input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+}
+
+.custom-select { position: relative; z-index: 10; }
+.custom-select.open { z-index: 200; }
+
+.custom-select-btn {
+    width: 100%;
+    min-height: 47px;
+    border: 1px solid rgba(255,255,255,0.46);
+    border-radius: 15px;
+    padding: 0 15px;
+    background: rgba(255,255,255,0.58);
+    color: #4b3028;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.custom-options {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    background: rgba(255,250,245,0.92);
+    border: 1px solid rgba(255,255,255,0.65);
+    border-radius: 16px;
+    backdrop-filter: blur(22px);
+    box-shadow: 0 18px 40px rgba(50,30,25,0.25);
+    padding: 8px;
+    display: none;
+    z-index: 9999;
+}
+
+.custom-select.open .custom-options {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.custom-options button {
+    border: none;
+    background: transparent;
+    padding: 11px 12px;
+    text-align: left;
+    border-radius: 12px;
+    color: #3A2A23;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.custom-options button:hover { background: rgba(245,182,200,0.45); }
+
+/* TABLA */
+.historial-tabla-card {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.30);
+    box-shadow: 0 18px 45px rgba(60,40,30,0.13), inset 0 1px 0 rgba(255,255,255,0.14);
+    border-radius: 24px;
+    padding: 16px;
+    position: relative;
+    z-index: 1;
+    overflow: visible;
+}
+
+.historial-tabla-wrapper { overflow-x: auto; }
+
+.historial-tabla {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.historial-tabla th {
+    text-align: left;
+    font-size: 0.86rem;
+    color: #8a6252;
+    font-weight: 700;
+    padding: 14px 16px;
+}
+
+.historial-tabla td {
+    padding: 14px 16px;
+    border-top: 1px solid rgba(255,255,255,0.22);
+    color: #3a2a23;
+}
+
+.fecha-cell span { display: block; color: #8a6252; margin-top: 4px; }
+.fecha-cell span:first-child { color: #3a2a23; margin-top: 0; }
+
+.tipo-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.tipo-pill.reserva  { background: rgba(255,214,221,0.86); color: #d94466; }
+.tipo-pill.venta    { background: rgba(255,240,201,0.86); color: #bd7b00; }
+.tipo-pill.producto { background: rgba(217,242,216,0.86); color: #318447; }
+.tipo-pill.usuario  { background: rgba(234,220,255,0.86); color: #7c48b5; }
+
+.sin-datos {
+    text-align: center;
+    color: #8a6252;
+    padding: 30px !important;
+}
