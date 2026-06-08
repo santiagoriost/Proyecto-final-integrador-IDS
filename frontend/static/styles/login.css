@@ -1,81 +1,110 @@
-.contenedor_form{
+/* Imagen de fondo fija que ocupa toda la pantalla */
+#img_portada {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;    
+}
+
+/* El contenedor principal: ahora es una tarjeta centrada y legible */
+.contenedor_form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-family: sans-serif;
     justify-content: center;
-    background-color: #f59292d0;
+    font-family: sans-serif;
+    background-color: rgba(151, 81, 1, 0.85);
     color: #0c0606;
-    gap: 30px;
-    margin: 110px 670px;
-    padding: 50px;
-    border-style: hidden;
+    gap: 15px;
+    max-width: 400px;
+    margin: 80px auto; 
+    padding: 40px;
     border-radius: 15px;
-
-}
-.form_email{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-family: sans-serif;
-    text-decoration: underline;
-
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
 }
 
-.form_email input{
-    margin-top: 15px;
-    margin-bottom: 15px;
-    padding: 5px;
-}
-.form_contraseña{
+/* Formulario interno */
+#form-login {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-.form_contraseña input{
-    margin-top: 15px;
-    margin-bottom: 15px;
-    padding: 5px;
-}
-.form{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-.form_group{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-}
-.form_actions{
-    margin: 1px 50px;
-    align-items: center;
-    justify-content: center;
     gap: 20px;
 }
-.form_group input{
-    margin-top: 15px;
-    margin-bottom: 15px;
-    padding: 5px;
+
+/* Estilos para los bloques de Email y Contraseña */
+.form_email, .form_contraseña {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-.form_boton_forgot_password{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    margin: 1px 70px;
+.form_email label, .form_contraseña label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    font-family: 'Arial', sans-serif;
 }
 
-.form_boton_register{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    margin: 5px 50px;
+.form_email_input, .form_contraseña_input {
+    width: 100%;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    font-family: 'Arial', sans-serif;
+}
+
+/* Los inputs ahora ocupan el 100% del ancho de la tarjeta */
+.form_email input, .form_contraseña input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* Botón principal de Iniciar Sesión */
+.form_actions {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.form_actions button {
+    width: 100%;
+    padding: 12px;
+    background-color: #5c3a21;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.form_actions button:hover {
+    background-color: #3e2514;
+}
+
+/* Botones secundarios (Olvidaste contraseña / Crear cuenta) */
+.form_boton_forgot_password, .form_boton_register {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.form_boton_forgot_password button, .form_boton_register button {
+    width: 100%;
+    background: none;
+    border: none;
+    color: #0c0606;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 5px 0;
+}
+
+.form_boton_forgot_password button:hover, .form_boton_register button:hover {
+    color: #5c3a21;
 }
