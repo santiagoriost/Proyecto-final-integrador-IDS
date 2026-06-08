@@ -88,7 +88,6 @@ def login():
         
         claims = {
             "nombre": usuario["nombre"],
-            "apellido": usuario["apellido"],
             "email": usuario["email"],
             "rol": usuario["rol"]
         }
@@ -97,18 +96,12 @@ def login():
         return jsonify({"message": "Login exitoso", "token": token, "usuario": {
             "id": usuario["id_usuario"],
             "nombre": usuario["nombre"],
-            "apellido": usuario["apellido"],
             "email": usuario["email"],
             "rol": usuario["rol"]
         }}), 200
     
     except Exception as e:
-        import traceback
-        traceback.print_exc()
-
-        return jsonify({
-            "error": str(e)
-        }), 500
+        return jsonify({"error": str(e)}), 500
     finally:        
         if cursor:
             cursor.close()
@@ -323,6 +316,74 @@ def forgot_password():
         cursor = conn.cursor(dictionary=True)
 
         datos = request.get_json()
+        nombre = datos.get("nombre")
+        apellido = datos.get("apellido")
+        email = datos.get("email")
+        
+        if not nombre or not apellido or not email:
+            return jsonify({"error": "Faltan campos obligatorios"}), 400
+
+        query_actualizar_user = "UPDATE usuarios SET nombre = %s, apellido = %s, email = %s WHERE id_usuario = %s"
+
+        cursor.execute(query_actualizar_user, (nombre, apellido, email, id))
+        conn.commit()
+
+        if cursor.rowcount == 0:
+            return jsonify({"error": "Usuario no encontrado"}), 404
+
+        return jsonify({"message": "Usuario actualizado correctamente"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+@usuarios_bp.route("/<int:id>", methods=["DELETE"])
+@jwt_required()
+def eliminar_usuario(id):
+    conn = None
+    cursor = None
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        id_usuario = get_jwt_identity()
+        datos_usuario = get_jwt()
+        if datos_usuario.get("rol") != "admin" and id_usuario != str(id):
+            return jsonify({"error": "Acceso denegado"}), 403
+        
+        validation_query = "SELECT id_usuario FROM usuarios WHERE id_usuario = %s"
+        cursor.execute(validation_query, (id,))
+        if not cursor.fetchone():
+            return jsonify({"error": "Usuario no encontrado"}), 404
+
+        query_eliminar_user = "DELETE FROM usuarios WHERE id_usuario = %s"
+
+        cursor.execute(query_eliminar_user, (id,))
+        conn.commit()
+
+        return jsonify({"message": "Usuario eliminado correctamente"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+@usuarios_bp.route("/forgot-password", methods=["PUT"])
+def forgot_password():
+    conn = None
+    cursor = None
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        datos = request.get_json()
         email = datos.get ("email")
         if not email:
             return jsonify({"error": "El campo email es obligatorio"}), 400
@@ -341,7 +402,7 @@ def forgot_password():
 
         reset_link = f"http://localhost:5001/reset-password?token={reset_token}"
 
-        msg = Message("Restablecer contraseña", recipients=[email])
+        msg = Message("Restablecer contraseña", recipients=[email], sender= "jcunduri@fi.uba.ar")
         msg.body = f"Hola,\n\nRecibimos una solicitud para restablecer tu contraseña. Haz clic en el siguiente enlace para restablecerla:\n\n{reset_link}\n\nSi no solicitaste este cambio, puedes ignorar este correo.\n\nSaludos."
         mail.send(msg)
 
@@ -393,5 +454,3 @@ def change_password():
             cursor.close()
         if conn:
             conn.close()
-
-        
