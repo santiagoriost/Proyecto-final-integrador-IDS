@@ -88,6 +88,7 @@ def login():
         
         claims = {
             "nombre": usuario["nombre"],
+            "apellido": usuario["apellido"],
             "email": usuario["email"],
             "rol": usuario["rol"]
         }
@@ -96,6 +97,7 @@ def login():
         return jsonify({"message": "Login exitoso", "token": token, "usuario": {
             "id": usuario["id_usuario"],
             "nombre": usuario["nombre"],
+            "apellido": usuario["apellido"],
             "email": usuario["email"],
             "rol": usuario["rol"]
         }}), 200
