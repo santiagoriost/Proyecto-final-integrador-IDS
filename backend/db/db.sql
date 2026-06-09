@@ -27,6 +27,8 @@ CREATE TABLE productos(
     stock INT NOT NULL DEFAULT 0,
     tipo VARCHAR(150),
     local_producto INT NOT NULL,
+    descripcion VARCHAR(255) NULL,
+    imagen VARCHAR(255) NULL,
     FOREIGN KEY(local_producto) REFERENCES locales(id_local)
 );
 CREATE TABLE  resenas(

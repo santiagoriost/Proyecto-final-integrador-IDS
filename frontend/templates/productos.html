@@ -12,7 +12,11 @@
     {% for producto in productos %}
     <div class="producto">
         <div class="imagen_producto">
-            <img src="{{ url_for('static', filename='imagenes/foto_productos/americano.jpg') }}" alt="{{ producto.nombre }}">
+            {% if producto.imagen %}
+                <img src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}">
+            {% else %}
+                <img src="{{ url_for('static', filename='imagenes/foto_productos/placeholder.svg') }}" alt="{{ producto.nombre }}">
+            {% endif %}
         </div>
         
         <div class="informacion_producto">

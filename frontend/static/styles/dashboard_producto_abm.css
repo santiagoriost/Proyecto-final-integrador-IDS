@@ -19,8 +19,11 @@
 }
 
 .form_producto{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* display: grid; */
+    /* grid-template-columns: 1fr 1fr; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     gap: 18px;
 }
 
@@ -72,4 +75,12 @@
     color: white;
     font-weight: 800;
     cursor: pointer;
+}
+form img{
+    width: 200px;
+    height: 200px;
+}
+
+#img_producto{
+    width: 350px;
 }
