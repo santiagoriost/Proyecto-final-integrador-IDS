@@ -7,7 +7,7 @@
 <div class="contenedor_producto">
     <h2>Detalle del producto {{producto.id}}</h2>
     <div class="contenedor_form">
-        <form action="{{url_for('dashboard.gestionar_producto', id_producto = producto.id)}}" method="post">
+        <form action="{{url_for('dashboard.gestionar_producto', id_producto = producto.id)}}" method="post" enctype="multipart/form-data">
             <div class="form_producto">
                 <label for="nombre_producto">Nombre:</label>
                 <input type="text" id="nombre_producto" name="fproducto_nombre" value="{{producto.nombre}}">
@@ -20,6 +20,15 @@
                 <label for="local_producto">Local:</label>
                 <input type="text" name="fproducto_local" value="{{producto.local}}" disabled>
                 <input type="number" id="local_producto" name="fproducto_local_id" value="{{producto.local_producto}}">
+                <label for="descripcion_producto">Descripcion:</label>
+                <input type="text" id="descripcion_producto" name="fproducto_desc" value="{{producto.descripcion}}">
+                <label for="img_producto">Imagen:</label>
+                {% if producto.imagen %}
+                <img src="{{url_for('static', filename=producto.imagen)}}" alt="producto">
+                {% else %}
+                <img src="{{url_for('static', filename='imagenes/foto_productos/placeholder.svg')}}" alt="producto">
+                {% endif %}
+                <input type="file" id="img_producto" name="fproducto_img">
             </div>
             <button type="submit" class="form_bttn_modificar">Guardar</button>
         </form>

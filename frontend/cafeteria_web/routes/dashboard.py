@@ -1,8 +1,11 @@
 from flask import request, Blueprint, render_template, flash, url_for, redirect, session
+import os
+from werkzeug.utils import secure_filename
 import requests
 API_URL = "http://localhost:5001/productos"
 API_RESERVAS_URL = "http://localhost:5001/reservas"
 API_HISTORIAL_URL = "http://localhost:5001/historial"
+UPLOAD_FOLDER = os.path.join('frontend', 'static', 'imagenes', 'foto_productos')
 dashboard_bp = Blueprint("dashboard", __name__)
 def registrar_accion(accion, tipo, detalle=""):
     try:
@@ -48,13 +51,25 @@ def gestionar_producto(id_producto):
     if token:
         headers = {"Authorization": f"Bearer {token}"}
     if request.method == "POST":
+        img = request.files.get("fproducto_img")
+        ruta_imagen_db = None
+        if img and img.filename != "":
+            extension = os.path.splitext(secure_filename(img.filename))[1]
+            nuevo_nombre = f"producto_id_{id_producto}{extension}"
+            filepath = os.path.join(UPLOAD_FOLDER, nuevo_nombre)
+            img.save(filepath)
+            ruta_imagen_db = f"imagenes/foto_productos/{nuevo_nombre}"
+
         datos = {
             "nombre": request.form.get("fproducto_nombre", "").strip(),
             "precio": request.form.get("fproducto_precio", "").strip(),
             "stock": request.form.get("fproducto_stock", "").strip(),
             "tipo": request.form.get("fproducto_tipo", "").strip(),
-            "local_producto": request.form.get("fproducto_local_id", "").strip()
+            "local_producto": request.form.get("fproducto_local_id", "").strip(),
+            "descripcion": request.form.get("fproducto_desc", "").strip(),
         }
+        if ruta_imagen_db:
+            datos["imagen"] = ruta_imagen_db
         try:
             respuesta = requests.patch(f"{API_URL}/{id_producto}", json=datos, headers=headers)
             if respuesta.status_code == 200:
@@ -79,8 +94,21 @@ def eliminar_producto(id_producto):
     if token:
         headers = {"Authorization": f"Bearer {token}"}
     try:
+        datos_request = requests.get(f"{API_URL}/{id_producto}", headers=headers)
+        if datos_request.status_code == 200:
+            datos_producto = datos_request.json()
+            img = datos_producto.get("imagen")
+    except Exception as e:
+        flash(f"error: {str(e)}", "error")
+    try:
         respuesta = requests.delete(f"{API_URL}/{id_producto}", headers=headers)
         if respuesta.status_code == 200:
+            if img:
+                filename = os.path.basename(img)
+                ruta_img = os.path.join('frontend', 'static', 'imagenes', 'foto_productos', filename)
+                if os.path.exists(ruta_img):
+                    os.remove(ruta_img)
+                    flash("Imagen eliminada correctamente", "success")
             flash("Producto eliminado correctamente", "success")
             return redirect(url_for('dashboard.dashboard_productos'))
         flash("No se pudo eliminar el producto", "error")
@@ -94,16 +122,28 @@ def agregar_producto():
     if token:
         headers = {"Authorization": f"Bearer {token}"}
     if request.method == "POST":
+        img = request.files.get("fproducto_img")
         datos = {
             "nombre": request.form.get("fproducto_nombre", "").strip(),
             "precio": request.form.get("fproducto_precio", "").strip(),
             "stock": request.form.get("fproducto_stock", "").strip(),
             "tipo": request.form.get("fproducto_tipo", "").strip(),
-            "local_producto": request.form.get("fproducto_local_id", "").strip()
+            "local_producto": request.form.get("fproducto_local_id", "").strip(),
+            "descripcion": request.form.get("fproducto_desc", "").strip(),
+            "imagen": None
         }
         try:
             respuesta = requests.post(API_URL, json=datos, headers=headers)
             if respuesta.status_code == 200:
+                producto = respuesta.json()
+                id = producto.get("id")
+                if img and img.filename != "":
+                    extension = os.path.splitext(secure_filename(img.filename))[1]
+                    nuevo_nombre = f"producto_id_{id}{extension}"
+                    filepath = os.path.join(UPLOAD_FOLDER, nuevo_nombre)
+                    img.save(filepath)
+                    ruta_imagen_db = f"imagenes/foto_productos/{nuevo_nombre}"
+                    requests.patch(f"{API_URL}/{id}", json={"imagen": ruta_imagen_db}, headers=headers)
                 flash("Producto agregado correctamente", "success")
                 return redirect(url_for('dashboard.dashboard_productos'))
             else:
