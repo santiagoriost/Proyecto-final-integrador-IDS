@@ -4,26 +4,39 @@
 <link rel="stylesheet" href="{{url_for('static', filename='styles/register.css')}}">
 {% endblock %}
 {% block contenido %}
+<img src="{{ url_for('static', filename='imagenes/cafeteria_ejemplo.jpg') }}" id='img_portada' alt="cafeteria">
+
 <div class="contenedor_form">
-<form action="{{url_for('usuarios.manejo_register')}}" method="post">
-    <div class="form_group">
-
-    <label for="nombre">Nombre:</label>
-    <input type="text" id="nombre_usuario" name="nombre" placeholder="Ingrese su nombre...">
-    
-    <label for="apellido">Apellido:</label>
-    <input type="text" id="apellido_usuario" name="apellido" placeholder="Ingrese su apellido...">
-
-    <label for="email_usuario">Email:</label>
-    <input type="email" id="email_usuario" name="email" placeholder="Ingrese su email...">
-        
-    <label for="clave_usuario">Contraseña:</label>
-    <input type="password" id="clave_usuario" name="clave" placeholder="Ingrese su contraseña...">
+    <form action="{{url_for('usuarios.manejo_register')}}" method="post">
+            
+            <div class="form_nombre">
+            <label for="nombre">Nombre:</label>
+            <div class="form_nombre_input">
+            <input type="text" id="nombre_usuario" name="nombre" placeholder="Ingrese su nombre...">
+    </div>
+    </div>
+            <div class="form_apellido">
+            <label for="apellido">Apellido:</label>
+            <div class="form_apellido_input">
+            <input type="text" id="apellido_usuario" name="apellido" placeholder="Ingrese su apellido...">
+    </div>
+    </div>
+            <div class="form_email">       
+            <label for="email_usuario">Email:</label>
+            <div class="form_email_input">
+            <input type="email" id="email_usuario" name="email" placeholder="Ingrese su email...">
+    </div>
+    </div>
+            <div class="form_contraseña">   
+            <label for="clave_usuario">Contraseña:</label>
+            <div class="form_contraseña_input">
+            <input type="password" id="clave_usuario" name="clave" placeholder="Ingrese su contraseña...">
+    </div>
     </div>
 
-    <div class="form_actions">
-        <button type="submit">Crear cuenta</button>
-    </form>
+            <div class="form_actions">
+            <button type="submit">Crear cuenta</button>
+    </div>
 </div>
 
 {% endblock %}

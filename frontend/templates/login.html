@@ -9,28 +9,32 @@
 <div class="contenedor_form">
     <form action="{{url_for('usuarios.manejo_login')}}" method="post" id="form-login">
         
-        <div class="form_email">
+            <div class="form_email">
             <label for="email_usuario">Email:</label>
             <div class="form_email_input">
-                <input type="email" id="email_usuario" name="form_email" placeholder="Ingrese su email...">
-            </div> </div> <div class="form_contraseña">
+            <input type="email" id="email_usuario" name="form_email" placeholder="Ingrese su email...">
+    </div> 
+    </div> 
+            <div class="form_contraseña">
             <label for="clave_usuario">Contraseña:</label>
             <div class="form_contraseña_input">
-                <input type="password" id="clave_usuario" name="form_clave" placeholder="Ingrese su contraseña...">
-            </div> </div> <div class="form_actions">
+            <input type="password" id="clave_usuario" name="form_clave" placeholder="Ingrese su contraseña...">
+    </div> 
+    </div> 
+            <div class="form_actions">
             <button type="submit">Iniciar sesion</button>
         
-        <div class="form_boton_forgot_password">
-        <a href="{{url_for('usuarios.manejo_forgot_password')}}">
+            <div class="form_boton_forgot_password">
+            <a href="{{url_for('usuarios.manejo_forgot_password')}}">
             <button type="button" class="boton-secundario">¿Olvidaste tu contraseña?</button>
-        </a>
-        </div>
+            </a>
+    </div>
 
-        <div class="form_boton_register">
-        <a href="{{url_for('usuarios.manejo_register')}}">
+            <div class="form_boton_register">
+            <a href="{{url_for('usuarios.manejo_register')}}">
             <button type="button" class="boton-secundario">¿No tienes cuenta? ¡Regístrate!</button>
-        </a>
-        </div>
+            </a>
+    </div>
 </div>
 <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 {% endblock %}

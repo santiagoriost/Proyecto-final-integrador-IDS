@@ -17,13 +17,14 @@
     justify-content: center;
     font-family: sans-serif;
     background-color: rgba(151, 81, 1, 0.85);
-    color: #0c0606;
+    color: rgb(235, 178, 125);
     gap: 15px;
     max-width: 400px;
     margin: 80px auto; 
     padding: 40px;
     border-radius: 15px;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    gap: 20px;
 }
 
 /* Formulario interno */
@@ -48,6 +49,7 @@
     margin-bottom: 5px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     font-family: 'Arial', sans-serif;
+    margin-top: 10px;
 }
 
 .form_email_input, .form_contraseña_input {
@@ -60,9 +62,11 @@
 .form_email input, .form_contraseña input {
     width: 100%;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 8px;
     border: 1px solid #ccc;
     box-sizing: border-box;
+    outline: none;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* Botón principal de Iniciar Sesión */
