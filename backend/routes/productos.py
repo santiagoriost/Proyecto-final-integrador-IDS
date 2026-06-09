@@ -30,7 +30,9 @@ def listar_productos():
                 "stock": producto["stock"],
                 "tipo": producto["tipo"],
                 "local": nombre_local,
-                "local_producto": producto["local_producto"]
+                "local_producto": producto["local_producto"],
+                "descripcion": producto["descripcion"],
+                "imagen": producto["imagen"]
             })
         base_url = request.base_url
         links = generar_links(base_url, limit, cant_productos, offset)
@@ -67,10 +69,10 @@ def agregar_producto():
         if not local_nombre:
             return jsonify({"error": "el local indicado no existe"}), 404
         
-        valores = (datos["nombre"], datos["precio"], datos["stock"], datos["tipo"], datos["local_producto"])
+        valores = (datos["nombre"], datos["precio"], datos["stock"], datos["tipo"], datos["local_producto"], datos["descripcion"], datos["imagen"])
         query = """
-        INSERT INTO productos(nombre, precio, stock, tipo, local_producto)
-        VALUES (%s, %s, %s, %s, %s)"""
+        INSERT INTO productos(nombre, precio, stock, tipo, local_producto, descripcion, imagen)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)"""
         cursor.execute(query, valores)
         conn.commit()
         return jsonify({
@@ -80,7 +82,9 @@ def agregar_producto():
             "stock": datos["stock"],
             "tipo": datos["tipo"],
             "local": local_nombre,
-            "local_producto": datos["local_producto"]
+            "local_producto": datos["local_producto"],
+            "descripcion": datos["descripcion"],
+            "imagen": datos["imagen"]
         }), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -142,7 +146,9 @@ def listar_producto(id_producto):
             "stock": producto["stock"],
             "tipo": producto["tipo"],
             "local": local_nombre,
-            "local_producto": producto["local_producto"]
+            "local_producto": producto["local_producto"],
+            "descripcion": producto["descripcion"],
+            "imagen": producto["imagen"]
         }), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -177,10 +183,10 @@ def actualizar_producto(id_producto):
         if not local_nombre:
             return jsonify({"error": "el local indicado no existe"}), 404
             
-        valores = (datos["nombre"], datos["precio"], datos["stock"], datos["tipo"], datos["local_producto"], id_producto)
+        valores = (datos["nombre"], datos["precio"], datos["stock"], datos["tipo"], datos["local_producto"], datos["descripcion"], datos["imagen"], id_producto)
         query = """
             UPDATE productos
-            SET nombre = %s, precio = %s, stock = %s, tipo = %s, local_producto = %s
+            SET nombre = %s, precio = %s, stock = %s, tipo = %s, local_producto = %s, descripcion = %s, imagen = %s
             WHERE id_producto = %s
         """
         cursor.execute(query, valores)
@@ -192,7 +198,9 @@ def actualizar_producto(id_producto):
             "stock": datos["stock"],
             "tipo": datos["tipo"],
             "local": local_nombre,
-            "local_producto": datos["local_producto"]
+            "local_producto": datos["local_producto"],
+            "descripcion": datos["descripcion"],
+            "imagen": datos["imagen"]
         }
         return jsonify({
             "mensaje": "producto actualizado correctamente",
@@ -229,7 +237,7 @@ def modificar_producto(id_producto):
         if not local_nombre:
             return jsonify({"error": "el local indicado no existe"}), 404
 
-        atributos_validos = ["nombre", "precio", "stock", "tipo", "local_producto"]
+        atributos_validos = ["nombre", "precio", "stock", "tipo", "local_producto", "descripcion", "imagen"]
         query = "UPDATE productos SET "
         sentencias = []
         valores = []
