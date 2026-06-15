@@ -20,7 +20,7 @@ def mostrar_carrito():
 
         headers = {"Authorization":f"Bearer {token}"}
 
-        respuesta = requests.get(API_CARRITO + "/",headers=headers)
+        respuesta = requests.get(API_CARRITO + "/ver",headers=headers)
 
         if respuesta.status_code == 200:
 
@@ -55,6 +55,9 @@ def agregar_producto(id_producto):
         headers = {"Authorization":f"Bearer {token}"}
 
         respuesta = requests.post(API_CARRITO + "/agregar",headers=headers,json={"id_producto": id_producto,"cantidad": 1})
+
+        print("STATUS:", respuesta.status_code)
+        print("BODY:", respuesta.text)
 
         if respuesta.status_code == 200:
 
@@ -136,5 +139,33 @@ def vaciar_carrito():
     except Exception:
 
         flash("Error al vaciar carrito","error")
+
+    return redirect(url_for("carrito.mostrar_carrito"))
+
+@carrito_bp.route("/confirmar")
+def confirmar_compra():
+
+    token = session.get("token")
+
+    if not token:
+        return redirect(url_for("usuarios.manejo_login"))
+
+    try:
+
+        headers = {"Authorization": f"Bearer {token}"}
+
+        respuesta = requests.post(API_CARRITO + "/confirmar", headers=headers)
+
+        if respuesta.status_code == 200:
+
+            flash("Compra realizada correctamente. Revisa tu correo.", "success")
+
+        else:
+
+            flash("Error al confirmar compra", "error")
+
+    except Exception:
+
+        flash("Error al conectar con el servidor", "error")
 
     return redirect(url_for("carrito.mostrar_carrito"))

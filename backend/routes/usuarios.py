@@ -112,7 +112,7 @@ def login():
 
 @usuarios_bp.route("/logout", methods=["POST"])
 def logout():
-    #Aca el logout se maneja en el front end asi que aca no va mas nada
+    
     return jsonify({"message": "Logout exitoso"}), 200
 
 @usuarios_bp.route("/me", methods=["GET"])
