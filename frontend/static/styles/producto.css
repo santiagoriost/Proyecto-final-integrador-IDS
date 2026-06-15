@@ -105,3 +105,29 @@
     font-weight: bold;
     border: 1px solid #000000;
 }
+
+.btn-carrito{
+    display:block;
+
+    margin-top:10px;
+
+    padding:10px;
+
+    text-align:center;
+
+    text-decoration:none;
+
+    border-radius:8px;
+
+    background-color:#6f4e37;
+
+    color:white;
+
+    font-weight:bold;
+
+    transition:0.2s;
+}
+
+.btn-carrito:hover{
+    opacity:0.9;
+}

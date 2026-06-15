@@ -27,6 +27,10 @@
                 <h4>Descripción:</h4>
                 <p>{{ producto.descripcion }}</p> </div>
         </div>
+        <a
+            class="btn-carrito"href="{{ url_for('carrito.agregar_producto',id_producto=producto.id_producto) }}">
+            Agregar al carrito
+        </a>
     </div>
     {% endfor %}
 </div>

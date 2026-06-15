@@ -333,7 +333,7 @@ def forgot_password():
         cursor.execute(actualizar_token_query, (reset_token, expiration_time, usuario["id_usuario"]))
         conn.commit()
 
-        reset_link = f"http://localhost:5002/reset-password?token={reset_token}"
+        reset_link = f"http://localhost:5002/usuario/reset-password/?token={reset_token}"
 
         msg = Message("Restablecer contraseña", recipients=[email], sender= "jcunduri@fi.uba.ar")
         msg.body = f"Hola,\n\nRecibimos una solicitud para restablecer tu contraseña. Haz clic en el siguiente enlace para restablecerla:\n\n{reset_link}\n\nSi no solicitaste este cambio, puedes ignorar este correo.\n\nSaludos."

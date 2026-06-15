@@ -54,7 +54,7 @@ header{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1260px;
+    max-width: 1420px;
 }
 .navbar .titulo{
     font-size: 50px;
@@ -62,7 +62,10 @@ header{
 }
 .nav-links {
     display: flex;
+    align-items: center;
+    gap: 20px;
     list-style: none;
+    flex-wrap: nowrap;
 }
 .nav-links li {
     margin-left: 40px;
@@ -72,6 +75,7 @@ header{
     color: white;
     text-decoration: none;
     font-weight: bold;
+    white-space: nowrap;
 }
 .nav-links a:hover {
     color: #f1dcbc;

@@ -97,6 +97,7 @@ def manejo_forgot_password():
 def manejo_reset_password():
     token = request.args.get("token")
     if request.method == "POST":
+        token = request.form.get("token")
         nueva_clave = request.form.get("nueva_clave", "").strip()
         if not nueva_clave:
             flash('Nueva contraseña no ingresada.', 'error')
@@ -118,7 +119,7 @@ def manejo_reset_password():
                 flash('Token inválido o expirado.', 'error')
         except Exception as e:
             flash('Error con el servidor', 'error')
-    return render_template("reset_password.html")
+    return render_template("reset_password.html", token=token)
 
 @usuarios_bp.route("/logout/")
 def manejo_logout():

@@ -80,3 +80,21 @@ CREATE TABLE detalle_ventas (
     FOREIGN KEY (venta_id) REFERENCES ventas(id_venta),
     FOREIGN KEY (producto_id) REFERENCES productos(id_producto)
 );
+
+CREATE TABLE carritos (
+    id_carrito INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    usuario_id INT NOT NULL UNIQUE,
+    fecha_creacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id_usuario)
+);
+
+CREATE TABLE carrito_items (
+    id_item INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    id_carrito INT NOT NULL,
+    id_producto INT NOT NULL,
+    cantidad INT NOT NULL DEFAULT 1,
+    FOREIGN KEY (id_carrito) REFERENCES carritos(id_carrito) ON DELETE CASCADE,
+    FOREIGN KEY (id_producto) REFERENCES productos(id_producto),
+
+    UNIQUE(id_carrito, id_producto)
+);
