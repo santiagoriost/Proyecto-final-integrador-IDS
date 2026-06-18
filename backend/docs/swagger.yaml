@@ -1,0 +1,1971 @@
+openapi: 3.0.0
+info:
+  title: Cafetería 11 - API
+  description: |-
+    API REST para la gestión de una cafetería: usuarios, productos, carrito,
+    reservas, reseñas, locales, ventas, historial y panel de administración.
+  version: 1.0.0
+servers:
+  - url: http://localhost:5001
+paths:
+  # ──────────────────────────── USUARIOS ────────────────────────────
+  /usuarios/register:
+    post:
+      summary: Registrar un nuevo usuario
+      tags:
+        - Usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistroUsuario'
+      responses:
+        '201':
+          description: Usuario creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioCreado'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /usuarios/login:
+    post:
+      summary: Iniciar sesión
+      tags:
+        - Usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUsuario'
+      responses:
+        '200':
+          description: Login exitoso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginRespuesta'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /usuarios/logout:
+    post:
+      summary: Cerrar sesión
+      tags:
+        - Usuarios
+      responses:
+        '200':
+          description: Logout exitoso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logout exitoso
+  /usuarios/me:
+    get:
+      summary: Obtener perfil del usuario autenticado
+      tags:
+        - Usuarios
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Datos del perfil
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  usuario:
+                    $ref: '#/components/schemas/Usuario'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /usuarios/:
+    get:
+      summary: Listar usuarios (solo admin)
+      tags:
+        - Usuarios
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Listado paginado de usuarios
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  usuarios:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Usuario'
+                  total:
+                    type: integer
+                    example: 15
+                  _links:
+                    $ref: '#/components/schemas/Links'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /usuarios/forgot-password:
+    put:
+      summary: Solicitar restablecimiento de contraseña
+      tags:
+        - Usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: usuario@example.com
+      responses:
+        '200':
+          description: Correo de restablecimiento enviado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Se mando el mail para restablecer tu contraseña
+                  reset_link:
+                    type: string
+                    example: http://localhost:5002/usuario/reset-password/?token=abc123
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /usuarios/reset-password:
+    post:
+      summary: Restablecer contraseña con token
+      tags:
+        - Usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - reset_token
+                - nueva_clave
+              properties:
+                reset_token:
+                  type: string
+                  example: abc123...
+                nueva_clave:
+                  type: string
+                  format: password
+                  example: nueva_contraseña
+      responses:
+        '200':
+          description: Contraseña restablecida correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Contraseña restablecida correctamente
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /usuarios/{id}:
+    parameters:
+      - $ref: '#/components/parameters/IdUsuario'
+    get:
+      summary: Obtener un usuario por ID (solo admin)
+      tags:
+        - Usuarios
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Detalle del usuario
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  usuario:
+                    $ref: '#/components/schemas/Usuario'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      summary: Actualizar un usuario (admin o propio usuario)
+      tags:
+        - Usuarios
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nombre
+                - apellido
+                - email
+              properties:
+                nombre:
+                  type: string
+                  example: Juan
+                apellido:
+                  type: string
+                  example: Pérez
+                email:
+                  type: string
+                  format: email
+                  example: juan@example.com
+      responses:
+        '200':
+          description: Usuario actualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Usuario actualizado correctamente
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      summary: Eliminar un usuario (admin o propio usuario)
+      tags:
+        - Usuarios
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Usuario eliminado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Usuario eliminado correctamente
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  # ──────────────────────────── PRODUCTOS ────────────────────────────
+  /productos/:
+    get:
+      summary: Listar productos
+      tags:
+        - Productos
+      parameters:
+        - $ref: '#/components/parameters/LimitProductos'
+        - $ref: '#/components/parameters/OffsetProductos'
+      responses:
+        '200':
+          description: Listado paginado de productos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  productos:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Producto'
+                  _links:
+                    $ref: '#/components/schemas/Links'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      summary: Agregar un producto (solo admin)
+      tags:
+        - Productos
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NuevoProducto'
+      responses:
+        '200':
+          description: Producto creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /productos/{id_producto}:
+    parameters:
+      - $ref: '#/components/parameters/IdProducto'
+    get:
+      summary: Obtener un producto por ID
+      tags:
+        - Productos
+      responses:
+        '200':
+          description: Detalle del producto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      summary: Actualizar un producto completamente (solo admin)
+      tags:
+        - Productos
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NuevoProducto'
+      responses:
+        '200':
+          description: Producto actualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: producto actualizado correctamente
+                  producto_actualizado:
+                    $ref: '#/components/schemas/Producto'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      summary: Modificar un producto parcialmente (solo admin)
+      tags:
+        - Productos
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  example: Café Latte
+                precio:
+                  type: number
+                  example: 450.00
+                stock:
+                  type: integer
+                  example: 50
+                tipo:
+                  type: string
+                  example: Bebida
+                local_producto:
+                  type: integer
+                  example: 1
+                descripcion:
+                  type: string
+                  example: Café con leche espumosa
+                imagen:
+                  type: string
+                  example: latte.jpg
+      responses:
+        '200':
+          description: Producto modificado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: producto modificado correctamente
+                  producto_modificacdo:
+                    $ref: '#/components/schemas/Producto'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      summary: Eliminar un producto (solo admin)
+      tags:
+        - Productos
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Producto eliminado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: producto eliminado correctamente
+                  producto_eliminado:
+                    $ref: '#/components/schemas/Producto'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  # ──────────────────────────── ADMIN / DASHBOARD ────────────────────────────
+  /administradores/dashboard/stats:
+    get:
+      summary: Obtener estadísticas del dashboard (solo admin)
+      tags:
+        - Administradores
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Estadísticas del sistema
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Bienvenido al dashboard de administradores
+                  estadisticas:
+                    $ref: '#/components/schemas/DashboardStats'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /administradores/dashboard/usuarios:
+    get:
+      summary: Obtener todos los usuarios del dashboard (solo admin)
+      tags:
+        - Administradores
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Usuario'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /administradores/administradores/{admin_id}:
+    parameters:
+      - $ref: '#/components/parameters/AdminId'
+    get:
+      summary: Obtener un administrador por ID (solo admin)
+      tags:
+        - Administradores
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Datos del administrador
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      summary: Eliminar un administrador (solo admin, solo a sí mismo)
+      tags:
+        - Administradores
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Administrador eliminado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Administrador eliminado correctamente
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /administradores/usuarios/{usuario_id}:
+    parameters:
+      - $ref: '#/components/parameters/UsuarioId'
+    delete:
+      summary: Eliminar un usuario desde el panel admin (solo admin)
+      tags:
+        - Administradores
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Usuario eliminado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Usuario eliminado correctamente
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /administradores/reseñas/{resena_id}:
+    parameters:
+      - $ref: '#/components/parameters/ResenaId'
+    delete:
+      summary: Eliminar una reseña desde el panel admin (solo admin)
+      tags:
+        - Administradores
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Reseña eliminada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Reseña eliminada correctamente
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  # ──────────────────────────── RESEÑAS ────────────────────────────
+  /reseñas/:
+    get:
+      summary: Listar reseñas
+      tags:
+        - Reseñas
+      parameters:
+        - $ref: '#/components/parameters/LimitResenas'
+        - $ref: '#/components/parameters/OffsetResenas'
+      responses:
+        '200':
+          description: Listado paginado de reseñas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reseñas:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Resena'
+                  _links:
+                    $ref: '#/components/schemas/Links'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      summary: Agregar una reseña
+      tags:
+        - Reseñas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NuevaResena'
+      responses:
+        '201':
+          description: Reseña creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resena'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  # ──────────────────────────── RESERVAS ────────────────────────────
+  /reservas/:
+    get:
+      summary: Listar reservas
+      tags:
+        - Reservas
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Listado paginado de reservas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reservas:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Reserva'
+                  _links:
+                    $ref: '#/components/schemas/Links'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      summary: Crear una reserva
+      tags:
+        - Reservas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NuevaReserva'
+      responses:
+        '201':
+          description: Reserva creada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  mensaje:
+                    type: string
+                    example: Reserva creada correctamente
+                  reserva:
+                    $ref: '#/components/schemas/Reserva'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /reservas/{id_reserva}:
+    parameters:
+      - $ref: '#/components/parameters/IdReserva'
+    get:
+      summary: Obtener una reserva por ID
+      tags:
+        - Reservas
+      responses:
+        '200':
+          description: Detalle de la reserva
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  usuario:
+                    type: integer
+                    example: 1
+                  producto:
+                    type: integer
+                    example: 1
+                  fecha_reserva:
+                    type: string
+                    format: date
+                    example: "2025-06-15"
+                  fecha_entrega:
+                    type: string
+                    example: "10:30:00"
+                  estado:
+                    type: string
+                    example: En proceso
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      summary: Actualizar una reserva completamente
+      tags:
+        - Reservas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActualizarReserva'
+      responses:
+        '200':
+          description: Reserva actualizada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: reserva actualizada correctamente
+                  reserva_actualizada:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      usuario_reserva:
+                        type: integer
+                      producto_reserva:
+                        type: integer
+                      fecha_entrega:
+                        type: string
+                      estado:
+                        type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      summary: Actualizar una reserva parcialmente
+      tags:
+        - Reservas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActualizarReserva'
+      responses:
+        '200':
+          description: Reserva actualizada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: reserva actualizada correctamente
+                  reserva_actualizada:
+                    type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      summary: Eliminar una reserva
+      tags:
+        - Reservas
+      responses:
+        '200':
+          description: Reserva eliminada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: reserva eliminada correctamente
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /reservas/{id_reserva}/estado:
+    parameters:
+      - $ref: '#/components/parameters/IdReserva'
+    patch:
+      summary: Actualizar el estado de una reserva
+      tags:
+        - Reservas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - estado
+              properties:
+                estado:
+                  type: string
+                  example: Confirmada
+      responses:
+        '200':
+          description: Estado actualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Estado actualizado correctamente
+                  nuevo_estado:
+                    type: string
+                    example: Confirmada
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  # ──────────────────────────── LOCALES ────────────────────────────
+  /locales/locales:
+    get:
+      summary: Listar locales
+      tags:
+        - Locales
+      responses:
+        '200':
+          description: Listado de locales
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Local'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      summary: Agregar un local (solo admin)
+      tags:
+        - Locales
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NuevoLocal'
+      responses:
+        '201':
+          description: Local agregado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: local agregado correctamente
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /locales/locales/{id_local}:
+    parameters:
+      - $ref: '#/components/parameters/IdLocal'
+    put:
+      summary: Actualizar un local (solo admin)
+      tags:
+        - Locales
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NuevoLocal'
+      responses:
+        '200':
+          description: Local actualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: local actualizado correctamente
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      summary: Eliminar un local (solo admin)
+      tags:
+        - Locales
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Local eliminado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: local eliminado correctamente
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  # ──────────────────────────── VENTAS ────────────────────────────
+  /ventas/:
+    get:
+      summary: Listar ventas
+      tags:
+        - Ventas
+      responses:
+        '200':
+          description: Listado de ventas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ventas:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Venta'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      summary: Registrar una venta
+      tags:
+        - Ventas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NuevaVenta'
+      responses:
+        '201':
+          description: Venta registrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Venta registrada correctamente
+                  id_venta:
+                    type: integer
+                    example: 1
+                  total:
+                    type: number
+                    example: 1250.00
+                  detalle:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DetalleVenta'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /ventas/mas-vendidos:
+    get:
+      summary: Obtener los productos más vendidos
+      tags:
+        - Ventas
+      responses:
+        '200':
+          description: Top 10 productos más vendidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mas_vendidos:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductoMasVendido'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  # ──────────────────────────── CARRITO ────────────────────────────
+  /api/carrito/agregar:
+    post:
+      summary: Agregar un producto al carrito
+      tags:
+        - Carrito
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id_producto
+              properties:
+                id_producto:
+                  type: integer
+                  example: 1
+                cantidad:
+                  type: integer
+                  example: 2
+                  default: 1
+      responses:
+        '200':
+          description: Producto agregado al carrito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Producto agregado al carrito
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/carrito/ver:
+    get:
+      summary: Ver el carrito del usuario autenticado
+      tags:
+        - Carrito
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Contenido del carrito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id_producto:
+                          type: integer
+                        nombre:
+                          type: string
+                        precio:
+                          type: number
+                        imagen:
+                          type: string
+                        cantidad:
+                          type: integer
+                        subtotal:
+                          type: number
+                  total:
+                    type: number
+                    example: 1250.00
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/carrito/item/{id_producto}:
+    parameters:
+      - $ref: '#/components/parameters/IdProductoCarrito'
+    put:
+      summary: Actualizar la cantidad de un producto en el carrito
+      tags:
+        - Carrito
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - cantidad
+              properties:
+                cantidad:
+                  type: integer
+                  minimum: 1
+                  example: 3
+      responses:
+        '200':
+          description: Cantidad actualizada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Cantidad actualizada
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      summary: Eliminar un producto del carrito
+      tags:
+        - Carrito
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Producto eliminado del carrito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Producto eliminado del carrito
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/carrito/confirmar:
+    post:
+      summary: Confirmar el carrito y generar pedido/reserva
+      tags:
+        - Carrito
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Pedido confirmado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Pedido confirmado
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/carrito/vaciar:
+    delete:
+      summary: Vaciar el carrito del usuario autenticado
+      tags:
+        - Carrito
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Carrito vaciado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Carrito vaciado correctamente
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  # ──────────────────────────── HISTORIAL ────────────────────────────
+  /historial/:
+    get:
+      summary: Obtener historial de acciones
+      tags:
+        - Historial
+      responses:
+        '200':
+          description: Listado del historial
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  historial:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/HistorialAccion'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      summary: Registrar una acción en el historial
+      tags:
+        - Historial
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - accion
+                - tipo
+              properties:
+                accion:
+                  type: string
+                  example: Producto eliminado
+                tipo:
+                  type: string
+                  example: producto
+                detalle:
+                  type: string
+                  example: Se eliminó el producto #5
+      responses:
+        '201':
+          description: Acción registrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                    example: Acción registrada
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    Usuario:
+      type: object
+      description: Datos de un usuario
+      properties:
+        id:
+          type: integer
+          example: 1
+        nombre:
+          type: string
+          example: Juan
+        apellido:
+          type: string
+          example: Pérez
+        email:
+          type: string
+          format: email
+          example: juan@example.com
+        rol:
+          type: string
+          example: user
+    RegistroUsuario:
+      type: object
+      description: Datos requeridos para registrar un usuario
+      required:
+        - nombre
+        - apellido
+        - email
+        - clave
+      properties:
+        nombre:
+          type: string
+          example: Juan
+        apellido:
+          type: string
+          example: Pérez
+        email:
+          type: string
+          format: email
+          example: juan@example.com
+        clave:
+          type: string
+          format: password
+          example: mi_contraseña
+        rol:
+          type: string
+          description: Rol del usuario (opcional, por defecto "user")
+          example: user
+    UsuarioCreado:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        nombre:
+          type: string
+          example: Juan
+        apellido:
+          type: string
+          example: Pérez
+        email:
+          type: string
+          format: email
+        rol:
+          type: string
+    LoginUsuario:
+      type: object
+      description: Credenciales de inicio de sesión
+      required:
+        - email
+        - clave
+      properties:
+        email:
+          type: string
+          format: email
+          example: juan@example.com
+        clave:
+          type: string
+          format: password
+          example: mi_contraseña
+    LoginRespuesta:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Login exitoso
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIs...
+        usuario:
+          $ref: '#/components/schemas/Usuario'
+    Producto:
+      type: object
+      description: Producto de la cafetería
+      properties:
+        id:
+          type: integer
+          example: 1
+        nombre:
+          type: string
+          example: Café Latte
+        precio:
+          type: number
+          example: 450.00
+        stock:
+          type: integer
+          example: 50
+        tipo:
+          type: string
+          example: Bebida
+        local:
+          type: string
+          example: Local Central
+        local_producto:
+          type: integer
+          example: 1
+        descripcion:
+          type: string
+          example: Café con leche espumosa
+        imagen:
+          type: string
+          example: latte.jpg
+    NuevoProducto:
+      type: object
+      description: Datos requeridos para crear o actualizar un producto
+      required:
+        - nombre
+        - precio
+        - stock
+        - tipo
+        - local_producto
+        - descripcion
+        - imagen
+      properties:
+        nombre:
+          type: string
+          example: Café Latte
+        precio:
+          type: number
+          example: 450.00
+        stock:
+          type: integer
+          example: 50
+        tipo:
+          type: string
+          example: Bebida
+        local_producto:
+          type: integer
+          example: 1
+        descripcion:
+          type: string
+          example: Café con leche espumosa
+        imagen:
+          type: string
+          example: latte.jpg
+    Local:
+      type: object
+      description: Local de la cafetería
+      properties:
+        id:
+          type: integer
+          example: 1
+        nombre:
+          type: string
+          example: Local Central
+        direccion:
+          type: string
+          example: Av. Siempre Viva 123
+        telefono:
+          type: string
+          example: 1144445555
+    NuevoLocal:
+      type: object
+      description: Datos requeridos para crear o actualizar un local
+      required:
+        - nombre
+        - pais
+        - provincia
+        - direccion
+        - horario_apertura
+        - horario_cierre
+      properties:
+        nombre:
+          type: string
+          example: Local Central
+        pais:
+          type: string
+          example: Argentina
+        provincia:
+          type: string
+          example: Buenos Aires
+        direccion:
+          type: string
+          example: Av. Siempre Viva 123
+        horario_apertura:
+          type: string
+          example: 08:00
+        horario_cierre:
+          type: string
+          example: 20:00
+    Reserva:
+      type: object
+      description: Reserva de la cafetería
+      properties:
+        id:
+          type: integer
+          example: 1
+        nombre_cliente:
+          type: string
+          example: Juan Pérez
+        correo_cliente:
+          type: string
+          format: email
+          example: juan@example.com
+        tipo_reserva:
+          type: string
+          example: Mesa
+        fecha_reserva:
+          type: string
+          format: date
+          example: "2025-06-15"
+        hora_reserva:
+          type: string
+          example: "10:30:00"
+        numero_personas:
+          type: integer
+          example: 4
+        producto_reserva:
+          type: integer
+          example: 1
+        comentarios:
+          type: string
+          example: Mesa cerca de la ventana
+        estado:
+          type: string
+          example: En proceso
+    NuevaReserva:
+      type: object
+      description: Datos requeridos para crear una reserva
+      required:
+        - nombre_cliente
+        - correo_cliente
+        - tipo_reserva
+        - fecha_reserva
+        - hora_reserva
+      properties:
+        nombre_cliente:
+          type: string
+          example: Juan Pérez
+        correo_cliente:
+          type: string
+          format: email
+          example: juan@example.com
+        tipo_reserva:
+          type: string
+          example: Mesa
+        fecha_reserva:
+          type: string
+          description: Fecha en formato DD/MM/YYYY
+          example: 15/06/2025
+        hora_reserva:
+          type: string
+          example: "10:30"
+        numero_personas:
+          type: integer
+          example: 4
+        producto_reserva:
+          type: integer
+          example: 1
+        comentarios:
+          type: string
+          example: Mesa cerca de la ventana
+    ActualizarReserva:
+      type: object
+      required:
+        - usuario_reserva
+        - producto_reserva
+        - fecha_entrega
+        - estado
+      properties:
+        usuario_reserva:
+          type: integer
+          example: 1
+        producto_reserva:
+          type: integer
+          example: 1
+        fecha_entrega:
+          type: string
+          example: "2025-06-20"
+        estado:
+          type: string
+          example: Confirmada
+    Resena:
+      type: object
+      description: Reseña de un producto
+      properties:
+        id:
+          type: integer
+          example: 1
+        usuario:
+          type: integer
+          example: 1
+        producto:
+          type: integer
+          example: 1
+        puntuacion:
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 4
+        comentario:
+          type: string
+          example: Muy buen café
+    NuevaResena:
+      type: object
+      description: Datos requeridos para crear una reseña
+      required:
+        - id_usuario
+        - id_producto
+        - puntuacion
+        - comentario
+      properties:
+        id_usuario:
+          type: integer
+          example: 1
+        id_producto:
+          type: integer
+          example: 1
+        puntuacion:
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 4
+        comentario:
+          type: string
+          example: Muy buen café
+    Venta:
+      type: object
+      description: Venta registrada
+      properties:
+        id_venta:
+          type: integer
+          example: 1
+        total:
+          type: number
+          example: 1250.00
+        fecha_venta:
+          type: string
+          format: date-time
+          example: "2025-06-15T10:30:00"
+    NuevaVenta:
+      type: object
+      description: Datos requeridos para registrar una venta
+      required:
+        - productos
+      properties:
+        productos:
+          type: array
+          items:
+            type: object
+            required:
+              - producto_id
+              - cantidad
+            properties:
+              producto_id:
+                type: integer
+                example: 1
+              cantidad:
+                type: integer
+                example: 2
+    DetalleVenta:
+      type: object
+      properties:
+        producto_id:
+          type: integer
+          example: 1
+        cantidad:
+          type: integer
+          example: 2
+        precio_unitario:
+          type: number
+          example: 450.00
+        subtotal:
+          type: number
+          example: 900.00
+    ProductoMasVendido:
+      type: object
+      properties:
+        nombre:
+          type: string
+          example: Café Latte
+        tipo:
+          type: string
+          example: Bebida
+        precio:
+          type: number
+          example: 450.00
+        total_vendido:
+          type: integer
+          example: 150
+        total_ingresos:
+          type: number
+          example: 67500.00
+    HistorialAccion:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        accion:
+          type: string
+          example: Producto eliminado
+        tipo:
+          type: string
+          example: producto
+        detalle:
+          type: string
+          example: Se eliminó el producto #5
+        fecha:
+          type: string
+          format: date-time
+          example: "2025-06-15 10:30:00"
+    DashboardStats:
+      type: object
+      properties:
+        total_productos:
+          type: integer
+          example: 25
+        total_reservas:
+          type: integer
+          example: 10
+        total_usuarios:
+          type: integer
+          example: 50
+        total_locales:
+          type: integer
+          example: 3
+        reservas_confirmadas:
+          type: integer
+          example: 5
+        reservas_canceladas:
+          type: integer
+          example: 2
+        reservas_en_proceso:
+          type: integer
+          example: 3
+        total_ventas:
+          type: integer
+          example: 0
+        total_clientes:
+          type: integer
+          example: 50
+    Errores:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+    Error:
+      type: object
+      description: Estructura de datos que contiene los detalles del error
+      properties:
+        code:
+          type: string
+          description: Código de error alfanumérico único legible por humanos
+          example: "usuario.not.found"
+        message:
+          type: string
+          description: Breve resumen del problema reportado
+          example: "Usuario no encontrado"
+        level:
+          type: string
+          description: Nivel del problema reportado
+          example: "error"
+          enum:
+            - info
+            - warning
+            - error
+        description:
+          type: string
+          description: Descripción detallada del problema reportado
+          example: "No existe un usuario con id '99'"
+    Links:
+      type: object
+      description: Objeto con enlaces HATEOAS para paginación
+      properties:
+        first:
+          type: object
+          properties:
+            href:
+              type: string
+        last:
+          type: object
+          properties:
+            href:
+              type: string
+        prev:
+          type: object
+          properties:
+            href:
+              type: string
+        next:
+          type: object
+          properties:
+            href:
+              type: string
+  parameters:
+    Limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: 10
+      description: Cantidad de registros por página
+      required: false
+    Offset:
+      name: offset
+      in: query
+      schema:
+        type: integer
+        default: 0
+      description: Desplazamiento para paginación
+      required: false
+    LimitProductos:
+      name: _limit
+      in: query
+      schema:
+        type: integer
+        default: 10
+      description: Cantidad de productos por página
+      required: false
+    OffsetProductos:
+      name: _offset
+      in: query
+      schema:
+        type: integer
+        default: 0
+      description: Desplazamiento para paginación
+      required: false
+    LimitResenas:
+      name: _limit
+      in: query
+      schema:
+        type: integer
+        default: 10
+      description: Cantidad de reseñas por página
+      required: false
+    OffsetResenas:
+      name: _offset
+      in: query
+      schema:
+        type: integer
+        default: 0
+      description: Desplazamiento para paginación
+      required: false
+    IdUsuario:
+      name: id
+      in: path
+      schema:
+        type: integer
+      description: ID del usuario
+      required: true
+      example: 1
+    IdProducto:
+      name: id_producto
+      in: path
+      schema:
+        type: integer
+      description: ID del producto
+      required: true
+      example: 1
+    IdProductoCarrito:
+      name: id_producto
+      in: path
+      schema:
+        type: integer
+      description: ID del producto en el carrito
+      required: true
+      example: 1
+    IdReserva:
+      name: id_reserva
+      in: path
+      schema:
+        type: integer
+      description: ID de la reserva
+      required: true
+      example: 1
+    IdLocal:
+      name: id_local
+      in: path
+      schema:
+        type: integer
+      description: ID del local
+      required: true
+      example: 1
+    AdminId:
+      name: admin_id
+      in: path
+      schema:
+        type: integer
+      description: ID del administrador
+      required: true
+      example: 1
+    UsuarioId:
+      name: usuario_id
+      in: path
+      schema:
+        type: integer
+      description: ID del usuario
+      required: true
+      example: 1
+    ResenaId:
+      name: resena_id
+      in: path
+      schema:
+        type: integer
+      description: ID de la reseña
+      required: true
+      example: 1
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errores'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errores'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errores'
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errores'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errores'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
