@@ -1,0 +1,40 @@
+services:
+  backend_app:
+    build: ./backend
+    ports:
+      - "5001:5001"
+    environment:
+      DB_HOST: db
+      DB_NAME: cafeteria
+      DB_PORT: 3306
+      DB_USER: cafeteria_user
+      DB_PASS: cafeteria_pass
+    depends_on:
+      - db
+  
+  frontend_app:
+    build: ./frontend
+    ports:
+      - "5002:5002"
+    environment:
+      BACK_APP_HOST: backend_app
+    volumes:
+      - ./frontend/static/imagenes/foto_productos:/app/static/imagenes/foto_productos
+    depends_on:
+      - backend_app
+  db:
+    image: mysql:8.0
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cafeteria
+      MYSQL_USER: cafeteria_user
+      MYSQL_PASSWORD: cafeteria_pass
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data_v2:/var/lib/mysql
+      - ./backend/db/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+volumes:
+  db_data_v2:

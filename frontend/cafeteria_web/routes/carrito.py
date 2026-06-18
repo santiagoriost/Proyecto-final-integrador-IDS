@@ -1,10 +1,10 @@
 
 from flask import (Blueprint, render_template, redirect, url_for, flash, session, request)
 import requests
-
+import os
 carrito_bp = Blueprint("carrito",__name__)
-
-API_CARRITO = "http://localhost:5001/api/carrito"
+BACK_APP_HOST = os.environ.get("BACK_APP_HOST", "backend_app")
+API_CARRITO = f"http://{BACK_APP_HOST}:5001/api/carrito"
 
 
 @carrito_bp.route("/", methods=["GET"])

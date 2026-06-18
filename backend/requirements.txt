@@ -1,0 +1,6 @@
+Flask
+flask-jwt-extended
+flask-cors
+flask-bcrypt
+flask-mail
+mysql-connector-python

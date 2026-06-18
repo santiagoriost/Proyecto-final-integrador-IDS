@@ -1,6 +1,12 @@
 from flask import Blueprint, request, jsonify, render_template
 from flask import Blueprint, request, jsonify, render_template, redirect, flash, url_for
 import requests
+import os
+
+BACK_APP_HOST = os.environ.get("BACK_APP_HOST", "backend_app")
+API_URL_PRODUCTOS = f"http://{BACK_APP_HOST}:5001/productos"
+API_URL_RESERVAS = f"http://{BACK_APP_HOST}:5001/reservas/"
+
 inicio_bp = Blueprint("inicio", __name__)
 
 @inicio_bp.route("/", methods=["GET"])
@@ -24,7 +30,7 @@ def crear_reserva():
     }
     try:
         respuesta = requests.post(
-            "http://localhost:5001/reservas/",
+            API_URL_RESERVAS,
             json=datos_reserva
         )
         if respuesta.status_code == 201:
@@ -52,10 +58,9 @@ def pagina_productos():
     lista_productos = []
     links_hateos = {}
     try:
-        respuesta = "http://localhost:5001/productos"
         limit = request.args.get("_limit", 10)
         offset = request.args.get("_offset", 0)
-        url = f"{respuesta}?_limit={limit}&_offset={offset}"
+        url = f"{API_URL_PRODUCTOS}?_limit={limit}&_offset={offset}"
         respuesta = requests.get(url)
         if respuesta.status_code == 200:
             datos = respuesta.json()
