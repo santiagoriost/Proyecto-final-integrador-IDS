@@ -232,10 +232,10 @@ def modificar_producto(id_producto):
             return jsonify({"error": "atributos no especificados"}), 400
         if not obtener_producto(id_producto, cursor):
             return jsonify({"error": "producto no encontrado"}), 404
-        
-        local_nombre = obtener_nombre_local(datos["local_producto"], cursor)
-        if not local_nombre:
-            return jsonify({"error": "el local indicado no existe"}), 404
+        if "local_producto" in datos:
+            local_nombre = obtener_nombre_local(datos["local_producto"], cursor)
+            if not local_nombre:
+                return jsonify({"error": "el local indicado no existe"}), 404
 
         atributos_validos = ["nombre", "precio", "stock", "tipo", "local_producto", "descripcion", "imagen"]
         query = "UPDATE productos SET "
