@@ -1,11 +1,15 @@
 from flask import request, Blueprint, render_template, flash, url_for, redirect, session
 import os
 from werkzeug.utils import secure_filename
+import time
 import requests
-API_URL = "http://localhost:5001/productos"
-API_RESERVAS_URL = "http://localhost:5001/reservas"
-API_HISTORIAL_URL = "http://localhost:5001/historial"
-UPLOAD_FOLDER = os.path.join('frontend', 'static', 'imagenes', 'foto_productos')
+BACK_APP_HOST = os.environ.get("BACK_APP_HOST")
+API_URL_PRODUCTOS = f"http://{BACK_APP_HOST}:5001/productos"
+API_RESERVAS_URL = f"http://{BACK_APP_HOST}:5001/reservas"
+API_HISTORIAL_URL = f"http://{BACK_APP_HOST}:5001/historial"
+UPLOAD_FOLDER = '/app/static/imagenes/foto_productos'
+EXTENSIONES_PERMITIDAS = {'.png', '.jpg', '.jpeg', '.webp'}
+
 dashboard_bp = Blueprint("dashboard", __name__)
 def registrar_accion(accion, tipo, detalle=""):
     try:
@@ -21,7 +25,7 @@ def dashboard_productos():
     try:
         limit = request.args.get("_limit", 10)
         offset = request.args.get("_offset", 0)
-        url = f"{API_URL}?_limit={limit}&_offset={offset}"
+        url = f"{API_URL_PRODUCTOS}?_limit={limit}&_offset={offset}"
         respuesta = requests.get(url)
         if respuesta.status_code == 200:
             datos = respuesta.json()
@@ -48,15 +52,32 @@ def dashboard_productos():
 @dashboard_bp.route("/producto/<int:id_producto>", methods=["GET", "POST"])
 def gestionar_producto(id_producto):
     token = session.get("token")
+    headers = {}
     if token:
         headers = {"Authorization": f"Bearer {token}"}
     if request.method == "POST":
         img = request.files.get("fproducto_img")
         ruta_imagen_db = None
         if img and img.filename != "":
-            extension = os.path.splitext(secure_filename(img.filename))[1]
-            nuevo_nombre = f"producto_id_{id_producto}{extension}"
+            nombre_seguro = secure_filename(img.filename)
+            extension = os.path.splitext(nombre_seguro)[1].lower()
+
+            if extension not in EXTENSIONES_PERMITIDAS:
+                flash("Formato de imagen no permitido. Usar PNG, JPG, JPEG, WEBP", "error")
+                return redirect(request.url)
+
+            timestamp = int(time.time())
+            nuevo_nombre = f"producto_id_{id_producto}_{timestamp}{extension}"
             filepath = os.path.join(UPLOAD_FOLDER, nuevo_nombre)
+            
+            os.makedirs(UPLOAD_FOLDER, exist_ok=True) 
+            for archivo in os.listdir(UPLOAD_FOLDER):
+                if archivo.startswith(f"producto_id_{id_producto}_") or archivo.startswith(f"producto_id_{id_producto}."):
+                    try:
+                        os.remove(os.path.join(UPLOAD_FOLDER, archivo))
+                    except Exception:
+                        pass
+        
             img.save(filepath)
             ruta_imagen_db = f"imagenes/foto_productos/{nuevo_nombre}"
 
@@ -71,7 +92,7 @@ def gestionar_producto(id_producto):
         if ruta_imagen_db:
             datos["imagen"] = ruta_imagen_db
         try:
-            respuesta = requests.patch(f"{API_URL}/{id_producto}", json=datos, headers=headers)
+            respuesta = requests.patch(f"{API_URL_PRODUCTOS}/{id_producto}", json=datos, headers=headers)
             if respuesta.status_code == 200:
                 flash("Producto modificado correctamente", "success")
                 return redirect(url_for('dashboard.dashboard_productos'))
@@ -81,7 +102,7 @@ def gestionar_producto(id_producto):
         except Exception as e:
             flash(f"Error: {str(e)}", "error")
     
-    respuesta = requests.get(f"{API_URL}/{id_producto}", headers=headers)
+    respuesta = requests.get(f"{API_URL_PRODUCTOS}/{id_producto}", headers=headers)
     if respuesta.status_code == 200:
         datos = respuesta.json()
         return render_template("dashboard_producto_BM.html", producto=datos)
@@ -91,24 +112,28 @@ def gestionar_producto(id_producto):
 @dashboard_bp.route("/producto/<int:id_producto>/eliminar", methods=["POST"])
 def eliminar_producto(id_producto):
     token = session.get("token")
+    headers = {}
     if token:
         headers = {"Authorization": f"Bearer {token}"}
+    img = None
     try:
-        datos_request = requests.get(f"{API_URL}/{id_producto}", headers=headers)
+        datos_request = requests.get(f"{API_URL_PRODUCTOS}/{id_producto}", headers=headers)
         if datos_request.status_code == 200:
             datos_producto = datos_request.json()
             img = datos_producto.get("imagen")
     except Exception as e:
         flash(f"error: {str(e)}", "error")
     try:
-        respuesta = requests.delete(f"{API_URL}/{id_producto}", headers=headers)
+        respuesta = requests.delete(f"{API_URL_PRODUCTOS}/{id_producto}", headers=headers)
         if respuesta.status_code == 200:
             if img:
                 filename = os.path.basename(img)
-                ruta_img = os.path.join('frontend', 'static', 'imagenes', 'foto_productos', filename)
+                ruta_img = os.path.join(UPLOAD_FOLDER, filename)
                 if os.path.exists(ruta_img):
-                    os.remove(ruta_img)
-                    flash("Imagen eliminada correctamente", "success")
+                    try:
+                        os.remove(ruta_img)
+                    except Exception as e:
+                        flash(f"Producto eliminado pero no se pudo eliminar la imagen: {str(e)}", "error")
             flash("Producto eliminado correctamente", "success")
             return redirect(url_for('dashboard.dashboard_productos'))
         flash("No se pudo eliminar el producto", "error")
@@ -119,10 +144,21 @@ def eliminar_producto(id_producto):
 @dashboard_bp.route("/producto", methods=["GET", "POST"])
 def agregar_producto():
     token = session.get("token")
+    headers = {}
     if token:
         headers = {"Authorization": f"Bearer {token}"}
     if request.method == "POST":
         img = request.files.get("fproducto_img")
+        
+        if img and img.filename != "":
+            nombre_seguro = secure_filename(img.filename)
+            extension = os.path.splitext(nombre_seguro)[1].lower()
+            if extension not in EXTENSIONES_PERMITIDAS:
+                flash("Formato de imagen no permitido. Usar PNG, JPG, JPEG, WEBP", "error")
+                return redirect(request.url)
+        else:
+            extension = None
+        
         datos = {
             "nombre": request.form.get("fproducto_nombre", "").strip(),
             "precio": request.form.get("fproducto_precio", "").strip(),
@@ -133,17 +169,25 @@ def agregar_producto():
             "imagen": None
         }
         try:
-            respuesta = requests.post(API_URL, json=datos, headers=headers)
+            respuesta = requests.post(API_URL_PRODUCTOS, json=datos, headers=headers)
             if respuesta.status_code == 200:
                 producto = respuesta.json()
                 id = producto.get("id")
-                if img and img.filename != "":
-                    extension = os.path.splitext(secure_filename(img.filename))[1]
-                    nuevo_nombre = f"producto_id_{id}{extension}"
+
+                if img and extension:
+                    timestamp = int(time.time())
+                    nuevo_nombre = f"producto_id_{id}_{timestamp}{extension}"
                     filepath = os.path.join(UPLOAD_FOLDER, nuevo_nombre)
+
+                    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
                     img.save(filepath)
+
                     ruta_imagen_db = f"imagenes/foto_productos/{nuevo_nombre}"
-                    requests.patch(f"{API_URL}/{id}", json={"imagen": ruta_imagen_db}, headers=headers)
+                    patch_resp = requests.patch(f"{API_URL_PRODUCTOS}/{id}", json={"imagen": ruta_imagen_db}, headers=headers)
+                    if patch_resp.status_code != 200:
+                        flash(f"Producto creado pero la imagen no se guardó: {patch_resp.json()}", "warning")
+                        return redirect(url_for('dashboard.dashboard_productos'))
+                    
                 flash("Producto agregado correctamente", "success")
                 return redirect(url_for('dashboard.dashboard_productos'))
             else:
