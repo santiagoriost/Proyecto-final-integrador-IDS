@@ -24,8 +24,6 @@ services:
       - backend_app
   db:
     image: mysql:8.0
-    env_file:
-      - .env
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: cafeteria
