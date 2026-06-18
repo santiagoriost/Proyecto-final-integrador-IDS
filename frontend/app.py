@@ -15,4 +15,4 @@ app.register_blueprint(ubicacion_bp, url_prefix="/ubicacion")
 app.register_blueprint(carrito_bp, url_prefix="/carrito")
 
 if __name__ == "__main__":
-    app.run(port=5002, debug=True)
+    app.run(host='0.0.0.0', port=5002, debug=True)

@@ -1,10 +1,12 @@
 from flask import Blueprint, render_template, request, redirect, flash, url_for, session
 import requests
-API_URL = "http://localhost:5001/usuarios/login"
-API_REGISTER = "http://localhost:5001/usuarios/register"
-API_FORGOT_PASSWORD = "http://localhost:5001/usuarios/forgot-password"
-API_RESET_PASSWORD = "http://localhost:5001/usuarios/reset-password"
-API_PERFIL = "http://localhost:5001/usuarios/me"
+import os
+BACK_APP_HOST = os.environ.get("BACK_APP_HOST", "backend_app")
+API_URL = f"http://{BACK_APP_HOST}:5001/usuarios/login"
+API_REGISTER = f"http://{BACK_APP_HOST}:5001/usuarios/register"
+API_FORGOT_PASSWORD = f"http://{BACK_APP_HOST}:5001/usuarios/forgot-password"
+API_RESET_PASSWORD = f"http://{BACK_APP_HOST}:5001/usuarios/reset-password"
+API_PERFIL = f"http://{BACK_APP_HOST}:5001/usuarios/me"
 usuarios_bp = Blueprint("usuarios", __name__)
 
 @usuarios_bp.route("/login/", methods=["GET", "POST"])
