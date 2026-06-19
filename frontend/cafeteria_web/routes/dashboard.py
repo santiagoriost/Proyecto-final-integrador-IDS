@@ -226,10 +226,7 @@ def dashboard_reservas():
             reservas=[],
             links={}
         )
-@dashboard_bp.route(
-    "/admin/reservas/<int:id_reserva>/estado",
-    methods=["POST"]
-)
+@dashboard_bp.route("/admin/reservas/<int:id_reserva>/estado", methods=["POST"])
 def cambiar_estado_reserva(id_reserva):
     estado = request.form.get("estado")
     datos = {
@@ -252,7 +249,29 @@ def cambiar_estado_reserva(id_reserva):
     except Exception as e:
         flash(f"Error: {str(e)}", "error")
     return redirect(url_for("dashboard.dashboard_reservas"))
-
+@dashboard_bp.route("/admin/reservas/validar", methods=["POST"])
+def validar_reserva_admin():
+    codigo_reserva = request.form.get("codigo_reserva", "").strip()
+    if codigo_reserva == "":
+        flash("Debes ingresar un código de reserva", "error")
+        return redirect(url_for("dashboard.dashboard_reservas"))
+    try:
+        respuesta = requests.patch(
+            f"{API_RESERVAS_URL}/validar",
+            json={"codigo_reserva": codigo_reserva}
+        )
+        datos = respuesta.json()
+        if respuesta.status_code == 200:
+            reserva = datos.get("reserva", {})
+            flash(
+                f"Reserva validada correctamente: {reserva.get('nombre_cliente')}",
+                "success"
+            )
+        else:
+            flash(datos.get("error", "No se pudo validar la reserva"), "error")
+    except Exception as e:
+        flash(f"Error al validar reserva: {str(e)}", "error")
+    return redirect(url_for("dashboard.dashboard_reservas"))
 @dashboard_bp.route("/admin/ventas", methods=["GET"])
 def dashboard_ventas():
     productos = []

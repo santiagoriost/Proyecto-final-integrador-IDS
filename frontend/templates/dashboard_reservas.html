@@ -98,6 +98,28 @@
         </div>
         <button class="btn-soft btn-filtro">☰ Filtros</button>
     </div>
+
+    <div class="validar-reserva-card">
+    <div>
+        <h2>Validar reserva</h2>
+        <p>Ingresa el código de reserva que recibió el cliente por correo.</p>
+    </div>
+
+    <form method="POST"
+          action="{{ url_for('dashboard.validar_reserva_admin') }}"
+          class="validar-reserva-form">
+
+        <input type="text"
+               name="codigo_reserva"
+               placeholder="Ej: RES-F94740D8"
+               required>
+
+        <button type="submit" class="btn-soft btn-validar">
+            Validar reserva
+        </button>
+    </form>
+</div>
+    
     <div class="reservas-table-card">
         <div class="reservas-table-wrapper"> 
             {% if reservas %}
@@ -141,6 +163,8 @@
                     <td>
                         {% if reserva.estado == "Confirmada" %}
                             <span class="estado-pill confirmada">● Confirmada</span>
+                        {% elif reserva.estado == "Validada" %}
+                            <span class="estado-pill confirmada">● Validada</span>
                         {% elif reserva.estado == "Cancelada" %}
                             <span class="estado-pill cancelada">● Cancelada</span>
                         {% else %}

@@ -4,3 +4,4 @@ flask-cors
 flask-bcrypt
 flask-mail
 mysql-connector-python
+qrcode[pil]
