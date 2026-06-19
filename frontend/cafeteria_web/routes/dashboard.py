@@ -66,13 +66,12 @@ def gestionar_producto(id_producto):
                 flash("Formato de imagen no permitido. Usar PNG, JPG, JPEG, WEBP", "error")
                 return redirect(request.url)
 
-            timestamp = int(time.time())
-            nuevo_nombre = f"producto_id_{id_producto}_{timestamp}{extension}"
+            nuevo_nombre = f"producto_id_{id_producto}{extension}"
             filepath = os.path.join(UPLOAD_FOLDER, nuevo_nombre)
             
             os.makedirs(UPLOAD_FOLDER, exist_ok=True) 
             for archivo in os.listdir(UPLOAD_FOLDER):
-                if archivo.startswith(f"producto_id_{id_producto}_") or archivo.startswith(f"producto_id_{id_producto}."):
+                if archivo.startswith(f"producto_id_{id_producto}") or archivo.startswith(f"producto_id_{id_producto}."):
                     try:
                         os.remove(os.path.join(UPLOAD_FOLDER, archivo))
                     except Exception:
@@ -175,8 +174,7 @@ def agregar_producto():
                 id = producto.get("id")
 
                 if img and extension:
-                    timestamp = int(time.time())
-                    nuevo_nombre = f"producto_id_{id}_{timestamp}{extension}"
+                    nuevo_nombre = f"producto_id_{id}{extension}"
                     filepath = os.path.join(UPLOAD_FOLDER, nuevo_nombre)
 
                     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
