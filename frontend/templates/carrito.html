@@ -9,118 +9,63 @@ Carrito
 {% endblock %}
 
 {% block contenido %}
+<img src="{{ url_for('static', filename='imagenes/cafeteria_ejemplo.jpg') }}" id='img_portada' alt="cafeteria">
 
 <div class="contenedor-carrito">
-
     <h1>Mi carrito</h1>
 
     {% if items %}
+        <div class="lista-items">
+            {% for item in items %}
+                <div class="item-carrito">
+                    
+                    <div class="info-producto">
+                        <h3>{{ item.nombre }}</h3>
+                        
+                        <div class="detalle-precio">
+                            <p>Precio unitario: ${{ item.precio }}</p>
+                            <p>Subtotal: ${{ item.subtotal }}</p>
+                        </div>
+                    </div>
 
-        {% for item in items %}
+                    <div class="acciones-carrito">
+                        <form method="POST" action="{{ url_for('carrito.actualizar_cantidad', id_producto=item.id_producto) }}">
+                            <div class="grupo-cantidad">
+                                <label>Cantidad</label>
+                                <input type="number" name="cantidad" min="1" value="{{ item.cantidad }}">
+                            </div>
+                                <button type="submit">Actualizar</button> </form>
+                        </form>
 
-        <div class="item-carrito">
+                        <a class="btn-eliminar" href="{{ url_for('carrito.eliminar_producto', id_producto=item.id_producto) }}">
+                            Eliminar
+                        </a>
+                    </div>
 
-            <div class="info-producto">
-
-                <h3>{{ item.nombre }}</h3>
-
-                <p>
-                    Precio unitario:
-                    ${{ item.precio }}
-                </p>
-
-                <p>
-                    Subtotal:
-                    ${{ item.subtotal }}
-                </p>
-
-            </div>
-
-            <div class="acciones-carrito">
-
-                <form
-                    method="POST"
-                    action="{{ url_for(
-                        'carrito.actualizar_cantidad',
-                        id_producto=item.id_producto
-                    ) }}"
-                >
-
-                    <label>
-                        Cantidad
-                    </label>
-
-                    <input
-                        type="number"
-                        name="cantidad"
-                        min="1"
-                        value="{{ item.cantidad }}"
-                    >
-
-                    <button type="submit">
-                        Actualizar
-                    </button>
-
-                </form>
-
-                <a
-                    class="btn-eliminar"
-                    href="{{ url_for(
-                        'carrito.eliminar_producto',
-                        id_producto=item.id_producto
-                    ) }}"
-                >
-                    Eliminar
-                </a>
-
-            </div>
-
+                </div>
+            {% endfor %}
         </div>
 
-        {% endfor %}
-
         <div class="resumen-carrito">
-
-            <h2>
-                Total:
-                ${{ total }}
-            </h2>
-
-            <a
-                class="btn-vaciar"
-                href="{{ url_for('carrito.vaciar_carrito') }}"
-            >
-                Vaciar carrito
-            </a>
+            <h2>Total: ${{ total }}</h2>
             
-
-            <a 
-                class="btn-confirmar"
-                href="{{ url_for('carrito.confirmar_compra') }}"
-            >
-                Confirmar compra
-            </a>
-
+            <div class="botones-resumen">
+                <a class="btn-vaciar" href="{{ url_for('carrito.vaciar_carrito') }}">
+                    Vaciar carrito
+                </a>
+                <a class="btn-confirmar" href="{{ url_for('carrito.confirmar_compra') }}">
+                    Confirmar compra
+                </a>
+            </div>
         </div>
 
     {% else %}
-
         <div class="carrito-vacio">
-
-            <h2>
-                Tu carrito está vacío
-            </h2>
-
-            <a
-                href="{{ url_for('inicio.pagina_productos') }}"
-            >
+            <h2>Tu carrito está vacío</h2>
+            <a href="{{ url_for('inicio.pagina_productos') }}">
                 Ver productos
             </a>
-
         </div>
-
     {% endif %}
-
 </div>
-
 {% endblock %}

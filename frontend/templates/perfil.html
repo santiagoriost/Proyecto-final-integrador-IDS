@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}mi perfil{% endblock %}
+{% block title %}Mi perfil{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{url_for('static', filename='styles/perfil.css')}}">
@@ -9,13 +9,39 @@
 {% block contenido %}
 <img src="{{ url_for('static', filename='imagenes/cafeteria_ejemplo.jpg') }}" id='img_portada' alt="cafeteria">
 
-<div class="perfil-container">
+<div class="contenedor_form">
     <h1>Mi Perfil</h1>
+    
     <div class="datos-perfil">
-        <p><strong>Nombre:</strong> {{ usuario.nombre }}</p>
-        <p><strong>Apellido:</strong> {{ usuario.apellido }}</p>
-        <p><strong>Email:</strong> {{ usuario.email }}</p>
-        <p><strong>Role:</strong> {{ usuario.rol }}</p>
+        
+        <div class="form_nombre">
+            <label>Nombre:</label>
+            <div class="form_nombre_input">
+                <p>{{ usuario.nombre }}</p>
+            </div>
+        </div>
+
+        <div class="form_apellido">
+            <label>Apellido:</label>
+            <div class="form_apellido_input">
+                <p>{{ usuario.apellido }}</p>
+            </div>
+        </div>
+
+        <div class="form_email">
+            <label>Email:</label>
+            <div class="form_email_input">
+                <p>{{ usuario.email }}</p>
+            </div>
+        </div>
+
+        <div class="form_rol">
+            <label>Rol:</label>
+            <div class="form_rol_input">
+                <p class="rol-badge">{{ usuario.rol }}</p>
+            </div>
+        </div>
+
     </div>
 </div>
 {% endblock %}
