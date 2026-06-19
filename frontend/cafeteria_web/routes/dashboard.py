@@ -181,11 +181,11 @@ def agregar_producto():
 
                     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
                     img.save(filepath)
-
                     ruta_imagen_db = f"imagenes/foto_productos/{nuevo_nombre}"
+
                     patch_resp = requests.patch(f"{API_URL_PRODUCTOS}/{id}", json={"imagen": ruta_imagen_db}, headers=headers)
                     if patch_resp.status_code != 200:
-                        flash(f"Producto creado pero la imagen no se guardó: {patch_resp.json()}", "warning")
+                        flash(f"Producto creado pero la imagen no se guardó: {patch_resp.json()}", "error")
                         return redirect(url_for('dashboard.dashboard_productos'))
                     
                 flash("Producto agregado correctamente", "success")
