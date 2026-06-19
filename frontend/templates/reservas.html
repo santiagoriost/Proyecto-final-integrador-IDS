@@ -9,10 +9,38 @@
 
 {% block contenido %}
 <section class="reservas-container">
+    <div class="banner-eventos">
+        <div class="banner-eventos-contenido">
+            <span class="banner-etiqueta">Celebra con nosotros</span>
+            <h1>¿Quieres reservar para un evento o cumpleaños?</h1>
+            <p>
+                Haz de tu ocasión especial un momento inolvidable en Cafetería 11.
+                Reserva tu mesa para cumpleaños, reuniones o celebraciones.
+            </p>
+
+            <div class="banner-tags">
+                <span>🎉 Eventos</span>
+                <span>🎂 Cumpleaños</span>
+                <span>☕ Reuniones</span>
+            </div>
+
+            <a href="#formularioReserva" class="boton-banner">
+                📅 Reservar ahora
+            </a>
+        </div>
+
+        <div class="banner-eventos-decoracion">
+            <div class="banner-foto">
+                <span>Momentos que se comparten,<br>recuerdos que perduran.</span>
+            </div>
+        </div>
+    </div>
+
     <h1 class="titulo-reserva">
         Reserva tu experiencia
     </h1>
-    <form class="formulario-reserva" method="POST" action="{{ url_for('inicio.crear_reserva') }}">
+
+    <form id="formularioReserva" class="formulario-reserva" method="POST" action="{{ url_for('inicio.crear_reserva') }}">
         <div class="grupo-campo">
             <label>Nombre Completo</label>
             <input
@@ -57,32 +85,42 @@
                 </div>
             </div>
         </div>
-        <div class="grupo-campo">
-            <label>Número de personas</label>
-            <input
-                type="number"
-                name="numero_personas"
-                min="1"
-                max="20"
-                required
-            >
-        </div>
-        <div class="grupo-campo">
-            <label>Tipo de reserva</label>
-            <div class="select-personalizado" id="select-reserva">
-                <input type="hidden" name="tipo_reserva" id="tipo-reserva" value="mesa">
-                <button type="button" class="select-boton">
-                    <span id="texto-tipo-reserva">Mesa</span>
-                    <span class="select-flecha">⌄</span>
+            <div class="grupo-campo">
+                <label>Número de personas</label>
+                <input
+                    type="number"
+                    name="numero_personas"
+                    min="1"
+                    max="60"
+                    required
+                >
+            </div>
+
+            <div class="grupo-campo">
+                <label>Tipo de reserva</label>
+
+                <div class="select-personalizado" id="select-reserva">
+                    <input type="hidden" name="tipo_reserva" id="tipo-reserva" value="mesa">
+
+                    <button type="button" class="select-boton">
+                        <span id="texto-tipo-reserva">Mesa</span>
+                        <span class="select-flecha">⌄</span>
+                    </button>
+
+                    <div class="select-opciones">
+                        <button type="button" class="select-opcion active" data-value="mesa">
+                            Mesa
+                        </button>
+                    </div>
+                </div>
+            </div>
+                <button type="submit" class="boton-reserva">
+                    Reservar ahora
                 </button>
-                <div class="select-opciones">
-                    <button type="button" class="select-opcion active" data-value="mesa">Mesa</button>
             </div>
         </div>
-        <button type="submit" class="boton-reserva">
-            Reservar ahora
-        </button>
-    </form>
+    </div>
+</form>
 </section>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="{{ url_for('static', filename='js/reservas.js') }}"></script>
