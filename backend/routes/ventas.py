@@ -23,6 +23,49 @@ def listar_ventas():
             cursor.close()
         if conn:
             conn.close()
+@ventas_bp.route("/<int:id_venta>", methods=["GET"])
+def detalle_venta(id_venta):
+    conn = None
+    cursor = None
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT *
+            FROM ventas
+            WHERE id_venta = %s
+        """, (id_venta,))
+        venta = cursor.fetchone()
+
+        if not venta:
+            return jsonify({"error": "Venta no encontrada"}), 404
+
+        cursor.execute("""
+            SELECT 
+                p.nombre,
+                dv.cantidad,
+                dv.precio_unitario,
+                dv.subtotal
+            FROM detalle_ventas dv
+            JOIN productos p ON p.id_producto = dv.producto_id
+            WHERE dv.venta_id = %s
+        """, (id_venta,))
+        detalles = cursor.fetchall()
+
+        return jsonify({
+            "venta": venta,
+            "detalles": detalles
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()           
 @ventas_bp.route("/", methods=["POST"])
 def registrar_venta():
     conn = None

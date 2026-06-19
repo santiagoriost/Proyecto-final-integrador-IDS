@@ -285,3 +285,100 @@ tbody tr:hover{
 .toast-venta.error{
     background: rgba(255,190,205,0.28);
 }
+.modal-detalle {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-detalle-contenido {
+    background: rgba(111, 78, 55, 0.92);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    width: 90%;
+    max-width: 600px;
+    border-radius: 22px;
+    padding: 28px;
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+    color: #fff;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+}
+.modal-detalle-contenido h3,
+.modal-venta-header {
+    color: #fff;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}
+
+.detalle-producto-modal {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    color: #fff;
+}
+
+.cerrar-modal {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+
+    color: #f1bfd0;
+    font-size: 28px;
+    font-weight: bold;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cerrar-modal:hover {
+    color: white;
+    transform: scale(1.1);
+}
+.cerrar-modal {
+    background: transparent;
+    border: none;
+}
+.btn-detalle-venta {
+    padding: 10px 16px;
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 14px;
+    background: linear-gradient(135deg, #f1bfd0, #e7a9bf);
+    color: #4b3131;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(231,169,191,0.25);
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.btn-detalle-venta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(231,169,191,0.35);
+}
+.modal-venta-header {
+    font-size: 24px;
+    font-weight: 800;
+    color: #f1bfd0;
+    margin-bottom: 18px;
+}
+.detalle-producto-modal {
+    background: rgba(241, 191, 208, 0.18);
+    border: 1px solid rgba(241, 191, 208, 0.25);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 14px;
+}
+.detalle-producto-modal strong {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+.detalle-producto-modal p {
+    margin: 4px 0;
+}

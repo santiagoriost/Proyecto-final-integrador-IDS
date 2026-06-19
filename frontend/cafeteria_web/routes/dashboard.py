@@ -257,6 +257,7 @@ def cambiar_estado_reserva(id_reserva):
 def dashboard_ventas():
     productos = []
     ventas = []
+    detalles_ventas = {}
     try:
         respuesta_productos = requests.get(API_URL_PRODUCTOS)
         if respuesta_productos.status_code == 200:
@@ -266,13 +267,24 @@ def dashboard_ventas():
         if respuesta_ventas.status_code == 200:
             datos_ventas = respuesta_ventas.json()
             ventas = datos_ventas.get("ventas", [])
+            for venta in ventas:
+                respuesta_detalle = requests.get(
+                    f"http://{BACK_APP_HOST}:5001/ventas/{venta['id_venta']}"
+                )
+
+                if respuesta_detalle.status_code == 200:
+                    detalles_ventas[venta["id_venta"]] = (
+                        respuesta_detalle.json().get("detalles", [])
+                    )
+
     except Exception as e:
         print(e)
     return render_template(
-        "dashboard_ventas.html",
-        productos=productos,
-        ventas=ventas
-    )
+    "dashboard_ventas.html",
+    productos=productos,
+    ventas=ventas,
+    detalles_ventas=detalles_ventas
+)
 
 @dashboard_bp.route(
     "/admin/ventas/registrar",

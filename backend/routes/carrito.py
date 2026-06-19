@@ -240,7 +240,18 @@ def confirmar_carrito():
                     item["id_producto"]
                 )
             )
-
+        cursor.execute(
+            """
+            INSERT INTO historial_acciones (accion, tipo, detalle)
+            VALUES (%s, %s, %s)
+            """,
+            (
+                "Compra realizada",
+                "venta",
+                f"El usuario {datos_usuario['nombre']} realizó la compra #{id_venta} por un total de ${total_venta:.2f}"
+            )
+        )
+        
         cursor.execute("""DELETE ci FROM carrito_items ci
                             JOIN carritos c
                                 ON c.id_carrito = ci.id_carrito

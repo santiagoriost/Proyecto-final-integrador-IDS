@@ -120,3 +120,45 @@ if (window.flatpickr) {
         monthSelectorType: "static"
     });
 }
+const modalDetalle = document.getElementById("modalDetalleVenta");
+const cerrarModal = document.getElementById("cerrarModalDetalle");
+const contenidoDetalle = document.getElementById("contenidoDetalleVenta");
+
+document.querySelectorAll(".btn-detalle-venta").forEach(boton => {
+    boton.addEventListener("click", () => {
+        const idVenta = boton.dataset.id;
+        const contenedorDatos = document.querySelector(
+            `.detalle-venta-data[data-id="${idVenta}"]`
+        );
+        modalDetalle.style.display = "flex";
+        if (!contenedorDatos) {
+            contenidoDetalle.innerHTML = "No se encontraron detalles para esta venta.";
+            return;
+        }
+        const items = contenedorDatos.querySelectorAll(".detalle-item");
+        let html = `
+            <div class="modal-venta-header">
+                <strong>Venta #${idVenta}</strong>
+            </div>
+        `;
+        items.forEach(item => {
+            html += `
+                <div class="detalle-producto-modal">
+                    <strong>${item.dataset.nombre}</strong>
+                    <p>Cantidad: ${item.dataset.cantidad}</p>
+                    <p>Precio unitario: $${item.dataset.precio}</p>
+                    <p>Subtotal: $${item.dataset.subtotal}</p>
+                </div>
+            `;
+        });
+        contenidoDetalle.innerHTML = html;
+    });
+});
+cerrarModal.addEventListener("click", () => {
+    modalDetalle.style.display = "none";
+});
+window.addEventListener("click", (e) => {
+    if (e.target === modalDetalle) {
+        modalDetalle.style.display = "none";
+    }
+});

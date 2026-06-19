@@ -82,6 +82,7 @@
             <th>ID Venta</th>
             <th>Fecha</th>
             <th>Total</th>
+            <th>Detalle</th>
         </tr>
     </thead>
 
@@ -91,14 +92,44 @@
             <td>{{ venta.id_venta }}</td>
             <td>{{ venta.fecha_venta }}</td>
             <td>${{ venta.total }}</td>
-        </tr>
+            <td>
+                <button type="button" class="btn-detalle-venta" data-id="{{ venta.id_venta }}">
+                    Ver detalle
+            </button>
+        </td>
+    </tr>
         {% endfor %}
     </tbody>
 </table>
 {% else %}
 <p>No hay ventas registradas.</p>
 {% endif %}
+<div id="datos-detalles-ventas" style="display: none;">
+    {% for id_venta, detalles in detalles_ventas.items() %}
+        <div class="detalle-venta-data" data-id="{{ id_venta }}">
+            {% for item in detalles %}
+                <div
+                    class="detalle-item"
+                    data-nombre="{{ item.nombre }}"
+                    data-cantidad="{{ item.cantidad }}"
+                    data-precio="{{ item.precio_unitario }}"
+                    data-subtotal="{{ item.subtotal }}">
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+<div id="modalDetalleVenta" class="modal-detalle">
+    <div class="modal-detalle-contenido">
+        <button id="cerrarModalDetalle" class="cerrar-modal">✕</button>
 
+        <h3>Detalle de la venta</h3>
+
+        <div id="contenidoDetalleVenta">
+            Cargando...
+        </div>
+    </div>
+</div>
 <div id="toastVenta" class="toast-venta"></div>
 
 {% with messages = get_flashed_messages(with_categories=true) %}
