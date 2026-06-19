@@ -100,23 +100,23 @@ VALUES ('Cafeteria Sede Central', 'Argentina', 'Buenos Aires', 'Av. Paseo Colon 
 
 INSERT INTO productos (nombre, precio, stock, tipo, local_producto, descripcion, imagen) VALUES
 -- Cafes calientes
-('Cafe Espresso', 1800.00, 50, 'Cafe', 1, 'Espresso clasico e intenso con granos seleccionados.', 'imagenes/foto_productos/expresso.jpg'),
-('Cafe Doble', 2300.00, 50, 'Cafe', 1, 'Doble carga de espresso para arrancar el dia con todo.', 'imagenes/foto_productos/cafe_doble.jpeg'),
-('Americano', 2000.00, 40, 'Cafe', 1, 'Espresso estirado con agua caliente, suave y aromatico.', 'imagenes/foto_productos/americano.jpg'),
-('Cafe Latte', 2500.00, 60, 'Cafe', 1, 'Espresso con leche al vapor y una fina capa de espuma.', 'imagenes/foto_productos/latte.jpg'),
-('Capuccino', 2700.00, 45, 'Cafe', 1, 'Espresso, leche y mucha espuma, espolvoreado con cacao.', 'imagenes/foto_productos/capuccino.jpg'),
-('Flat White', 2800.00, 35, 'Cafe', 1, 'Doble shot de espresso con leche texturizada sutilmente.', 'imagenes/foto_productos/flat_white.jpg'),
-('Submarino', 2600.00, 20, 'Bebida Caliente', 1, 'Leche caliente servida con una barra de chocolate para derretir.', 'imagenes/foto_productos/submarino.jpeg'),
+('Cafe Espresso', 1800.00, 50, 'Cafe', 1, 'Espresso clasico e intenso con granos seleccionados.', 'imagenes/foto_productos/producto_id_1.jpg'),
+('Cafe Doble', 2300.00, 50, 'Cafe', 1, 'Doble carga de espresso para arrancar el dia con todo.', 'imagenes/foto_productos/producto_id_2.jpeg'),
+('Americano', 2000.00, 40, 'Cafe', 1, 'Espresso estirado con agua caliente, suave y aromatico.', 'imagenes/foto_productos/producto_id_3.jpg'),
+('Cafe Latte', 2500.00, 60, 'Cafe', 1, 'Espresso con leche al vapor y una fina capa de espuma.', 'imagenes/foto_productos/producto_id_4.jpg'),
+('Capuccino', 2700.00, 45, 'Cafe', 1, 'Espresso, leche y mucha espuma, espolvoreado con cacao.', 'imagenes/foto_productos/producto_id_5.jpg'),
+('Flat White', 2800.00, 35, 'Cafe', 1, 'Doble shot de espresso con leche texturizada sutilmente.', 'imagenes/foto_productos/producto_id_6.jpg'),
+('Submarino', 2600.00, 20, 'Bebida Caliente', 1, 'Leche caliente servida con una barra de chocolate para derretir.', 'imagenes/foto_productos/producto_id_7.jpeg'),
 -- Cafes Frios & Bebidas Frias
-('Iced Latte', 2700.00, 30, 'Cafe Frio', 1, 'Nuestro clasico Latte servido con hielo y muy refrescante.', 'imagenes/foto_productos/iced_latte.jpeg'),
-('Frappuccino de Caramelo', 3200.00, 25, 'Cafe Frio', 1, 'Cafe licuado con hielo, leche, salsa de caramelo y crema batida.', 'imagenes/foto_productos/frappuccino_caramelo.jpeg'),
-('Licuado de Banana', 2400.00, 15, 'Bebida Fria', 1, 'Licuado tradicional con leche y bananas frescas.', 'imagenes/foto_productos/licuado_banana.webp'),
-('Exprimido de Naranja', 2500.00, 30, 'Bebida Fria', 1, 'Jugo de naranja 100% natural y exprimido en el momento.', 'imagenes/foto_productos/jugo_naranja.jpeg'),
+('Iced Latte', 2700.00, 30, 'Cafe Frio', 1, 'Nuestro clasico Latte servido con hielo y muy refrescante.', 'imagenes/foto_productos/producto_id_8.jpeg'),
+('Frappuccino de Caramelo', 3200.00, 25, 'Cafe Frio', 1, 'Cafe licuado con hielo, leche, salsa de caramelo y crema batida.', 'imagenes/foto_productos/producto_id_9.jpeg'),
+('Licuado de Banana', 2400.00, 15, 'Bebida Fria', 1, 'Licuado tradicional con leche y bananas frescas.', 'imagenes/foto_productos/producto_id_10.webp'),
+('Exprimido de Naranja', 2500.00, 30, 'Bebida Fria', 1, 'Jugo de naranja 100% natural y exprimido en el momento.', 'imagenes/foto_productos/producto_id_11.jpeg'),
 -- Pasteleria Dulce
-('Medialuna de Grasa', 600.00, 100, 'Dulce', 1, 'Clasica medialuna argentina de grasa, crocante y saladita.', 'imagenes/foto_productos/medialuna_grasa.jpg'),
-('Medialuna de Manteca', 600.00, 100, 'Dulce', 1, 'Medialuna de manteca super esponjosa con almibar.', 'imagenes/foto_productos/medialuna_manteca.jpg'),
-('Porcion de Lemon Pie', 2900.00, 12, 'Dulce', 1, 'Base de masa dulce, crema de limon y merengue italiano dorado.', 'imagenes/foto_productos/lemon_pie.jpg'),
-('Porcion de Cheesecake', 3200.00, 10, 'Dulce', 1, 'Tarta de queso crema con salsa artesanal de frutos rojos.', 'imagenes/foto_productos/cheesecake.jpeg'),
+('Medialuna de Grasa', 600.00, 100, 'Dulce', 1, 'Clasica medialuna argentina de grasa, crocante y saladita.', 'imagenes/foto_productos/producto_id_12.jpg'),
+('Medialuna de Manteca', 600.00, 100, 'Dulce', 1, 'Medialuna de manteca super esponjosa con almibar.', 'imagenes/foto_productos/producto_id_13.jpg'),
+('Porcion de Lemon Pie', 2900.00, 12, 'Dulce', 1, 'Base de masa dulce, crema de limon y merengue italiano dorado.', 'imagenes/foto_productos/producto_id_14.jpg'),
+('Porcion de Cheesecake', 3200.00, 10, 'Dulce', 1, 'Tarta de queso crema con salsa artesanal de frutos rojos.', 'imagenes/foto_productos/producto_id_15.jpeg'),
 -- Salados
-('Tostado de Jamon y Queso', 3500.00, 25, 'Salado', 1, 'Tostado en pan de miga con jamon cocido y queso tybo derretido.', 'imagenes/foto_productos/tostado_jyq.jpeg'),
-('Chipa Porcion', 1200.00, 60, 'Salado', 1, 'Porcion de 4 pancitos de queso calientes y libres de gluten.', 'imagenes/foto_productos/chipa.jpeg')
+('Tostado de Jamon y Queso', 3500.00, 25, 'Salado', 1, 'Tostado en pan de miga con jamon cocido y queso tybo derretido.', 'imagenes/foto_productos/producto_id_16.jpeg'),
+('Chipa Porcion', 1200.00, 60, 'Salado', 1, 'Porcion de 4 pancitos de queso calientes y libres de gluten.', 'imagenes/foto_productos/producto_id_17.jpeg');
