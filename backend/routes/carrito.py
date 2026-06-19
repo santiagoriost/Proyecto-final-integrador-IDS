@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify
 from db.db_conn import get_connection
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
-from datetime import datetime, timedelta
 from flask_mail import Message
 from extensions import mail
 
@@ -178,11 +177,7 @@ def confirmar_carrito():
         id_usuario = int(get_jwt_identity())
         datos_usuario = get_jwt()
 
-        fecha_mysql = datetime.now().strftime("%Y-%m-%d")
-        hora_reserva = datetime.now().strftime("%H:%M:%S")
-        comentarios = "pedido realizado desde el carrito"
-
-        query_items = """SELECT p.id_producto, p.nombre, p.stock, ci.cantidad FROM carritos c 
+        query_items = """SELECT p.id_producto, p.nombre, p.precio, p.stock, ci.cantidad FROM carritos c 
         JOIN carrito_items ci
             ON c.id_carrito = ci.id_carrito
         JOIN productos p
@@ -194,28 +189,57 @@ def confirmar_carrito():
         items = cursor.fetchall()
 
         if not items:
-            return jsonify({"error": "El carrito está vacío"}), 400
-
+            return jsonify({"error": "El carrito está vacío"}), 400       
+        
+        total_venta = 0
         for item in items:
-
+            total_venta += float(item["precio"]) * item["cantidad"]
+        for item in items:
             if item["stock"] < item["cantidad"]:
                 return jsonify({"error": f"Stock insuficiente para {item['id_producto']}"}), 400
+        cursor.execute(
+            """
+            INSERT INTO ventas (total)
+            VALUES (%s)
+            """,
+                (total_venta,)
+            )
+
+        id_venta = cursor.lastrowid
 
         for item in items:
-
-            cursor.execute("""INSERT INTO reservas(nombre_cliente, correo_cliente, tipo_reserva, fecha_reserva, hora_reserva, numero_personas, producto_reserva, comentarios, estado)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
-                """,
-                (datos_usuario["nombre"], datos_usuario["email"], "Producto", fecha_mysql, hora_reserva, None, item["id_producto"], comentarios, "En proceso")
-            )
+            cursor.execute(
+                """
+                INSERT INTO detalle_ventas
+                (
+                    venta_id,
+                    producto_id,
+                    cantidad,
+                    precio_unitario,
+                    subtotal
+                )
+                    VALUES (%s,%s,%s,%s,%s)
+                    """,
+                    (
+                        id_venta,
+                        item["id_producto"],
+                        item["cantidad"],
+                        item["precio"],
+                        float(item["precio"]) * item["cantidad"]
+                    )
+                )
 
             cursor.execute(
                 """
                 UPDATE productos
                 SET stock = stock - %s
-                WHERE nombre = %s
+                WHERE id_producto = %s
                 """,
-                (item["cantidad"], item["nombre"]))
+                (
+                    item["cantidad"],
+                    item["id_producto"]
+                )
+            )
 
         cursor.execute("""DELETE ci FROM carrito_items ci
                             JOIN carritos c
@@ -226,30 +250,20 @@ def confirmar_carrito():
         conn.commit()
 
         mail_body = "Tu pedido fue registrado correctamente.\n\n"
-
         for item in items:
             mail_body += f"- {item['nombre']} x{item['cantidad']}\n"
-
         mensaje = Message(subject="Pedido confirmado - Cafeteria 11", sender="jcunduri@fi.uba.ar", recipients=[datos_usuario["email"]])
-
         mensaje.body = mail_body
-
         mail.send(mensaje)
-
         return jsonify({"message": "Pedido confirmado"}), 200
-
     except Exception as e:
         print("ERROR: ", e)
         return jsonify({"error": str(e)}), 500
-
     finally:
-
         if cursor:
             cursor.close()
-
         if conn:
-            conn.close()
-                
+            conn.close()    
 
 @carrito_bp.route("/vaciar", methods=["DELETE"])
 @jwt_required()

@@ -258,11 +258,11 @@ def dashboard_ventas():
     productos = []
     ventas = []
     try:
-        respuesta_productos = requests.get("http://127.0.0.1:5001/productos/")
+        respuesta_productos = requests.get(API_URL_PRODUCTOS)
         if respuesta_productos.status_code == 200:
             datos_productos = respuesta_productos.json()
             productos = datos_productos.get("productos", [])
-        respuesta_ventas = requests.get("http://127.0.0.1:5001/ventas/")
+        respuesta_ventas = requests.get(f"http://{BACK_APP_HOST}:5001/ventas/")
         if respuesta_ventas.status_code == 200:
             datos_ventas = respuesta_ventas.json()
             ventas = datos_ventas.get("ventas", [])

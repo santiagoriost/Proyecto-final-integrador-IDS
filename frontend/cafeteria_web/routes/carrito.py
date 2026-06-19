@@ -162,7 +162,15 @@ def confirmar_compra():
 
         else:
 
-            flash("Error al confirmar compra", "error")
+            print("STATUS CONFIRMAR:", respuesta.status_code)
+            print("BODY CONFIRMAR:", respuesta.text)
+
+            try:
+                mensaje = respuesta.json().get("error", "Error al confirmar compra")
+            except Exception:
+                mensaje = "Error al confirmar compra"
+
+            flash(mensaje, "error")
 
     except Exception:
 

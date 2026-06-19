@@ -43,19 +43,15 @@ CREATE TABLE  resenas(
 );
 CREATE TABLE reservas (
     id_reserva INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    usuario_reserva INT NULL,
-    producto_reserva INT NULL,
     nombre_cliente VARCHAR(100) NOT NULL,
     correo_cliente VARCHAR(120) NOT NULL,
-    tipo_reserva ENUM('mesa', 'producto') NOT NULL,
+    tipo_reserva ENUM('mesa') NOT NULL,
     fecha_reserva DATE NOT NULL,
     hora_reserva TIME NOT NULL,
     numero_personas INT NULL,
     comentarios TEXT,
     estado VARCHAR(50) NOT NULL DEFAULT 'En proceso',
-    fecha_creacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_reserva) REFERENCES usuarios(id_usuario),
-    FOREIGN KEY (producto_reserva) REFERENCES productos(id_producto)
+    fecha_creacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE historial_acciones (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,

@@ -38,7 +38,6 @@ def listar_reservas():
                 "fecha_reserva": str(reserva["fecha_reserva"]),
                 "hora_reserva": str(reserva["hora_reserva"]),
                 "numero_personas": reserva["numero_personas"],
-                "producto_reserva": reserva["producto_reserva"],
                 "comentarios": reserva["comentarios"],
                 "estado": reserva["estado"]
             })
@@ -108,7 +107,6 @@ def agregar_reserva():
         ).strftime("%Y-%m-%d")
         hora_reserva = datos["hora_reserva"]
         numero_personas = datos.get("numero_personas")
-        producto_reserva = datos.get("producto_reserva")
         comentarios = datos.get("comentarios")
 
         fecha_hora_reserva = datetime.strptime(
@@ -142,11 +140,10 @@ def agregar_reserva():
             fecha_reserva,
             hora_reserva,
             numero_personas,
-            producto_reserva,
             comentarios,
             estado
         )
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """
         valores = (
             nombre_cliente,
@@ -155,7 +152,6 @@ def agregar_reserva():
             fecha_mysql,
             hora_reserva,
             numero_personas,
-            producto_reserva,
             comentarios,
             "En proceso"
         )
@@ -191,41 +187,10 @@ def agregar_reserva():
                 "fecha_reserva": fecha_reserva,
                 "hora_reserva": hora_reserva,
                 "numero_personas": numero_personas,
-                "producto_reserva": producto_reserva,
                 "comentarios": comentarios,
                 "estado": "En proceso"
             }
         }), 201
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-    finally:
-        if cursor:
-            cursor.close()
-        if conn:
-            conn.close()
-@reservas_bp.route("/<int:id_reserva>", methods=["GET"])
-def obtener_reserva(id_reserva):
-    conn = None
-    cursor = None
-    try:
-        conn = get_connection()
-        cursor = conn.cursor(dictionary=True)
-
-        query = "SELECT * FROM reservas WHERE id_reserva = %s"
-        cursor.execute(query, (id_reserva,))
-        reserva = cursor.fetchone()
-
-        if not reserva:
-            return jsonify({"error": "reserva no encontrada"}), 404
-
-        return jsonify({
-            "id": reserva["id_reserva"],
-            "usuario": reserva["usuario_reserva"],
-            "producto": reserva["producto_reserva"],
-            "fecha_reserva": reserva["fecha_reserva"],
-            "fecha_entrega": reserva["hora_reserva"],
-            "estado": reserva["estado"]
-        }), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
@@ -340,151 +305,3 @@ def actualizar_estado_reserva(id_reserva):
             cursor.close()
         if conn:
             conn.close()
-@reservas_bp.route("/<int:id_reserva>", methods=["PUT"])
-def actualizar_reserva(id_reserva):
-    conn = None
-    cursor = None
-    try:
-        conn = get_connection()
-        cursor = conn.cursor(dictionary=True)
-
-        datos = request.get_json()
-        atributos_necesarios = ["usuario_reserva", "producto_reserva", "fecha_entrega", "estado"]
-
-        for atributo in atributos_necesarios:
-            if atributo not in datos:
-                return jsonify({"error": f"Falta el atributo '{atributo}'"}), 400
-            if str(datos[atributo]).strip() == "":
-                return jsonify({"error": f"El atributo '{atributo}' tiene un valor vacío"}), 400
-        
-        query_reserva = "SELECT * FROM reservas WHERE id_reserva = %s"
-        cursor.execute(query_reserva, (id_reserva,))
-        reserva = cursor.fetchone()
-
-        if not reserva:
-            return jsonify({"error": "reserva no encontrada"}), 404
-
-        query_producto = "SELECT id_producto FROM productos WHERE id_producto = %s"
-        cursor.execute(query_producto, (datos["producto_reserva"],))
-        producto = cursor.fetchone()
-
-        if not producto:
-            return jsonify({"error": "producto no encontrado"}), 404
-
-        query_update = """
-        UPDATE reservas
-        SET usuario_reserva = %s, 
-        producto_reserva = %s, 
-        fecha_entrega = %s,
-        estado = %s
-        WHERE id_reserva = %s
-        """
-        valores = (
-            datos["usuario_reserva"],
-            datos["producto_reserva"],
-            datos["fecha_entrega"],
-            datos["estado"],
-            id_reserva
-        )
-        cursor.execute(query_update, valores)
-        conn.commit()
-
-        return jsonify({
-            "mensaje": "reserva actualizada correctamente",
-            "reserva_actualizada": {
-                "id": id_reserva,
-                "usuario_reserva": datos["usuario_reserva"],
-                "producto_reserva": datos["producto_reserva"],
-                "fecha_entrega": datos["fecha_entrega"],
-                "estado": datos["estado"]
-            }
-        }), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-    finally:
-        if cursor:
-            cursor.close()
-        if conn:
-            conn.close()
-
-
-@reservas_bp.route("/<int:id_reserva>", methods=["PATCH"])
-def actualizar_reserva_parcial(id_reserva):
-    conn = None
-    cursor = None
-    try:
-        conn = get_connection()
-        cursor = conn.cursor(dictionary=True)
-
-        datos = request.get_json()
-        atributos_necesarios = ["usuario_reserva", "producto_reserva", "fecha_entrega", "estado"]
-
-        for atributo in atributos_necesarios:
-            if atributo not in datos:
-                return jsonify({"error": f"Falta el atributo '{atributo}'"}), 400
-
-            if str(datos[atributo]).strip() == "":
-                return jsonify({"error": f"El atributo '{atributo}' tiene un valor vacío"}), 400
-
-        query_reserva = "SELECT * FROM reservas WHERE id_reserva = %s"
-        cursor.execute(query_reserva, (id_reserva,))
-        reserva = cursor.fetchone()
-
-        if not reserva:
-            return jsonify({"error": "reserva no encontrada"}), 404
-
-        query_usuario = "SELECT id_cuenta FROM cuentas WHERE id_cuenta = %s"
-        cursor.execute(query_usuario, (datos["usuario_reserva"],))
-        usuario = cursor.fetchone()
-
-        if not usuario:
-            return jsonify({"error": "usuario no encontrado"}), 404
-
-        query_producto = "SELECT id_producto FROM productos WHERE id_producto = %s"
-        cursor.execute(query_producto, (datos["producto_reserva"],))
-        producto = cursor.fetchone()
-
-        if not producto:
-            return jsonify({"error": "producto no encontrado"}), 404
-
-        query_update = """
-        UPDATE reservas
-        SET usuario_reserva = %s,
-            producto_reserva = %s,
-            fecha_entrega = %s,
-            estado = %s
-        WHERE id_reserva = %s
-        """
-
-        valores = (
-            datos["usuario_reserva"],
-            datos["producto_reserva"],
-            datos["fecha_entrega"],
-            datos["estado"],
-            id_reserva
-        )
-
-        cursor.execute(query_update, valores)
-        conn.commit()
-
-        return jsonify({
-            "mensaje": "reserva actualizada correctamente",
-            "reserva_actualizada": {
-                "id": id_reserva,
-                "usuario_reserva": datos["usuario_reserva"],
-                "producto_reserva": datos["producto_reserva"],
-                "fecha_entrega": datos["fecha_entrega"],
-                "estado": datos["estado"]
-            }
-        }), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-    finally:
-        if cursor:
-            cursor.close()
-
-        if conn:
-            conn.close()
-
