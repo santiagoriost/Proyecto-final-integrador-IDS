@@ -58,13 +58,15 @@
 
     <div class="charts-grid">
         <article class="chart-card">
-            <h2>Reservas por estado</h2>
-            <canvas id="graficoEstados"></canvas>
+            <h2>Ventas por fecha</h2>
+            <p class="chart-description">Cantidad de ventas registradas cada día</p>
+            <canvas id="graficoVentasFecha"></canvas>
         </article>
 
         <article class="chart-card">
-            <h2>Tipos de reserva</h2>
-            <canvas id="graficoTipos"></canvas>
+            <h2>Reservas por fecha</h2>
+            <p class="chart-description">Cantidad de reservas realizadas cada día</p>
+            <canvas id="graficoReservasFecha"></canvas>
         </article>
 
         <article class="chart-card chart-wide">
@@ -80,6 +82,9 @@
 </script>
 <script id="ventas-json" type="application/json">
     {{ ventas | tojson }}
+</script>
+<script id="mas-vendidos-json" type="application/json">
+    {{ mas_vendidos | tojson }}
 </script>
 <script src="{{ url_for('static', filename='js/dashboard_estadisticas.js') }}"></script>
 {% endblock %}

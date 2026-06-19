@@ -115,50 +115,7 @@ if (inputBusqueda) {
 if (btnFiltro) {
     btnFiltro.addEventListener("click", aplicarFiltros);
 }
-/* ELIMINAR */
-document.querySelectorAll(".btn-eliminar").forEach(boton => {
-    boton.addEventListener("click", () => {
-        reservaAEliminar = boton.dataset.id;
-        modalEliminar.classList.add("show");
-    });
-});
 
-if (btnCancelarModal) {
-    btnCancelarModal.addEventListener("click", () => {
-        modalEliminar.classList.remove("show");
-        reservaAEliminar = null;
-    });
-}
-
-if (btnConfirmarEliminar) {
-    btnConfirmarEliminar.addEventListener("click", async () => {
-        try {
-            const respuesta = await fetch(
-                `http://127.0.0.1:5001/reservas/${reservaAEliminar}`,
-                {
-                    method: "DELETE"
-                }
-            );
-
-            const datos = await respuesta.json();
-
-            if (respuesta.ok) {
-                mostrarToast("Reserva eliminada ", "success");
-                modalEliminar.classList.remove("show");
-                reservaAEliminar = null;
-
-                setTimeout(() => {
-                    location.reload();
-                }, 1200);
-            } else {
-                mostrarToast(datos.error || "Error al eliminar", "error");
-            }
-        } catch (error) {
-            console.error(error);
-            mostrarToast("Error del servidor", "error");
-        }
-    });
-}
 /* NUEVA RESERVA */
 const modalNuevaReserva =
     document.getElementById("modalNuevaReserva");
@@ -176,48 +133,6 @@ if (btnNuevaReserva) {
 if (btnCerrarNuevaReserva) {
     btnCerrarNuevaReserva.addEventListener("click", () => {
         modalNuevaReserva.classList.remove("show");
-    });
-}
-if (formNuevaReserva) {
-    formNuevaReserva.addEventListener("submit", async event => {
-        event.preventDefault();
-        const formData = new FormData(formNuevaReserva);
-        const datos = Object.fromEntries(formData.entries());
-        try {
-            const respuesta = await fetch(
-                "http://127.0.0.1:5001/reservas/",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(datos)
-                }
-            );
-            const resultado = await respuesta.json();
-
-            if (respuesta.ok) {
-                mostrarToast(
-                    "Reserva creada ",
-                    "success"
-                );
-                modalNuevaReserva.classList.remove("show");
-                setTimeout(() => {
-                    location.reload();
-                }, 1200);
-            } else {
-                mostrarToast(
-                    resultado.error || "Error al crear",
-                    "error"
-                );
-            }
-        } catch (error) {
-            console.error(error);
-            mostrarToast(
-                "Error del servidor",
-                "error"
-            );
-        }
     });
 }
 const btnExportarReservas = document.getElementById("btnExportarReservas");

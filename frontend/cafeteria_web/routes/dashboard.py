@@ -234,7 +234,7 @@ def cambiar_estado_reserva(id_reserva):
     }
     try:
         respuesta = requests.patch(
-            f"http://127.0.0.1:5001/reservas/{id_reserva}/estado",
+            f"{API_RESERVAS_URL}/{id_reserva}/estado",
             json=datos
         )
         if respuesta.status_code == 200:
@@ -249,6 +249,53 @@ def cambiar_estado_reserva(id_reserva):
     except Exception as e:
         flash(f"Error: {str(e)}", "error")
     return redirect(url_for("dashboard.dashboard_reservas"))
+
+@dashboard_bp.route("/admin/reservas/<int:id_reserva>/eliminar", methods=["POST"])
+def eliminar_reserva_admin(id_reserva):
+    try:
+        respuesta = requests.delete(
+            f"{API_RESERVAS_URL}/{id_reserva}"
+        )
+        if respuesta.status_code == 200:
+            flash("Reserva eliminada correctamente", "success")
+        else:
+            datos_error = respuesta.json()
+            flash(
+                datos_error.get("error", "No se pudo eliminar la reserva"),
+                "error"
+            )
+    except Exception as e:
+        flash(f"Error al eliminar reserva: {str(e)}", "error")
+    return redirect(url_for("dashboard.dashboard_reservas"))
+
+@dashboard_bp.route("/admin/reservas/crear", methods=["POST"])
+def crear_reserva_admin():
+    datos = {
+        "nombre_cliente": request.form.get("nombre_cliente", "").strip(),
+        "correo_cliente": request.form.get("correo_cliente", "").strip(),
+        "tipo_reserva": request.form.get("tipo_reserva", "").strip(),
+        "fecha_reserva": request.form.get("fecha_reserva", "").strip(),
+        "hora_reserva": request.form.get("hora_reserva", "").strip(),
+        "numero_personas": request.form.get("numero_personas", "").strip(),
+        "comentarios": request.form.get("comentarios", "").strip()
+    }
+    try:
+        respuesta = requests.post(
+            f"{API_RESERVAS_URL}/",
+            json=datos
+        )
+        if respuesta.status_code == 201:
+            flash("Reserva creada correctamente", "success")
+        else:
+            datos_error = respuesta.json()
+            flash(
+                datos_error.get("error", "No se pudo crear la reserva"),
+                "error"
+            )
+    except Exception as e:
+        flash(f"Error al crear reserva: {str(e)}", "error")
+    return redirect(url_for("dashboard.dashboard_reservas"))
+
 @dashboard_bp.route("/admin/reservas/validar", methods=["POST"])
 def validar_reserva_admin():
     codigo_reserva = request.form.get("codigo_reserva", "").strip()
@@ -272,6 +319,7 @@ def validar_reserva_admin():
     except Exception as e:
         flash(f"Error al validar reserva: {str(e)}", "error")
     return redirect(url_for("dashboard.dashboard_reservas"))
+
 @dashboard_bp.route("/admin/ventas", methods=["GET"])
 def dashboard_ventas():
     productos = []
@@ -322,7 +370,7 @@ def registrar_venta_admin():
     }
     try:
         respuesta = requests.post(
-            "http://127.0.0.1:5001/ventas/",
+            f"http://{BACK_APP_HOST}:5001/ventas/",
             json=datos
         )
         if respuesta.status_code == 201:
@@ -351,15 +399,24 @@ def registrar_venta_admin():
 def dashboard_estadisticas():
     reservas = []
     ventas = []
+    mas_vendidos = []
     try:
         respuesta_reservas = requests.get(
-            "http://127.0.0.1:5001/reservas/?limit=100"
+            f"{API_RESERVAS_URL}/?limit=100"
         )
         if respuesta_reservas.status_code == 200:
             datos_reservas = respuesta_reservas.json()
             reservas = datos_reservas.get("reservas", [])
+
+        respuesta_mas_vendidos = requests.get(
+            f"http://{BACK_APP_HOST}:5001/ventas/mas-vendidos"
+        )
+        if respuesta_mas_vendidos.status_code == 200:
+            datos_mas_vendidos = respuesta_mas_vendidos.json()
+            mas_vendidos = datos_mas_vendidos.get("mas_vendidos", [])
+
         respuesta_ventas = requests.get(
-            "http://127.0.0.1:5001/ventas/"
+            f"http://{BACK_APP_HOST}:5001/ventas/"
         )
         if respuesta_ventas.status_code == 200:
             datos_ventas = respuesta_ventas.json()
@@ -369,7 +426,8 @@ def dashboard_estadisticas():
     return render_template(
         "dashboard_estadisticas.html",
         reservas=reservas,
-        ventas=ventas
+        ventas=ventas,
+        mas_vendidos=mas_vendidos
     )
 
 @dashboard_bp.route("/admin/historial", methods=["GET"])
@@ -387,7 +445,7 @@ def dashboard_historial():
 def dashboard_mas_vendidos():
     mas_vendidos = []
     try:
-        respuesta = requests.get("http://127.0.0.1:5001/ventas/mas-vendidos")
+        respuesta = requests.get(f"http://{BACK_APP_HOST}:5001/ventas/mas-vendidos")
         if respuesta.status_code == 200:
             mas_vendidos = respuesta.json().get("mas_vendidos", [])
     except Exception as e:
@@ -409,7 +467,7 @@ def dashboard_resenas():
             "Authorization": f"Bearer {token}"
         }
         respuesta = requests.get(
-            "http://127.0.0.1:5001/reseñas/",
+            f"http://{BACK_APP_HOST}:5001/reseñas/",
             headers=headers
         )
         if respuesta.status_code != 200:

@@ -382,7 +382,6 @@
     background-size: 6px 6px;
     background-repeat: no-repeat;
 }
-
 .glass-select option { background: #F6EEE3; color: #3A2A23; }
 .flatpickr-calendar {
     background: rgba(255,250,245,0.88) !important;
@@ -390,9 +389,7 @@
     border-radius: 20px !important;
     box-shadow: 0 24px 60px rgba(60,40,32,0.28) !important;
 }
-
 .flatpickr-months { background: rgba(245,182,200,0.18) !important; }
-
 .flatpickr-monthDropdown-months,
 .numInputWrapper input {
     background: transparent !important;
@@ -400,31 +397,84 @@
     color: #3A2A23 !important;
     font-weight: 700 !important;
 }
-
 .flatpickr-weekday { color: #8a6252 !important; font-weight: 700 !important; }
-
 .flatpickr-day { border-radius: 12px !important; color: #3A2A23 !important; }
-
 .flatpickr-day:hover {
     background: rgba(245,182,200,0.35) !important;
     border-color: transparent !important;
 }
-
 .flatpickr-day.selected {
     background: #F5B6C8 !important;
     border-color: #F5B6C8 !important;
     color: #3A2A23 !important;
 }
-
 .flatpickr-time {
     background: rgba(255,250,245,0.88) !important;
     border-top: 1px solid rgba(120,85,72,0.16) !important;
     height: 52px !important;
 }
-
 .flatpickr-time input,
 .flatpickr-time .flatpickr-am-pm { color: #3A2A23 !important; }
-
 .flatpickr-time input { font-size: 1.2rem !important; font-weight: 700 !important; }
-
 .flatpickr-time .numInputWrapper:hover { background: rgba(245,182,200,0.16) !important; }
+.validar-reserva-card {
+    margin: 24px 0;
+    padding: 24px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 18px 40px rgba(58, 42, 35, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+.validar-reserva-card h2 {
+    margin: 0 0 6px;
+    font-size: 22px;
+    color: #3A2A23;
+}
+.validar-reserva-card p {
+    margin: 0;
+    color: rgba(58, 42, 35, 0.75);
+    font-size: 14px;
+}
+.validar-reserva-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.validar-reserva-form input {
+    min-width: 260px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(58, 42, 35, 0.18);
+    background: rgba(255, 255, 255, 0.8);
+    color: #3A2A23;
+    font-weight: 600;
+    outline: none;
+}
+.validar-reserva-form input:focus {
+    border-color: rgba(111, 44, 145, 0.55);
+    box-shadow: 0 0 0 4px rgba(111, 44, 145, 0.12);
+}
+.btn-validar {
+    padding: 14px 20px;
+    border-radius: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+@media (max-width: 900px) {
+    .validar-reserva-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .validar-reserva-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .validar-reserva-form input {
+        min-width: 100%;
+    }
+}

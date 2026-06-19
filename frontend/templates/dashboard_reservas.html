@@ -196,8 +196,16 @@
                                 </button>
                             </form>
 
-                            <button class="btn-icon btn-eliminar eliminar"
-                                data-id="{{ reserva.id }}">🗑</button>
+                            <form method="POST"
+                                action="{{ url_for('dashboard.eliminar_reserva_admin', id_reserva=reserva.id) }}"
+                                class="form-estado form-eliminar-reserva">
+
+                                <button type="submit"
+                                    class="btn-icon btn-eliminar eliminar"
+                                    onclick="return confirm('¿Seguro que deseas eliminar esta reserva?')">
+                                🗑
+                            </button>
+                        </form>
                         </div>
                     </td>
                 </tr>
@@ -225,7 +233,9 @@
     <div class="modal-card modal-reserva">
         <h2>Nueva reserva</h2>
 
-        <form id="formNuevaReserva">
+        <form id="formNuevaReserva"
+            method="POST"
+            action="{{ url_for('dashboard.crear_reserva_admin') }}">
 
             <div class="form-group">
                 <label>Nombre</label>
