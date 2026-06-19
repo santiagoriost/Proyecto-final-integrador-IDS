@@ -1,7 +1,6 @@
 from flask import request, Blueprint, render_template, flash, url_for, redirect, session
 import os
 from werkzeug.utils import secure_filename
-import time
 import requests
 BACK_APP_HOST = os.environ.get("BACK_APP_HOST")
 API_URL_PRODUCTOS = f"http://{BACK_APP_HOST}:5001/productos"
