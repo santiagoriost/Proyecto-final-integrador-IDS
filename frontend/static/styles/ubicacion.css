@@ -4,14 +4,54 @@
     align-items: center;
     justify-content: center;
     margin-top: 50px;
+    background-color: #f8eee3;
+    padding: 50px 20px;
+    font-family: sans-serif;
 }
 
 .contenedor_ubicacion h1 {
     font-size: 36px;
     margin-bottom: 20px;
+    color: #f1dcbc;
+    text-align: center;
+    text-shadow: 1px 1px 2px #4b3a2d;
 }
 
 .mapa {
     border-radius: 10px;
     overflow: hidden;
 }    
+
+.contenedor_ubicacion form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(110, 55, 0, 0.9);
+    color: white;
+    width: 90%;
+    padding: 35px;
+    border-radius: 15px;
+    border: 1px solid #5C4033;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.contenedor_ubicacion p {
+    font-size: 20px;
+    color: white;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.mapa_container {
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #5C4033;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.mapa_container iframe {
+    width: 100%;
+    height: 450px;
+    border: 0;
+}
