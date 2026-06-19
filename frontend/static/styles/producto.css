@@ -74,18 +74,11 @@
 }
 
 .contenedor_paginacion_productos {
-    display: none;
-    justify-content: center;
-    margin: 20px 0;
-    position: absolute;
-
-}
-
-.contenedor_paginacion_productos {
     display: flex;
     justify-content: center;
-    gap: 10px;
-    margin: -20px 0px;
+    align-items: center;
+    gap: 15px;
+    margin: 40px auto 20px;
     width: 100%;
 
 }
