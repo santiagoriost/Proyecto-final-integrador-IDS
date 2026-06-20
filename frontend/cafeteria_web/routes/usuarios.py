@@ -127,6 +127,7 @@ def manejo_reset_password():
 def manejo_logout():
     session.pop("token", None)
     session.pop("usuario", None)
+    session.pop("rol", None)
     flash('Sesión cerrada exitosamente.', 'success')
     return redirect(url_for('inicio.pagina_inicio'))
 

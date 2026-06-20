@@ -10,6 +10,16 @@ UPLOAD_FOLDER = '/app/static/imagenes/foto_productos'
 EXTENSIONES_PERMITIDAS = {'.png', '.jpg', '.jpeg', '.webp'}
 
 dashboard_bp = Blueprint("dashboard", __name__)
+@dashboard_bp.before_request
+def proteger_rutas_admin():
+    if not session.get("token"):
+        flash("Debes iniciar sesión para acceder al panel admin.", "error")
+        return redirect(url_for("usuarios.manejo_login"))
+
+    if session.get("rol") != "admin":
+        flash("No tienes permisos para acceder al panel admin.", "error")
+        return redirect(url_for("inicio.pagina_inicio"))
+    
 def registrar_accion(accion, tipo, detalle=""):
     try:
         requests.post(
