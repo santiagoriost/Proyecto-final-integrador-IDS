@@ -1,0 +1,93 @@
+.contenedor-resenas {
+
+    max-width: 900px;
+    margin: auto;
+    padding: 30px;
+}
+
+.contenedor-resenas h1 {
+
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-resena {
+
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    background: #f5f5f5;
+
+    padding: 20px;
+
+    border-radius: 10px;
+
+    margin-bottom: 40px;
+}
+
+.form-resena select,
+.form-resena textarea {
+
+    padding: 10px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 6px;
+}
+
+.form-resena button {
+
+    background: #5C4033;
+
+    color: white;
+
+    border: none;
+
+    padding: 12px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+}
+
+.form-resena button:hover {
+
+    opacity: 0.9;
+}
+
+.lista-resenas {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+}
+
+.card-resena {
+
+    background: white;
+
+    border: 1px solid #ddd;
+
+    border-radius: 10px;
+
+    padding: 20px;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.estrellas {
+
+    font-size: 20px;
+
+    margin-bottom: 10px;
+}
+
+.sin-resenas {
+    text-align: center;
+    padding: 40px;
+    background: #f8f8f8;
+    border-radius: 10px;
+}

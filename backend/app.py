@@ -40,7 +40,7 @@ def invalid_token_callback(msg):
 app.register_blueprint(productos_bp, url_prefix="/productos")
 app.register_blueprint(usuarios_bp, url_prefix="/usuarios")
 app.register_blueprint(administradores_bp, url_prefix="/administradores")
-app.register_blueprint(resenas_bp, url_prefix="/reseñas")
+app.register_blueprint(resenas_bp, url_prefix="/resenas")
 app.register_blueprint(reservas_bp, url_prefix="/reservas")
 app.register_blueprint(locales_bp, url_prefix="/locales")
 app.register_blueprint(ventas_bp, url_prefix="/ventas")

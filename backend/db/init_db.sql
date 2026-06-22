@@ -51,7 +51,10 @@ CREATE TABLE reservas (
     numero_personas INT NULL,
     comentarios TEXT,
     estado VARCHAR(50) NOT NULL DEFAULT 'En proceso',
+    codigo_reserva VARCHAR(30) UNIQUE,
+    fecha_validacion DATETIME NULL,
     fecha_creacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    
 );
 CREATE TABLE historial_acciones (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,

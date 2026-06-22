@@ -1,21 +1,94 @@
 {% extends "base.html" %}
 
-{% block title %}Panel Admin - Reseñas{% endblock %}
+{% block title %}
+Reseñas
+{% endblock %}
 
-{% block content %}
-    <h1>Panel de Control - Administración</h1>
-    <h2>Reseñas de Clientes</h2>
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/resenas.css') }}">
+{% endblock %}
 
-    <table border="1" id="tablaResenas">
-        <thead>
-            <tr>
-                <th>Usuario</th>
-                <th>Comentario</th>
-                <th>Puntaje</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            </tbody>
-    </table>
+{% block contenido %}
+
+<div class="contenedor-resenas">
+
+    <h1>Reseñas de Cafetería 11</h1>
+
+    {% if session.get('usuario') %}
+
+    <form
+        class="form-resena"
+        method="POST"
+        action="{{ url_for('resenas.agregar_resena') }}"
+    >
+
+        <label>Puntuación</label>
+
+        <select name="puntuacion" required>
+
+            <option value="5">⭐⭐⭐⭐⭐</option>
+            <option value="4">⭐⭐⭐⭐</option>
+            <option value="3">⭐⭐⭐</option>
+            <option value="2">⭐⭐</option>
+            <option value="1">⭐</option>
+
+        </select>
+
+        <label>Comentario</label>
+
+        <textarea
+            name="comentario"
+            rows="4"
+            required
+        ></textarea>
+
+        <button type="submit">
+
+            Publicar reseña
+
+        </button>
+
+    </form>
+
+    {% endif %}
+
+    <div class="lista-resenas">
+
+        {% if resenas %}
+
+            {% for resena in resenas %}
+
+            <div class="card-resena">
+
+                <div class="estrellas">
+
+                    {% for i in range(resena.puntuacion) %}
+                    ⭐
+                    {% endfor %}
+
+                </div>
+
+                <p>{{ resena.comentario }}</p>
+
+                <small>
+                    Usuario #{{ resena.usuario }}
+                </small>
+
+            </div>
+
+            {% endfor %}
+    
+        {% else %}
+
+            <div class="sin-resenas">
+                <h3>Aún no hay reseñas</h3>
+                <p>¡Sé el primero en dejar una opinión sobre Cafetería 11!</p>
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
 {% endblock %}

@@ -17,6 +17,7 @@
             <li><a href="{{url_for('inicio.pagina_reservas')}}">Reservas</a></li>
             <li><a href="{{url_for('ubicacion.pagina_ubicacion')}}">Ubicacion</a></li>
             <li><a href="{{ url_for('carrito.mostrar_carrito') }}">Carrito</a></li>
+            <li><a href="{{ url_for('resenas.pagina_resenas') }}">Reseñas</a></li>
             {% if session.get("rol") == "admin" %}
                 <li>
                     <a href="{{ url_for('dashboard.dashboard_estadisticas') }}">

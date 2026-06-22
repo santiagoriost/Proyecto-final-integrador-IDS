@@ -42,7 +42,7 @@ def listar_reseñas():
         lista_reseñas = cursor.fetchall()
 
         if not lista_reseñas:
-            return jsonify({"error": "reseñas no encontradas"}), 404
+            return jsonify({"reseñas": [],"_links": {}}), 200
 
         query_cant_reseñas = "SELECT COUNT(*) as total FROM resenas"
         cursor.execute(query_cant_reseñas)
