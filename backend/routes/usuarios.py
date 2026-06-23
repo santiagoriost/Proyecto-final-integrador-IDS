@@ -145,7 +145,6 @@ def mostrar_usuarios():
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
-        #id_usuario = get_jwt_identity()
         datos_usuario = get_jwt()
         if datos_usuario.get("rol") != "admin":
             return jsonify({"error": "Acceso denegado"}), 403

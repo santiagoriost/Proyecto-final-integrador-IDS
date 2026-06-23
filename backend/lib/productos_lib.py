@@ -49,7 +49,6 @@ def validar_atributos_necesarios(datos):
 
 def generar_url(base_url, limit, new_offset):
     params = f"_limit={limit}&_offset={new_offset}"
-    #despues podemos aplicar la opcion de buscar por atributo pero bueno ahora no tengo ganas
     return f"{base_url}?{params}"
 
 def generar_links(base_url, limit, cant_productos, offset):
