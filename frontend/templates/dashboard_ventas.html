@@ -130,23 +130,6 @@
         </div>
     </div>
 </div>
-<div id="toastVenta" class="toast-venta"></div>
-
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        {% for category, message in messages %}
-            <script>
-                window.addEventListener("load", () => {
-                    mostrarToast(
-                        "{{ message }}",
-                        "{{ category }}"
-                    );
-                });
-            </script>
-        {% endfor %}
-    {% endif %}
-{% endwith %}
-
 {% endblock %}
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

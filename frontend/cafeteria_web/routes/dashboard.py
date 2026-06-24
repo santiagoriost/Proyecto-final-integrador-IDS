@@ -474,7 +474,7 @@ def dashboard_resenas():
             "Authorization": f"Bearer {token}"
         }
         respuesta = requests.get(
-            f"http://{BACK_APP_HOST}:5001/reseñas/",
+            f"http://{BACK_APP_HOST}:5001/resenas/",
             headers=headers
         )
         if respuesta.status_code != 200:
@@ -489,7 +489,7 @@ def dashboard_resenas():
         datos = respuesta.json()
         return render_template(
             "dashboard_resenas.html",
-            resenas=datos.get("resenas", [])
+            resenas=datos.get("reseñas", [])
         )
     except Exception as e:
         flash(f"Error: {str(e)}", "error")
@@ -497,3 +497,39 @@ def dashboard_resenas():
             "dashboard_resenas.html",
             resenas=[]
         )
+@dashboard_bp.route("/admin/resenas/<int:id_resena>/eliminar", methods=["POST"])
+def eliminar_resena_admin(id_resena):
+    token = session.get("token")
+    headers = {"Authorization": f"Bearer {token}"}
+    try:
+        respuesta = requests.delete(
+            f"http://{BACK_APP_HOST}:5001/resenas/{id_resena}",
+            headers=headers
+        )
+        if respuesta.status_code == 200:
+            flash("Reseña eliminada correctamente", "success")
+        else:
+            flash("No se pudo eliminar la reseña", "error")
+        return redirect(url_for("dashboard.dashboard_resenas"))
+    except Exception as e:
+        flash(f"Error: {str(e)}", "error")
+    return redirect(url_for("dashboard.dashboard_resenas"))
+
+@dashboard_bp.route("/admin/resenas/<int:id_resena>/responder", methods=["POST"])
+def responder_resena_admin(id_resena):
+    token = session.get("token")
+    headers = {"Authorization": f"Bearer {token}"}
+    respuesta_texto = request.form.get("respuesta", "").strip()
+    try:
+        resp = requests.patch(
+            f"http://{BACK_APP_HOST}:5001/resenas/{id_resena}/respuesta",
+            json={"respuesta": respuesta_texto},
+            headers=headers
+        )
+        if resp.status_code == 200:
+            flash("Respuesta guardada correctamente", "success")
+        else:
+            flash("No se pudo guardar la respuesta", "error")
+    except Exception as e:
+        flash(f"Error: {str(e)}", "error")
+    return redirect(url_for("dashboard.dashboard_resenas"))

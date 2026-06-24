@@ -37,7 +37,7 @@ def listar_reseñas():
         limit = int(request.args.get("_limit", 10))
         offset = int(request.args.get("_offset", 0))
 
-        query = "SELECT * FROM resenas LIMIT %s OFFSET %s"
+        query = """SELECT r.*, u.nombre, u.apellido  FROM resenas r JOIN usuarios u ON r.id_usuario = u.id_usuario LIMIT %s OFFSET %s """
         cursor.execute(query, (limit, offset))
         lista_reseñas = cursor.fetchall()
 
@@ -53,8 +53,10 @@ def listar_reseñas():
             reseñas.append({
                 "id": reseña["id_resena"],
                 "usuario": reseña["id_usuario"],
+                "nombre_usuario": f"{reseña['nombre']} {reseña['apellido']}",
                 "producto": reseña["id_producto"],
                 "puntuacion": reseña["puntuacion"],
+                "respuesta": reseña["respuesta"],
                 "comentario": reseña["comentario"]
             })
 
@@ -132,6 +134,66 @@ def agregar_reseña():
             "comentario": datos["comentario"]
         }), 201
 
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+
+@resenas_bp.route("/<int:id_resena>", methods=["DELETE"])
+def eliminar_reseña(id_resena):
+    conn = None
+    cursor = None
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        query_validacion = "SELECT id_resena FROM resenas WHERE id_resena = %s"
+        cursor.execute(query_validacion, (id_resena,))
+        resena = cursor.fetchone()
+
+        if not resena:
+            return jsonify({"error": "reseña no encontrada"}), 404
+
+        cursor.execute("DELETE FROM resenas WHERE id_resena = %s", (id_resena,))
+        conn.commit()
+
+        return jsonify({"message": "reseña eliminada correctamente"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+@resenas_bp.route("/<int:id_resena>/respuesta", methods=["PATCH"])
+def responder_reseña(id_resena):
+    conn = None
+    cursor = None
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        datos = request.get_json()
+        respuesta = datos.get("respuesta", "").strip()
+        
+        if not respuesta:
+            return jsonify({"error": "la respuesta no puede estar vacía"}), 400
+        
+        query = "UPDATE resenas SET respuesta = %s WHERE id_resena = %s"
+        cursor.execute(query, (respuesta, id_resena))
+        conn.commit()
+        
+        if cursor.rowcount == 0:
+            return jsonify({"error": "reseña no encontrada"}), 404
+        
+        return jsonify({"message": "respuesta guardada correctamente"}), 200
+    
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:

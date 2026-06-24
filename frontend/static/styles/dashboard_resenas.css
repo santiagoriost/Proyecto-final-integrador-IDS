@@ -96,3 +96,195 @@
     color: var(--text-secondary, #bbb);
     font-style: italic;
 }
+.btn-eliminar {
+    background: #d94444;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.btn-eliminar:hover {
+    background: #b73535;
+}
+.form-responder {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.form-responder input {
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    font-size: 14px;
+    flex: 1;
+    transition: 0.2s ease;
+}
+
+.form-responder input:focus {
+    outline: none;
+    border-color: rgba(255,255,255,0.45);
+    background: rgba(255,255,255,0.22);
+}
+
+.btn-responder {
+    background: rgba(245, 182, 200, 0.85);
+    color: #3a2a23;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: 0.2s ease;
+}
+
+.btn-responder:hover {
+    background: rgba(245, 182, 200, 1);
+}
+.resenas-filtros-card {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filter-search {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 12px;
+    padding: 10px 16px;
+    color: rgba(255,255,255,0.7);
+}
+
+.filter-search input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 14px;
+    width: 100%;
+}
+
+.filter-search input::placeholder {
+    color: rgba(255,255,255,0.5);
+}
+
+.custom-select {
+    position: relative;
+}
+
+.custom-select-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 12px;
+    padding: 10px 16px;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    transition: 0.2s ease;
+}
+
+.custom-select-btn:hover {
+    background: rgba(255,255,255,0.22);
+}
+
+.custom-options {
+    position: absolute;
+    top: 48px;
+    right: 0;
+    background: rgba(247, 234, 214, 0.96);
+    border-radius: 14px;
+    padding: 8px;
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 80;
+    min-width: 180px;
+    box-shadow: 0 12px 30px rgba(73,44,29,0.22);
+}
+.custom-select.open .custom-options {
+    display: flex;
+}
+.custom-options button {
+    border: none;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #E8D3BE;
+    color: #3f2a1f;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: left;
+    transition: 0.2s ease;
+}
+.custom-options button:hover {
+    background: #43342C;
+    color: white;
+}
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-box {
+    background: rgba(247, 234, 214, 0.96);
+    border-radius: 20px;
+    padding: 32px;
+    text-align: center;
+    box-shadow: 0 20px 45px rgba(73,44,29,0.30);
+    min-width: 300px;
+}
+
+.modal-box h3 {
+    color: #3a2a23;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.modal-box p {
+    color: #7a5c50;
+    margin-bottom: 24px;
+}
+
+.modal-acciones {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.btn-cancelar {
+    background: rgba(255,255,255,0.75);
+    border: 1px solid #d7d2ce;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-weight: 600;
+    color: #3a2a23;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.btn-cancelar:hover {
+    background: rgba(255,255,255,1);
+}

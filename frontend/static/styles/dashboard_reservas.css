@@ -279,25 +279,6 @@
 .btn-icon.cancelar  { background: rgba(255,240,201,0.86); color: #bd7b00; }
 .btn-icon.eliminar  { background: rgba(255,224,226,0.86); color: #c83f55; }
 
-/* ============================================
-   TOAST
-   ============================================ */
-.toast {
-    position: fixed;
-    right: 25px;
-    bottom: 25px;
-    padding: 14px 20px;
-    border-radius: 16px;
-    background: #3a2a23;
-    color: white;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: 0.25s ease;
-    z-index: 9999;
-}
-
-.toast.show  { opacity: 1; transform: translateY(0); }
-.toast.error { background: #9d3b3b; }
 .modal-overlay {
     position: fixed;
     inset: 0;

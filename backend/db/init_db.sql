@@ -37,6 +37,7 @@ CREATE TABLE  resenas(
     id_producto INT NOT NULL,
     puntuacion INT NOT NULL CHECK (puntuacion >= 1 AND puntuacion <= 5),
     comentario TEXT,
+    respuesta TEXT DEFAULT NULL,
     fecha_resena TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(id_usuario) REFERENCES usuarios(id_usuario),
     FOREIGN KEY(id_producto) REFERENCES productos(id_producto)

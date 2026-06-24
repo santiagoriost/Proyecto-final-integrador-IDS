@@ -43,23 +43,21 @@
     </aside>
 
     <main class="admin-main">
-        <section class="admin-content">
-            {% if request.endpoint != "dashboard.dashboard_ventas" %}
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        <div class="flash-container">
-                            {% for category, message in messages %}
-                            <div class="toast toast--{{ category }}">
-                                <span>{{ message }}</span>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                {% endwith %}
-            {% endif %} 
-            {% block contenido %}{% endblock %}
-        </section>
-    </main>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-container">
+                {% for category, message in messages %}
+                <div class="toast toast--{{ category }}">
+                    <span>{{ message }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <section class="admin-content">
+        {% block contenido %}{% endblock %}
+    </section>
+</main>
 
     {% block extra_js %}{% endblock %}
 <script src="{{ url_for('static', filename='js/admin_logout.js') }}"></script>

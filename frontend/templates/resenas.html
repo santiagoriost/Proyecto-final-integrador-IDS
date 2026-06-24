@@ -1,114 +1,90 @@
 {% extends "base.html" %}
-
 {% block title %}
 Reseñas
 {% endblock %}
-
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/resenas.css') }}">
 {% endblock %}
-
 {% block contenido %}
-
 <div class="contenedor-resenas">
-
     <h1>Reseñas de Cafetería 11</h1>
-
     {% if session.get('usuario') %}
-
     <form
         class="form-resena"
         method="POST"
         action="{{ url_for('resenas.agregar_resena') }}"
-    >
-
+            >
         <label>Puntuación</label>
-
-        <select name="puntuacion" required>
-
-            <option value="5">⭐⭐⭐⭐⭐</option>
-            <option value="4">⭐⭐⭐⭐</option>
-            <option value="3">⭐⭐⭐</option>
-            <option value="2">⭐⭐</option>
-            <option value="1">⭐</option>
-
-        </select>
-
+        <div class="select-personalizado" id="selectPuntuacion">
+            <button type="button" class="select-boton">
+                <span class="select-texto">⭐⭐⭐⭐⭐</span>
+                <span class="select-flecha">⌄</span>
+            </button>
+            <div class="select-opciones">
+                <button type="button" class="select-opcion" data-value="5">⭐⭐⭐⭐⭐</button>
+                <button type="button" class="select-opcion" data-value="4">⭐⭐⭐⭐</button>
+                <button type="button" class="select-opcion" data-value="3">⭐⭐⭐</button>
+                <button type="button" class="select-opcion" data-value="2">⭐⭐</button>
+                <button type="button" class="select-opcion" data-value="1">⭐</button>
+            </div>
+            <input type="hidden" name="puntuacion" id="puntuacionInput" value="5">
+        </div>
         <label>Comentario</label>
-
         <textarea
             name="comentario"
             rows="4"
             required
         ></textarea>
-
         <button type="submit">
 
             Publicar reseña
-
         </button>
-
     </form>
-
     {% endif %}
-
     <div class="lista-resenas">
-
         {% if resenas %}
-
             {% for resena in resenas %}
-
             <div class="card-resena">
 
+                <div class="card-resena-header">
+                    <span class="card-resena-nombre">{{ resena.nombre_usuario }}</span>
                 <div class="estrellas">
-
-                    {% for i in range(resena.puntuacion) %}
-                    ⭐
-                    {% endfor %}
-
+                    {% for i in range(resena.puntuacion) %}⭐{% endfor %}
                 </div>
-
-                <p>{{ resena.comentario }}</p>
-
-                <small>
-                    Usuario #{{ resena.usuario }}
-                </small>
-
             </div>
-
+        <p class="card-resena-comentario">{{ resena.comentario }}</p>
+        {% if resena.respuesta %}
+        <div class="card-resena-respuesta">
+            <strong>Cafetería 11:</strong> {{ resena.respuesta }}
+        </div>
+{% endif %}
+    </div>
             {% endfor %}
-    
         {% else %}
-
             <div class="sin-resenas">
                 <h3>Aún no hay reseñas</h3>
                 <p>¡Sé el primero en dejar una opinión sobre Cafetería 11!</p>
             </div>
-
         {% endif %}
-
     </div>
-
 </div>
-
 {% if links %}
 <div class="contenedor_paginacion_productos">
     {% if links._first %}
         <a href="{{ url_for('resenas.pagina_resenas')}}?_limit=10&_offset=0" class="btn_pag">Inicio</a>
     {% endif %}
-
     {% if links._prev %}
         <a href="{{url_for('resenas.pagina_resenas')}}?{{links._prev.href.split('?')[1]}}" class="btn_pag">Anterior</a>
     {% endif %}
-
     {% if links._next %}
         <a href="{{url_for('resenas.pagina_resenas')}}?{{links._next.href.split('?')[1]}}" class="btn_pag">Siguiente</a>
     {% endif %}
-
     {% if links._last %}
         <a href="{{url_for('resenas.pagina_resenas')}}?{{links._last.href.split('?')[1]}}" class="btn_pag">Último</a>
     {% endif %}
 </div>
 {% endif %}
-
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/resenas.js') }}"></script>
+{% endblock %}
 {% endblock %}

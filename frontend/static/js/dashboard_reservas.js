@@ -11,17 +11,6 @@ const filasReservas = document.querySelectorAll(".reservas-table tbody tr");
 let estadoSeleccionado = "Todos los estados";
 let tipoSeleccionado = "Todos los tipos";
 
-function mostrarToast(mensaje, tipo = "success") {
-    const toast = document.getElementById("toast");
-
-    toast.textContent = mensaje;
-    toast.className = `toast show ${tipo}`;
-
-    setTimeout(() => {
-        toast.classList.remove("show");
-    }, 3000);
-}
-
 function normalizarTexto(texto) {
     return texto
         .toLowerCase()
@@ -168,7 +157,7 @@ if (btnExportarReservas) {
 
         URL.revokeObjectURL(url);
 
-        mostrarToast("Reservas exportadas ", "success");
+        alert("Reservas exportadas correctamente");
     });
 }
 if (window.flatpickr) {

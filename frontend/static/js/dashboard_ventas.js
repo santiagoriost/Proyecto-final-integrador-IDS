@@ -6,17 +6,7 @@ const customBtn = customSelect.querySelector(".custom-select-btn");
 const customText = customSelect.querySelector(".custom-select-text");
 const customOptions = customSelect.querySelectorAll(".custom-options button");
 const toastVenta = document.getElementById("toastVenta");
-function mostrarToast(
-    mensaje,
-    tipo = "success"
-){
-    toastVenta.textContent = mensaje;
-    toastVenta.className =
-        `toast-venta show ${tipo}`;
-    setTimeout(() => {
-        toastVenta.classList.remove("show");
-    }, 2500);
-}
+
 function actualizarTotal(){
     const productoSeleccionado = document.querySelector(
         `.custom-options button[data-value="${productoVenta.value}"]`
@@ -54,10 +44,7 @@ cantidadVenta.addEventListener("input", actualizarTotal);
 formVenta.addEventListener("submit", (event) => {
     if(!productoVenta.value || !cantidadVenta.value){
         event.preventDefault();
-        mostrarToast(
-            "selecciona un producto y cantidad",
-            "error"
-        );
+        alert("Selecciona un producto y cantidad");
         return;
     }
 });
