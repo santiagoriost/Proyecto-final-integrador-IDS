@@ -91,4 +91,24 @@ Reseñas
 
 </div>
 
+{% if links %}
+<div class="contenedor_paginacion_productos">
+    {% if links._first %}
+        <a href="{{ url_for('resenas.pagina_resenas')}}?_limit=10&_offset=0" class="btn_pag">Inicio</a>
+    {% endif %}
+
+    {% if links._prev %}
+        <a href="{{url_for('resenas.pagina_resenas')}}?{{links._prev.href.split('?')[1]}}" class="btn_pag">Anterior</a>
+    {% endif %}
+
+    {% if links._next %}
+        <a href="{{url_for('resenas.pagina_resenas')}}?{{links._next.href.split('?')[1]}}" class="btn_pag">Siguiente</a>
+    {% endif %}
+
+    {% if links._last %}
+        <a href="{{url_for('resenas.pagina_resenas')}}?{{links._last.href.split('?')[1]}}" class="btn_pag">Último</a>
+    {% endif %}
+</div>
+{% endif %}
+
 {% endblock %}

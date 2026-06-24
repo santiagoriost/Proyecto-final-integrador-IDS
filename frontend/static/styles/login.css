@@ -93,7 +93,7 @@
     background-color: #3e2514;
 }
 
-/* Botones secundarios (Olvidaste contraseña / Crear cuenta) */
+/* Botones secundarios */
 .form_boton_forgot_password, .form_boton_register {
     width: 100%;
     margin-top: 10px;
