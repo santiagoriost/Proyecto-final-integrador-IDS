@@ -205,7 +205,7 @@ def actualizar_producto(id_producto):
         return jsonify({
             "mensaje": "producto actualizado correctamente",
             "producto_actualizado": producto_actualizado
-        })
+        }), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
